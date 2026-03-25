@@ -1,87 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive UK General Election 2024 Tracker - Explore constituency results on an interactive map with detailed breakdowns by party.">
-    <title>UK Election Tracker 2024 | Interactive Map</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="index.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK Election Tracker 2024</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <!-- Loading overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading UK Election Map</div>
-        <div class="loading-subtext">Fetching constituency boundaries...</div>
-    </div>
-
-    <!-- Mobile toggle -->
-    <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle sidebar">☰</button>
-
-    <div class="app">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h1>🗳️ UK Election Tracker</h1>
-                <p class="subtitle">2024 General Election Results</p>
-                <div class="election-date">
-                    <span class="dot"></span>
-                    <span>4th July 2024 · 650 Constituencies</span>
-                </div>
+  <div id="app-container">
+    <header class="app-header">
+      <h1>UK General Election Tracker 2024</h1>
+    </header>
+    
+    <main class="app-main">
+      <div id="map-container">
+        <div id="map"></div>
+      </div>
+      
+      <aside id="info-panel">
+        <div class="panel-content">
+          <h2>Constituency Details</h2>
+          <p class="placeholder-text">Hover over or click a constituency on the map to see detailed results.</p>
+          <div id="constituency-info" style="display: none;">
+            <h3 id="constituency-name"></h3>
+            <div class="result-card">
+              <p><strong>Winner:</strong> <span id="winner-name"></span></p>
+              <p><strong>Party:</strong> <span id="winner-party" class="party-badge"></span></p>
+              <p><strong>Majority:</strong> <span id="winner-majority"></span></p>
+              <p><strong>Turnout:</strong> <span id="voter-turnout"></span>%</p>
             </div>
-
-            <!-- Search -->
-            <div class="search-container">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search constituencies..." autocomplete="off" />
-                <div class="search-results" id="searchResults"></div>
-            </div>
-
-            <!-- View Toggle -->
-            <div class="view-toggle-container">
-                <div class="view-toggle">
-                    <button class="toggle-btn active" data-mode="2024">2024 Winner</button>
-                    <button class="toggle-btn" data-mode="2019">2019 Winner</button>
-                    <button class="toggle-btn" data-mode="swing">Vote Swing</button>
-                </div>
-            </div>
-
-            <!-- Seat summary -->
-            <div class="summary-section">
-                <h3>Parliamentary Seats</h3>
-                <div class="seat-bar-container">
-                    <div class="majority-label">326 majority</div>
-                    <div class="majority-line"></div>
-                    <div class="seat-bar" id="seatBar"></div>
-                </div>
-                <div class="party-legend" id="partyLegend"></div>
-            </div>
-
-            <!-- Constituency detail -->
-            <div class="detail-panel" id="detailPanel">
-                <div class="detail-placeholder" id="detailPlaceholder">
-                    <div class="icon">🗺️</div>
-                    <p>Click a constituency on the map<br>to view detailed results</p>
-                </div>
-                <div class="constituency-detail" id="constituencyDetail"></div>
-            </div>
-        </aside>
-
-        <!-- Map -->
-        <div class="map-container">
-            <div id="map"></div>
-            <div class="map-stats-overlay" id="mapStats">
-                <div class="map-stat-chip">
-                    <span>Loaded:</span>
-                    <strong id="loadedCount">0</strong>
-                    <span>constituencies</span>
-                </div>
-            </div>
+            <h4>Candidates</h4>
+            <ul id="candidate-list"></ul>
+          </div>
         </div>
-    </div>
+      </aside>
+    </main>
+  </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="data/results.js"></script>
-    <script src="app.js"></script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+     
+  <!-- TopoJSON JS -->
+  <script src="https://unpkg.com/topojson-client@3"></script>
+     
+  <!-- Load Data First -->
+  <script src="data/results.js"></script>
+  
+  <!-- Load App Logic -->
+  <script src="app.js"></script>
 </body>
 </html>

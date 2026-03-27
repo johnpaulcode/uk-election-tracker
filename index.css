@@ -1,0 +1,253 @@
+/* Base Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #0f172a; /* Slate 900 */
+  color: #f8fafc; /* Slate 50 */
+  line-height: 1.5;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  background-color: #1e293b; /* Slate 800 */
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #334155; /* Slate 700 */
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  z-index: 10;
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.app-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+#map-container {
+  flex: 2;
+  position: relative;
+  background: #1e293b;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Customizing Leaflet for dark mode */
+.leaflet-container {
+  background: #0f172a;
+  outline: 0;
+}
+
+#info-panel {
+  flex: 1;
+  min-width: 320px;
+  max-width: 400px;
+  background-color: rgba(30, 41, 59, 0.95); /* Slate 800 with opacity */
+  backdrop-filter: blur(10px);
+  border-left: 1px solid #334155;
+  overflow-y: auto;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.panel-content {
+  padding: 2rem;
+}
+
+.panel-content h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #334155;
+  color: #e2e8f0; /* Slate 200 */
+}
+
+.placeholder-text {
+  color: #94a3b8; /* Slate 400 */
+  font-style: italic;
+}
+
+#constituency-info {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#constituency-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+.result-card {
+  background: #334155; /* Slate 700 */
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+}
+
+.result-card p {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: #cbd5e1; /* Slate 300 */
+}
+
+.result-card p:last-child {
+  margin-bottom: 0;
+}
+
+.result-card strong {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.party-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Party Colors */
+.party-con { background-color: #0087DC; }
+.party-lab { background-color: #E4003B; }
+.party-ld { background-color: #FAA61A; }
+.party-ruk { background-color: #12B6CF; }
+.party-green { background-color: #02A95B; }
+.party-snp { background-color: #FDF38E; color: #333; }
+.party-pc { background-color: #005B54; }
+.party-dup { background-color: #D46A4C; }
+.party-sf { background-color: #326760; }
+.party-sdlp { background-color: #2AA82C; }
+.party-uup { background-color: #48A5EE; }
+.party-apni { background-color: #F6CB2F; color: #333; }
+.party-ind { background-color: #E5E7EB; color: #333; }
+.party-tuv { background-color: #0C3A6A; }
+.party-spk { background-color: #909090; }
+.party-other { background-color: #9CA3AF; }
+
+h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #e2e8f0;
+}
+
+#candidate-list {
+  list-style: none;
+}
+
+#candidate-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #334155;
+  color: #cbd5e1;
+}
+
+#candidate-list li:last-child {
+  border-bottom: none;
+}
+
+.candidate-party-badge {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Live Overrides Banner */
+.live-override-alert {
+  background-color: rgba(234, 179, 8, 0.15); /* Yellow tinted background */
+  border-left: 4px solid #eab308;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+.live-override-alert h4 {
+  margin: 0 0 8px 0;
+  color: #fef08a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.live-override-alert p {
+  margin: 4px 0;
+  font-size: 0.9em;
+}
+
+/* Swing Badges */
+.swing-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+  margin-left: 10px;
+}
+.swing-positive {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+.swing-negative {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+.swing-neutral {
+  background-color: rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+}

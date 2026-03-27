@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK Election Tracker 2024</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id="app-container">
+    <header class="app-header">
+      <h1>UK General Election Tracker 2024</h1>
+    </header>
+    
+    <main class="app-main">
+      <div id="map-container">
+        <div id="map"></div>
+      </div>
+      
+      <aside id="info-panel">
+        <div class="panel-content">
+          <h2>Constituency Details</h2>
+          <p class="placeholder-text">Hover over or click a constituency on the map to see detailed results.</p>
+          <div id="constituency-info" style="display: none;">
+            <h3 id="constituency-name"></h3>
+            <div class="result-card">
+              <p><strong>Winner:</strong> <span id="winner-name"></span></p>
+              <p><strong>Party:</strong> <span id="winner-party" class="party-badge"></span></p>
+              <p><strong>Majority:</strong> <span id="winner-majority"></span></p>
+              <p><strong>Turnout:</strong> <span id="voter-turnout"></span>%</p>
+            </div>
+            <h4>Candidates</h4>
+            <ul id="candidate-list"></ul>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+     
+  <!-- TopoJSON JS -->
+  <script src="https://unpkg.com/topojson-client@3"></script>
+     
+  <!-- Load Data First -->
+  <script src="data/results.js"></script>
+  <script src="data/live_overrides.js"></script>
+  
+  <!-- Load App Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -38,13 +38,44 @@ const elMajority = document.getElementById('winner-majority');
 const elTurnout = document.getElementById('voter-turnout');
 const elCandidateList = document.getElementById('candidate-list');
 
+<<<<<<< HEAD
 function updateInfoPanel(data) {
+=======
+function updateInfoPanel(data, code) {
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
   if (!data) return;
 
   placeholderText.style.display = 'none';
   infoPanel.style.display = 'block';
 
   elName.textContent = data.name;
+<<<<<<< HEAD
+=======
+  
+  // Check for Live Overrides
+  let overrideContainer = document.getElementById('override-container');
+  if (!overrideContainer) {
+      overrideContainer = document.createElement('div');
+      overrideContainer.id = 'override-container';
+      elName.parentNode.insertBefore(overrideContainer, elName.nextSibling);
+  }
+  
+  if (code && typeof LIVE_OVERRIDES !== 'undefined' && LIVE_OVERRIDES[code]) {
+      const liveData = LIVE_OVERRIDES[code];
+      const newPartyColor = partyColors[liveData.new_party] || partyColors['Other'];
+      overrideContainer.innerHTML = `
+        <div class="live-override-alert">
+          <h4>🚨 Live Status Changed</h4>
+          <p><strong>Current MP:</strong> ${liveData.new_winner}</p>
+          <p><strong>Current Party:</strong> <span class="party-badge party-${liveData.new_party.toLowerCase()}" style="background-color: ${newPartyColor};">${liveData.new_party}</span></p>
+          <p style="font-size: 0.8em; opacity: 0.8; margin-top: 8px;">(Elected 2024: ${liveData.old_winner}, ${liveData.old_party})</p>
+        </div>
+      `;
+  } else {
+      overrideContainer.innerHTML = '';
+  }
+
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
   elWinner.textContent = data.winner;
   
   elPartyBadge.textContent = data.party;
@@ -76,9 +107,24 @@ function updateInfoPanel(data) {
           const candParty = cand.party;
           const color = partyColors[candParty] || partyColors['Other'];
           
+<<<<<<< HEAD
           li.innerHTML = `
               <span><span class="candidate-party-badge" style="background-color: ${color};"></span>${candParty}</span>
               <strong>${cand.votes.toLocaleString()}</strong>
+=======
+          let swingHtml = '';
+          if (cand.swing !== undefined) {
+              const swingVal = parseFloat(cand.swing);
+              let swingClass = 'swing-neutral';
+              if (swingVal > 0) swingClass = 'swing-positive';
+              else if (swingVal < 0) swingClass = 'swing-negative';
+              swingHtml = `<span class="swing-badge ${swingClass}">${cand.swing}%</span>`;
+          }
+          
+          li.innerHTML = `
+              <span><span class="candidate-party-badge" style="background-color: ${color};"></span>${candParty}</span>
+              <strong>${cand.votes.toLocaleString()} ${swingHtml}</strong>
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
           `;
           elCandidateList.appendChild(li);
       });
@@ -112,22 +158,47 @@ function renderGeoJSON(geojson) {
       const result = RESULTS[code];
       const partyKey = result ? result.party : 'Other';
       const color = partyColors[partyKey] || partyColors['Other'];
+<<<<<<< HEAD
       
       return {
         fillColor: color,
         weight: 1,
         opacity: 1,
         color: '#1e293b', // Darker border
+=======
+      const isOverridden = typeof LIVE_OVERRIDES !== 'undefined' && LIVE_OVERRIDES[code];
+      
+      return {
+        fillColor: color,
+        weight: isOverridden ? 2 : 1,
+        dashArray: isOverridden ? '5, 5' : '',
+        opacity: 1,
+        color: isOverridden ? '#fbbf24' : '#1e293b',
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
         fillOpacity: 0.8
       };
     },
     onEachFeature: function(feature, layer) {
       const code = feature.properties.PCON24CD;
       const result = RESULTS[code];
+<<<<<<< HEAD
 
       if (result) {
         // Tooltip
         layer.bindTooltip(`<strong>${result.name}</strong><br/>Winner: ${result.winner} (${result.party})`, {
+=======
+      const isOverridden = typeof LIVE_OVERRIDES !== 'undefined' && LIVE_OVERRIDES[code];
+
+      if (result) {
+        // Tooltip
+        let tooltipContent = `<strong>${result.name}</strong><br/>Winner: ${result.winner} (${result.party})`;
+        if (isOverridden) {
+            const liveData = LIVE_OVERRIDES[code];
+            tooltipContent += `<br/><span style="color: #fbbf24;">🚨 Live: ${liveData.new_winner} (${liveData.new_party})</span>`;
+        }
+        
+        layer.bindTooltip(tooltipContent, {
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
           sticky: true,
           className: 'custom-tooltip'
         });
@@ -139,26 +210,47 @@ function renderGeoJSON(geojson) {
             target.setStyle({
               weight: 3,
               color: '#f8fafc',
+<<<<<<< HEAD
+=======
+              dashArray: '',
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
               fillOpacity: 1
             });
             if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
               target.bringToFront();
             }
+<<<<<<< HEAD
             updateInfoPanel(result);
+=======
+            updateInfoPanel(result, code);
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
           },
           mouseout: function(e) {
             const target = e.target;
             const partyKey = result.party;
             const color = partyColors[partyKey] || partyColors['Other'];
+<<<<<<< HEAD
             target.setStyle({
               fillColor: color,
               weight: 1,
               color: '#1e293b',
+=======
+            
+            target.setStyle({
+              fillColor: color,
+              weight: isOverridden ? 2 : 1,
+              dashArray: isOverridden ? '5, 5' : '',
+              color: isOverridden ? '#fbbf24' : '#1e293b',
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
               fillOpacity: 0.8
             });
           },
           click: function(e) {
+<<<<<<< HEAD
             updateInfoPanel(result);
+=======
+            updateInfoPanel(result, code);
+>>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
           }
         });
       }

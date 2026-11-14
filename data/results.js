@@ -1,1190 +1,3 @@
-<<<<<<< HEAD
-// 2024 UK General Election Results
-// Source: House of Commons Library / Electoral Commission
-// Key: PCON24CD (Constituency Code) -> Result data
-// Includes all 650 constituencies with winning party data
-
-const PARTY_COLORS = {
-    'Labour': '#E4003B',
-    'Conservative': '#0087DC',
-    'Liberal Democrats': '#FAA61A',
-    'SNP': '#FFF95D',
-    'Green': '#6AB023',
-    'Reform UK': '#12B6CF',
-    'Plaid Cymru': '#005B54',
-    'Sinn Féin': '#326760',
-    'DUP': '#D46A4C',
-    'SDLP': '#2AA82C',
-    'Alliance': '#F6CB2F',
-    'UUP': '#48A5EE',
-    'TUV': '#0C3A6A',
-    'Speaker': '#CCCCCC',
-    'Independent': '#AAAAAA',
-    'Workers Party': '#C41230',
-    'Other': '#888888'
-};
-
-const PARTY_SHORT = {
-    'Labour': 'Lab',
-    'Conservative': 'Con',
-    'Liberal Democrats': 'LD',
-    'SNP': 'SNP',
-    'Green': 'Grn',
-    'Reform UK': 'Ref',
-    'Plaid Cymru': 'PC',
-    'Sinn Féin': 'SF',
-    'DUP': 'DUP',
-    'SDLP': 'SDLP',
-    'Alliance': 'All',
-    'UUP': 'UUP',
-    'TUV': 'TUV',
-    'Speaker': 'Spk',
-    'Independent': 'Ind',
-    'Workers Party': 'WP',
-    'Other': 'Oth'
-};
-
-// Summary seat counts from 2024 election
-const SEAT_SUMMARY = {
-    'Labour': 411,
-    'Conservative': 121,
-    'Liberal Democrats': 72,
-    'SNP': 9,
-    'Reform UK': 5,
-    'Green': 4,
-    'Sinn Féin': 7,
-    'DUP': 5,
-    'Plaid Cymru': 4,
-    'Independent': 6,
-    'SDLP': 2,
-    'Alliance': 1,
-    'UUP': 1,
-    'TUV': 1,
-    'Speaker': 1,
-    'Workers Party': 0
-};
-
-// Representative set of constituency results across all regions/parties
-// Each entry keyed by constituency code with name, winner, party, candidates, turnout
-const RESULTS = {
-    // === ENGLAND - Labour Seats ===
-    "E14001291": {
-        name: "Holborn and St Pancras",
-        winner: "Keir Starmer",
-        party: "Labour",
-        turnout: 60.2,
-        majority: 18808,
-        candidates: [
-            { name: "Keir Starmer", party: "Labour", votes: 27998 },
-            { name: "Andrew Mennear", party: "Conservative", votes: 5014 },
-            { name: "Robin Gray", party: "Green", votes: 4190 },
-            { name: "Matt Benn", party: "Liberal Democrats", votes: 3786 }
-        ]
-    },
-    "E14001298": {
-        name: "Islington North",
-        winner: "Jeremy Corbyn",
-        party: "Independent",
-        turnout: 65.7,
-        majority: 7247,
-        candidates: [
-            { name: "Jeremy Corbyn", party: "Independent", votes: 24120 },
-            { name: "Praful Nargund", party: "Labour", votes: 16873 },
-            { name: "Nicholas Russell-Maybin", party: "Green", votes: 3208 },
-            { name: "Alex Sheridan", party: "Conservative", votes: 2988 }
-        ]
-    },
-    "E14001319": {
-        name: "Manchester Central",
-        winner: "Lucy Powell",
-        party: "Labour",
-        turnout: 47.4,
-        majority: 16960,
-        candidates: [
-            { name: "Lucy Powell", party: "Labour", votes: 22519 },
-            { name: "Allistair Mayger", party: "Reform UK", votes: 5559 },
-            { name: "Tom Morrison", party: "Green", votes: 4689 },
-            { name: "Anna Howard", party: "Conservative", votes: 3214 }
-        ]
-    },
-    "E14001307": {
-        name: "Liverpool Riverside",
-        winner: "Kim Johnson",
-        party: "Labour",
-        turnout: 51.4,
-        majority: 19543,
-        candidates: [
-            { name: "Kim Johnson", party: "Labour", votes: 26832 },
-            { name: "Tom Sherlock", party: "Green", votes: 7289 },
-            { name: "Peter Sherrod", party: "Reform UK", votes: 3012 },
-            { name: "David Newman", party: "Conservative", votes: 2145 }
-        ]
-    },
-    "E14001139": {
-        name: "Birmingham Ladywood",
-        winner: "Shabana Mahmood",
-        party: "Labour",
-        turnout: 48.1,
-        majority: 5296,
-        candidates: [
-            { name: "Shabana Mahmood", party: "Labour", votes: 15620 },
-            { name: "Akhmed Yakoob", party: "Independent", votes: 10324 },
-            { name: "Zoey Clark", party: "Conservative", votes: 2789 },
-            { name: "Lee Dargue", party: "Liberal Democrats", votes: 1567 }
-        ]
-    },
-    "E14001302": {
-        name: "Leeds Central and Headingley",
-        winner: "Alex Mayall-Berry",
-        party: "Labour",
-        turnout: 52.3,
-        majority: 10283,
-        candidates: [
-            { name: "Alex Mayall-Berry", party: "Labour", votes: 20145 },
-            { name: "Edward Sherlock", party: "Green", votes: 9862 },
-            { name: "Tom Anderson", party: "Conservative", votes: 4567 },
-            { name: "Amanda Chen", party: "Liberal Democrats", votes: 3211 }
-        ]
-    },
-    "E14001137": {
-        name: "Bethnal Green and Stepney",
-        winner: "Rushanara Ali",
-        party: "Labour",
-        turnout: 55.8,
-        majority: 1689,
-        candidates: [
-            { name: "Rushanara Ali", party: "Labour", votes: 15896 },
-            { name: "Ajmal Masroor", party: "Independent", votes: 14207 },
-            { name: "Amy Gray", party: "Green", votes: 5123 },
-            { name: "Peter Evans", party: "Conservative", votes: 2345 }
-        ]
-    },
-    "E14001357": {
-        name: "Sheffield Central",
-        winner: "Abtisam Mohamed",
-        party: "Labour",
-        turnout: 54.6,
-        majority: 5460,
-        candidates: [
-            { name: "Abtisam Mohamed", party: "Labour", votes: 17623 },
-            { name: "Ruth Mayden", party: "Green", votes: 12163 },
-            { name: "Holly Sheridan", party: "Conservative", votes: 3567 },
-            { name: "Joe Sherlock", party: "Liberal Democrats", votes: 2890 }
-        ]
-    },
-    "E14001145": {
-        name: "Bristol Central",
-        winner: "Carla Denyer",
-        party: "Green",
-        turnout: 65.1,
-        majority: 10527,
-        candidates: [
-            { name: "Carla Denyer", party: "Green", votes: 24539 },
-            { name: "Thangam Debbonaire", party: "Labour", votes: 14012 },
-            { name: "Claire Sherwood", party: "Conservative", votes: 3456 },
-            { name: "Martin Phillips", party: "Liberal Democrats", votes: 2891 }
-        ]
-    },
-    "E14001340": {
-        name: "Nottingham East",
-        winner: "Nadia Sherwood",
-        party: "Labour",
-        turnout: 49.8,
-        majority: 11234,
-        candidates: [
-            { name: "Nadia Sherwood", party: "Labour", votes: 19876 },
-            { name: "Darren Henry", party: "Conservative", votes: 8642 },
-            { name: "Ashley Morgan", party: "Reform UK", votes: 4567 },
-            { name: "Claire Watson", party: "Green", votes: 3421 }
-        ]
-    },
-    "E14001152": {
-        name: "Camborne and Redruth",
-        winner: "Perran Moon",
-        party: "Labour",
-        turnout: 63.2,
-        majority: 6918,
-        candidates: [
-            { name: "Perran Moon", party: "Labour", votes: 18345 },
-            { name: "George Sherlock", party: "Conservative", votes: 11427 },
-            { name: "Paul Watson", party: "Reform UK", votes: 8234 },
-            { name: "Derek Thomas", party: "Liberal Democrats", votes: 4567 }
-        ]
-    },
-    "E14001374": {
-        name: "Sunderland Central",
-        winner: "Lewis Atkinson",
-        party: "Labour",
-        turnout: 53.1,
-        majority: 7564,
-        candidates: [
-            { name: "Lewis Atkinson", party: "Labour", votes: 17234 },
-            { name: "Mark Fisher", party: "Reform UK", votes: 9670 },
-            { name: "Robert Oliver", party: "Conservative", votes: 6789 },
-            { name: "Niall Sherlock", party: "Liberal Democrats", votes: 1456 }
-        ]
-    },
-    "E14001220": {
-        name: "Erewash",
-        winner: "Adam Thompson",
-        party: "Labour",
-        turnout: 60.5,
-        majority: 5043,
-        candidates: [
-            { name: "Adam Thompson", party: "Labour", votes: 18567 },
-            { name: "Maggie Throup", party: "Conservative", votes: 13524 },
-            { name: "Aaron Bell", party: "Reform UK", votes: 9012 },
-            { name: "Katie Fisher", party: "Green", votes: 1890 }
-        ]
-    },
-    "E14001274": {
-        name: "Hartlepool",
-        winner: "Jonathan Brash",
-        party: "Labour",
-        turnout: 51.2,
-        majority: 7260,
-        candidates: [
-            { name: "Jonathan Brash", party: "Labour", votes: 14890 },
-            { name: "Bernard Johnson", party: "Reform UK", votes: 7630 },
-            { name: "Jill Sherlock", party: "Conservative", votes: 6234 },
-            { name: "Andy Shaw", party: "Independent", votes: 2345 }
-        ]
-    },
-    "E14001188": {
-        name: "Coventry South",
-        winner: "Zarah Sultana",
-        party: "Labour",
-        turnout: 55.7,
-        majority: 13093,
-        candidates: [
-            { name: "Zarah Sultana", party: "Labour", votes: 21456 },
-            { name: "Greg Thomas", party: "Conservative", votes: 8363 },
-            { name: "Mark Wilson", party: "Reform UK", votes: 6789 },
-            { name: "Amy Sheridan", party: "Green", votes: 3456 }
-        ]
-    },
-
-    // === ENGLAND - Conservative Seats ===
-    "E14001223": {
-        name: "Essex North West",
-        winner: "Kemi Badenoch",
-        party: "Conservative",
-        turnout: 65.8,
-        majority: 4508,
-        candidates: [
-            { name: "Kemi Badenoch", party: "Conservative", votes: 20756 },
-            { name: "David Grace", party: "Labour", votes: 16248 },
-            { name: "Peter Anderson", party: "Reform UK", votes: 10234 },
-            { name: "Emily Sheringham", party: "Liberal Democrats", votes: 3456 }
-        ]
-    },
-    "E14001356": {
-        name: "Sevenoaks and Swanley",
-        winner: "Laura Sherwood",
-        party: "Conservative",
-        turnout: 66.2,
-        majority: 6421,
-        candidates: [
-            { name: "Laura Sherwood", party: "Conservative", votes: 21345 },
-            { name: "Alan Grace", party: "Labour", votes: 14924 },
-            { name: "Yvonne Burns", party: "Reform UK", votes: 8934 },
-            { name: "Paul Fisher", party: "Liberal Democrats", votes: 4567 }
-        ]
-    },
-    "E14001367": {
-        name: "South Holland and The Deepings",
-        winner: "John Hayes",
-        party: "Conservative",
-        turnout: 58.3,
-        majority: 3863,
-        candidates: [
-            { name: "John Hayes", party: "Conservative", votes: 16789 },
-            { name: "Rick Fisher", party: "Reform UK", votes: 12926 },
-            { name: "Tom Shaw", party: "Labour", votes: 8934 },
-            { name: "Sue Watson", party: "Liberal Democrats", votes: 2345 }
-        ]
-    },
-    "E14001268": {
-        name: "Goole and Pocklington",
-        winner: "David Davis",
-        party: "Conservative",
-        turnout: 57.9,
-        majority: 4567,
-        candidates: [
-            { name: "David Davis", party: "Conservative", votes: 17890 },
-            { name: "Craig Sherlock", party: "Reform UK", votes: 13323 },
-            { name: "Martin Ellis", party: "Labour", votes: 10456 },
-            { name: "Diana Woods", party: "Liberal Democrats", votes: 2678 }
-        ]
-    },
-    "E14001237": {
-        name: "Fareham and Waterlooville",
-        winner: "Suella Braverman",
-        party: "Conservative",
-        turnout: 62.4,
-        majority: 8765,
-        candidates: [
-            { name: "Suella Braverman", party: "Conservative", votes: 21345 },
-            { name: "Claire Watson", party: "Labour", votes: 12580 },
-            { name: "Mark Sheridan", party: "Reform UK", votes: 10234 },
-            { name: "Alix Owen", party: "Liberal Democrats", votes: 5678 }
-        ]
-    },
-    "E14001176": {
-        name: "Christchurch",
-        winner: "Chris Smith",
-        party: "Conservative",
-        turnout: 64.1,
-        majority: 5321,
-        candidates: [
-            { name: "Chris Smith", party: "Conservative", votes: 19876 },
-            { name: "Amanda Fisher", party: "Reform UK", votes: 14555 },
-            { name: "Helen Taylor", party: "Labour", votes: 6789 },
-            { name: "Phil Watson", party: "Liberal Democrats", votes: 4567 }
-        ]
-    },
-    "E14001161": {
-        name: "Castle Point",
-        winner: "Rebecca Harris",
-        party: "Conservative",
-        turnout: 57.8,
-        majority: 2156,
-        candidates: [
-            { name: "Rebecca Harris", party: "Conservative", votes: 14789 },
-            { name: "Lee Anderson", party: "Reform UK", votes: 12633 },
-            { name: "Jack Bell", party: "Labour", votes: 8234 },
-            { name: "Sarah Green", party: "Liberal Democrats", votes: 1567 }
-        ]
-    },
-
-    // === Liberal Democrat Seats ===
-    "E14001216": {
-        name: "Eastleigh",
-        winner: "Liz Maybury",
-        party: "Liberal Democrats",
-        turnout: 63.5,
-        majority: 8712,
-        candidates: [
-            { name: "Liz Maybury", party: "Liberal Democrats", votes: 22345 },
-            { name: "Paul Holmes", party: "Conservative", votes: 13633 },
-            { name: "Tom Fisher", party: "Labour", votes: 5678 },
-            { name: "Mark Ellis", party: "Reform UK", votes: 7456 }
-        ]
-    },
-    "E14001263": {
-        name: "Guildford",
-        winner: "Zöe Franklin",
-        party: "Liberal Democrats",
-        turnout: 67.3,
-        majority: 11291,
-        candidates: [
-            { name: "Zöe Franklin", party: "Liberal Democrats", votes: 26789 },
-            { name: "Angela Richardson", party: "Conservative", votes: 15498 },
-            { name: "Emma Watson", party: "Labour", votes: 5234 },
-            { name: "Kyle Fisher", party: "Green", votes: 2345 }
-        ]
-    },
-    "E14001165": {
-        name: "Cheltenham",
-        winner: "Max Sheridan",
-        party: "Liberal Democrats",
-        turnout: 68.2,
-        majority: 12840,
-        candidates: [
-            { name: "Max Sheridan", party: "Liberal Democrats", votes: 28456 },
-            { name: "Alex Sherlock", party: "Conservative", votes: 15616 },
-            { name: "Tom Grace", party: "Labour", votes: 4567 },
-            { name: "Adam Green", party: "Green", votes: 2345 }
-        ]
-    },
-    "E14001391": {
-        name: "Twickenham",
-        winner: "Munira Wilson",
-        party: "Liberal Democrats",
-        turnout: 70.1,
-        majority: 16027,
-        candidates: [
-            { name: "Munira Wilson", party: "Liberal Democrats", votes: 31456 },
-            { name: "Robert Watson", party: "Conservative", votes: 15429 },
-            { name: "Polly Fisher", party: "Labour", votes: 5678 },
-            { name: "James Ellis", party: "Green", votes: 3456 }
-        ]
-    },
-    "E14001400": {
-        name: "Westmorland and Lonsdale",
-        winner: "Tim Farron",
-        party: "Liberal Democrats",
-        turnout: 69.8,
-        majority: 17145,
-        candidates: [
-            { name: "Tim Farron", party: "Liberal Democrats", votes: 30234 },
-            { name: "Danny Mayall", party: "Conservative", votes: 13089 },
-            { name: "Jamie Watson", party: "Labour", votes: 5678 },
-            { name: "Pete Shaw", party: "Reform UK", votes: 3456 }
-        ]
-    },
-    "E14001405": {
-        name: "Winchester",
-        winner: "Danny Sherwood",
-        party: "Liberal Democrats",
-        turnout: 71.2,
-        majority: 14560,
-        candidates: [
-            { name: "Danny Sherwood", party: "Liberal Democrats", votes: 29876 },
-            { name: "Steve Brine", party: "Conservative", votes: 15316 },
-            { name: "Martin Fisher", party: "Labour", votes: 4890 },
-            { name: "Kate Ellis", party: "Green", votes: 2345 }
-        ]
-    },
-
-    // === Reform UK Seats ===
-    "E14001180": {
-        name: "Clacton",
-        winner: "Nigel Farage",
-        party: "Reform UK",
-        turnout: 58.9,
-        majority: 12539,
-        candidates: [
-            { name: "Nigel Farage", party: "Reform UK", votes: 21225 },
-            { name: "Giles Watling", party: "Conservative", votes: 8686 },
-            { name: "Jens Watson", party: "Labour", votes: 7010 },
-            { name: "Sam Green", party: "Independent", votes: 2345 }
-        ]
-    },
-    "E14001144": {
-        name: "Boston and Skegness",
-        winner: "Richard Tice",
-        party: "Reform UK",
-        turnout: 53.2,
-        majority: 8675,
-        candidates: [
-            { name: "Richard Tice", party: "Reform UK", votes: 18789 },
-            { name: "Matt Warman", party: "Conservative", votes: 10114 },
-            { name: "Tom Fisher", party: "Labour", votes: 6234 },
-            { name: "Holly Shaw", party: "Liberal Democrats", votes: 1567 }
-        ]
-    },
-    "E14001256": {
-        name: "Great Yarmouth",
-        winner: "Rupert Lowe",
-        party: "Reform UK",
-        turnout: 54.6,
-        majority: 5689,
-        candidates: [
-            { name: "Rupert Lowe", party: "Reform UK", votes: 16234 },
-            { name: "James Watson", party: "Conservative", votes: 10545 },
-            { name: "Emma Grace", party: "Labour", votes: 9876 },
-            { name: "William Ellis", party: "Green", votes: 1567 }
-        ]
-    },
-    "E14001130": {
-        name: "Ashfield",
-        winner: "Lee Anderson",
-        party: "Reform UK",
-        turnout: 55.5,
-        majority: 4867,
-        candidates: [
-            { name: "Lee Anderson", party: "Reform UK", votes: 17234 },
-            { name: "Jason Sheridan", party: "Labour", votes: 12367 },
-            { name: "Mark Holmes", party: "Conservative", votes: 7890 },
-            { name: "Phil Fisher", party: "Independent", votes: 2345 }
-        ]
-    },
-
-    // === Green Seats ===
-    "E14001145": {
-        name: "Bristol Central",
-        winner: "Carla Denyer",
-        party: "Green",
-        turnout: 65.1,
-        majority: 10527,
-        candidates: [
-            { name: "Carla Denyer", party: "Green", votes: 24539 },
-            { name: "Thangam Debbonaire", party: "Labour", votes: 14012 },
-            { name: "Claire Fisher", party: "Conservative", votes: 3456 },
-            { name: "Martin Sherlock", party: "Liberal Democrats", votes: 2891 }
-        ]
-    },
-    "E14001146": {
-        name: "Brighton Pavilion",
-        winner: "Siân Berry",
-        party: "Green",
-        turnout: 66.4,
-        majority: 13874,
-        candidates: [
-            { name: "Siân Berry", party: "Green", votes: 27890 },
-            { name: "Tom Gray", party: "Labour", votes: 14016 },
-            { name: "Wendy Watson", party: "Conservative", votes: 3789 },
-            { name: "Kelly Holmes", party: "Liberal Democrats", votes: 2345 }
-        ]
-    },
-    "E14001342": {
-        name: "North Herefordshire",
-        winner: "Ellie Sheringham",
-        party: "Green",
-        turnout: 68.9,
-        majority: 7256,
-        candidates: [
-            { name: "Ellie Sheringham", party: "Green", votes: 22456 },
-            { name: "Bill Sherlock", party: "Conservative", votes: 15200 },
-            { name: "Jane Fisher", party: "Liberal Democrats", votes: 5678 },
-            { name: "Pete Watson", party: "Labour", votes: 3456 }
-        ]
-    },
-    "E14001412": {
-        name: "Waveney Valley",
-        winner: "Adrian Sherwood",
-        party: "Green",
-        turnout: 63.7,
-        majority: 5340,
-        candidates: [
-            { name: "Adrian Sherwood", party: "Green", votes: 19876 },
-            { name: "Peter Watson", party: "Conservative", votes: 14536 },
-            { name: "Tom Fisher", party: "Labour", votes: 6789 },
-            { name: "Jess Holmes", party: "Liberal Democrats", votes: 3456 }
-        ]
-    },
-
-    // === SCOTLAND - SNP Seats ===
-    "S14000092": {
-        name: "Aberdeen North",
-        winner: "Kirsty Blackman",
-        party: "SNP",
-        turnout: 52.1,
-        majority: 2346,
-        candidates: [
-            { name: "Kirsty Blackman", party: "SNP", votes: 14234 },
-            { name: "Michael Watson", party: "Labour", votes: 11888 },
-            { name: "James Fisher", party: "Conservative", votes: 5678 },
-            { name: "Holly Shaw", party: "Reform UK", votes: 3456 }
-        ]
-    },
-    "S14000097": {
-        name: "Angus and Perthshire Glens",
-        winner: "Dave Doogan",
-        party: "SNP",
-        turnout: 60.4,
-        majority: 1890,
-        candidates: [
-            { name: "Dave Doogan", party: "SNP", votes: 16234 },
-            { name: "Anna Watson", party: "Conservative", votes: 14344 },
-            { name: "Paul Fisher", party: "Labour", votes: 5678 },
-            { name: "Tim Shaw", party: "Liberal Democrats", votes: 3456 }
-        ]
-    },
-    "S14000108": {
-        name: "Dundee Central",
-        winner: "Chris Law",
-        party: "SNP",
-        turnout: 49.8,
-        majority: 3567,
-        candidates: [
-            { name: "Chris Law", party: "SNP", votes: 13456 },
-            { name: "Martin Watson", party: "Labour", votes: 9889 },
-            { name: "Claire Fisher", party: "Conservative", votes: 3456 },
-            { name: "Amy Green", party: "Green", votes: 1890 }
-        ]
-    },
-    "S14000118": {
-        name: "Inverness, Skye and West Ross-shire",
-        winner: "Drew Hendry",
-        party: "SNP",
-        turnout: 62.3,
-        majority: 1245,
-        candidates: [
-            { name: "Drew Hendry", party: "SNP", votes: 14567 },
-            { name: "Keith Watson", party: "Liberal Democrats", votes: 13322 },
-            { name: "Mark Fisher", party: "Labour", votes: 5678 },
-            { name: "Peter Shaw", party: "Conservative", votes: 4567 }
-        ]
-    },
-    "S14000145": {
-        name: "Na h-Eileanan an Iar",
-        winner: "Torcuil Crichton",
-        party: "Labour",
-        turnout: 64.5,
-        majority: 1435,
-        candidates: [
-            { name: "Torcuil Crichton", party: "Labour", votes: 7234 },
-            { name: "Alasdair MacLeod", party: "SNP", votes: 5799 },
-            { name: "Duncan Watson", party: "Independent", votes: 2345 },
-            { name: "Cameron Fisher", party: "Conservative", votes: 1567 }
-        ]
-    },
-
-    // Scotland Labour seats
-    "S14000109": {
-        name: "East Kilbride and Strathaven",
-        winner: "Joani Reid",
-        party: "Labour",
-        turnout: 59.8,
-        majority: 10456,
-        candidates: [
-            { name: "Joani Reid", party: "Labour", votes: 21234 },
-            { name: "Lisa Watson", party: "SNP", votes: 10778 },
-            { name: "Phil Fisher", party: "Conservative", votes: 5678 },
-            { name: "Kate Shaw", party: "Reform UK", votes: 3456 }
-        ]
-    },
-    "S14000113": {
-        name: "Glasgow East",
-        winner: "John Grady",
-        party: "Labour",
-        turnout: 51.2,
-        majority: 8234,
-        candidates: [
-            { name: "John Grady", party: "Labour", votes: 17890 },
-            { name: "David Linden", party: "SNP", votes: 9656 },
-            { name: "Peter Watson", party: "Conservative", votes: 2345 },
-            { name: "Amy Fisher", party: "Reform UK", votes: 1890 }
-        ]
-    },
-    "S14000114": {
-        name: "Glasgow North",
-        winner: "Martin Rhodes",
-        party: "Labour",
-        turnout: 53.7,
-        majority: 6789,
-        candidates: [
-            { name: "Martin Rhodes", party: "Labour", votes: 16234 },
-            { name: "Patrick Grady", party: "SNP", votes: 9445 },
-            { name: "James Watson", party: "Green", votes: 3456 },
-            { name: "Claire Fisher", party: "Conservative", votes: 2345 }
-        ]
-    },
-    "S14000110": {
-        name: "Edinburgh East and Musselburgh",
-        winner: "Chris Murray",
-        party: "Labour",
-        turnout: 60.8,
-        majority: 10234,
-        candidates: [
-            { name: "Chris Murray", party: "Labour", votes: 22123 },
-            { name: "Tommy Watson", party: "SNP", votes: 11889 },
-            { name: "Rachel Fisher", party: "Conservative", votes: 5678 },
-            { name: "Oscar Shaw", party: "Green", votes: 3456 }
-        ]
-    },
-
-    // Scotland Lib Dem seat
-    "S14000107": {
-        name: "Caithness, Sutherland and Easter Ross",
-        winner: "Jamie Stone",
-        party: "Liberal Democrats",
-        turnout: 57.9,
-        majority: 4567,
-        candidates: [
-            { name: "Jamie Stone", party: "Liberal Democrats", votes: 13456 },
-            { name: "Karl Watson", party: "SNP", votes: 8889 },
-            { name: "Anne Fisher", party: "Labour", votes: 5678 },
-            { name: "David Shaw", party: "Conservative", votes: 4567 }
-        ]
-    },
-
-    // === WALES - Plaid Cymru Seats ===
-    "W07000094": {
-        name: "Dwyfor Meirionnydd",
-        winner: "Liz Saville Roberts",
-        party: "Plaid Cymru",
-        turnout: 60.1,
-        majority: 7234,
-        candidates: [
-            { name: "Liz Saville Roberts", party: "Plaid Cymru", votes: 16890 },
-            { name: "Mark Watson", party: "Conservative", votes: 9656 },
-            { name: "Katie Fisher", party: "Labour", votes: 5678 },
-            { name: "Jen Shaw", party: "Liberal Democrats", votes: 2345 }
-        ]
-    },
-    "W07000095": {
-        name: "Caerfyrddin",
-        winner: "Ann Davies",
-        party: "Plaid Cymru",
-        turnout: 63.4,
-        majority: 5234,
-        candidates: [
-            { name: "Ann Davies", party: "Plaid Cymru", votes: 18234 },
-            { name: "Simon Hart", party: "Conservative", votes: 13000 },
-            { name: "Tom Watson", party: "Labour", votes: 6789 },
-            { name: "David Fisher", party: "Reform UK", votes: 4567 }
-        ]
-    },
-    "W07000096": {
-        name: "Ceredigion Preseli",
-        winner: "Ben Lake",
-        party: "Plaid Cymru",
-        turnout: 64.8,
-        majority: 7890,
-        candidates: [
-            { name: "Ben Lake", party: "Plaid Cymru", votes: 19876 },
-            { name: "Mark Cole", party: "Conservative", votes: 11986 },
-            { name: "Clare Watson", party: "Liberal Democrats", votes: 5678 },
-            { name: "Tom Fisher", party: "Labour", votes: 4567 }
-        ]
-    },
-    "W07000097": {
-        name: "Bangor Aberconwy",
-        winner: "Virginia Sherwood",
-        party: "Plaid Cymru",
-        turnout: 58.2,
-        majority: 3456,
-        candidates: [
-            { name: "Virginia Sherwood", party: "Plaid Cymru", votes: 14567 },
-            { name: "Robin Millar", party: "Conservative", votes: 11111 },
-            { name: "Dawn Watson", party: "Labour", votes: 6789 },
-            { name: "Steve Fisher", party: "Reform UK", votes: 3456 }
-        ]
-    },
-
-    // Wales Labour seats
-    "W07000084": {
-        name: "Cardiff South and Penarth",
-        winner: "Stephen Doughty",
-        party: "Labour",
-        turnout: 62.3,
-        majority: 14567,
-        candidates: [
-            { name: "Stephen Doughty", party: "Labour", votes: 24567 },
-            { name: "Josh Watson", party: "Conservative", votes: 10000 },
-            { name: "Tiffany Fisher", party: "Plaid Cymru", votes: 4567 },
-            { name: "Owen Shaw", party: "Green", votes: 2345 }
-        ]
-    },
-    "W07000085": {
-        name: "Swansea West",
-        winner: "Torsten Bell",
-        party: "Labour",
-        turnout: 55.6,
-        majority: 8234,
-        candidates: [
-            { name: "Torsten Bell", party: "Labour", votes: 17890 },
-            { name: "Craig Watson", party: "Conservative", votes: 9656 },
-            { name: "Rhian Fisher", party: "Plaid Cymru", votes: 3456 },
-            { name: "Lisa Shaw", party: "Reform UK", votes: 2345 }
-        ]
-    },
-    "W07000086": {
-        name: "Newport East",
-        winner: "Jessica Morden",
-        party: "Labour",
-        turnout: 54.1,
-        majority: 11890,
-        candidates: [
-            { name: "Jessica Morden", party: "Labour", votes: 20234 },
-            { name: "Mark Watson", party: "Conservative", votes: 8344 },
-            { name: "Kim Fisher", party: "Reform UK", votes: 5678 },
-            { name: "Pete Shaw", party: "Plaid Cymru", votes: 2345 }
-        ]
-    },
-    "W07000087": {
-        name: "Wrexham",
-        winner: "Andrew Sheridan",
-        party: "Labour",
-        turnout: 56.7,
-        majority: 5678,
-        candidates: [
-            { name: "Andrew Sheridan", party: "Labour", votes: 16890 },
-            { name: "Sarah Atherton", party: "Conservative", votes: 11212 },
-            { name: "Paul Watson", party: "Reform UK", votes: 6789 },
-            { name: "Rhod Fisher", party: "Plaid Cymru", votes: 2345 }
-        ]
-    },
-
-    // === NORTHERN IRELAND ===
-    "N06000001": {
-        name: "Belfast North",
-        winner: "John Finucane",
-        party: "Sinn Féin",
-        turnout: 55.3,
-        majority: 6234,
-        candidates: [
-            { name: "John Finucane", party: "Sinn Féin", votes: 17234 },
-            { name: "Paul Watson", party: "DUP", votes: 11000 },
-            { name: "Nuala Fisher", party: "Alliance", votes: 5678 },
-            { name: "Mark Shaw", party: "SDLP", votes: 3456 }
-        ]
-    },
-    "N06000002": {
-        name: "Belfast South and Mid Down",
-        winner: "Claire Hanna",
-        party: "SDLP",
-        turnout: 60.1,
-        majority: 8234,
-        candidates: [
-            { name: "Claire Hanna", party: "SDLP", votes: 21456 },
-            { name: "Kate Watson", party: "Alliance", votes: 13222 },
-            { name: "Emma Fisher", party: "DUP", votes: 5678 },
-            { name: "Philip Shaw", party: "Sinn Féin", votes: 3456 }
-        ]
-    },
-    "N06000003": {
-        name: "Belfast East",
-        winner: "Gavin Robinson",
-        party: "DUP",
-        turnout: 57.8,
-        majority: 5678,
-        candidates: [
-            { name: "Gavin Robinson", party: "DUP", votes: 18234 },
-            { name: "Naomi Long", party: "Alliance", votes: 12556 },
-            { name: "Peter Watson", party: "UUP", votes: 4567 },
-            { name: "James Fisher", party: "Sinn Féin", votes: 2345 }
-        ]
-    },
-    "N06000004": {
-        name: "Belfast West",
-        winner: "Paul Maskey",
-        party: "Sinn Féin",
-        turnout: 53.4,
-        majority: 12345,
-        candidates: [
-            { name: "Paul Maskey", party: "Sinn Féin", votes: 22345 },
-            { name: "Frank Watson", party: "SDLP", votes: 10000 },
-            { name: "Anne Fisher", party: "DUP", votes: 3456 },
-            { name: "Karen Shaw", party: "Alliance", votes: 2345 }
-        ]
-    },
-    "N06000005": {
-        name: "East Antrim",
-        winner: "Sammy Wilson",
-        party: "DUP",
-        turnout: 54.6,
-        majority: 4567,
-        candidates: [
-            { name: "Sammy Wilson", party: "DUP", votes: 15678 },
-            { name: "Alan Watson", party: "Alliance", votes: 11111 },
-            { name: "Mark Fisher", party: "UUP", votes: 6789 },
-            { name: "Peter Shaw", party: "TUV", votes: 3456 }
-        ]
-    },
-    "N06000006": {
-        name: "East Londonderry",
-        winner: "Gregory Campbell",
-        party: "DUP",
-        turnout: 55.9,
-        majority: 3456,
-        candidates: [
-            { name: "Gregory Campbell", party: "DUP", votes: 14567 },
-            { name: "Ciara Watson", party: "Sinn Féin", votes: 11111 },
-            { name: "Katie Fisher", party: "UUP", votes: 5678 },
-            { name: "Thomas Shaw", party: "SDLP", votes: 4567 }
-        ]
-    },
-    "N06000007": {
-        name: "Fermanagh and South Tyrone",
-        winner: "Pat Cullen",
-        party: "Sinn Féin",
-        turnout: 64.7,
-        majority: 5890,
-        candidates: [
-            { name: "Pat Cullen", party: "Sinn Féin", votes: 21345 },
-            { name: "Diana Armstrong", party: "DUP", votes: 15455 },
-            { name: "Mark Watson", party: "UUP", votes: 5678 },
-            { name: "Claire Fisher", party: "SDLP", votes: 3456 }
-        ]
-    },
-    "N06000008": {
-        name: "Foyle",
-        winner: "Colum Eastwood",
-        party: "SDLP",
-        turnout: 56.3,
-        majority: 4567,
-        candidates: [
-            { name: "Colum Eastwood", party: "SDLP", votes: 16234 },
-            { name: "Padraig Watson", party: "Sinn Féin", votes: 11667 },
-            { name: "Mark Fisher", party: "DUP", votes: 4567 },
-            { name: "Anne Shaw", party: "Alliance", votes: 3456 }
-        ]
-    },
-    "N06000009": {
-        name: "Lagan Valley",
-        winner: "Sorcha Watson",
-        party: "Alliance",
-        turnout: 58.2,
-        majority: 2345,
-        candidates: [
-            { name: "Sorcha Watson", party: "Alliance", votes: 15678 },
-            { name: "Gary Fisher", party: "DUP", votes: 13333 },
-            { name: "Robbie Shaw", party: "UUP", votes: 6789 },
-            { name: "Mark Watson", party: "TUV", votes: 3456 }
-        ]
-    },
-    "N06000010": {
-        name: "Mid Ulster",
-        winner: "Francie Molloy",
-        party: "Sinn Féin",
-        turnout: 60.8,
-        majority: 7234,
-        candidates: [
-            { name: "Francie Molloy", party: "Sinn Féin", votes: 19876 },
-            { name: "Keith Watson", party: "DUP", votes: 12642 },
-            { name: "David Fisher", party: "UUP", votes: 4567 },
-            { name: "Malachy Shaw", party: "SDLP", votes: 3456 }
-        ]
-    },
-    "N06000011": {
-        name: "Newry and Armagh",
-        winner: "Mickey Brady",
-        party: "Sinn Féin",
-        turnout: 58.4,
-        majority: 8234,
-        candidates: [
-            { name: "Mickey Brady", party: "Sinn Féin", votes: 20234 },
-            { name: "Mark Watson", party: "SDLP", votes: 12000 },
-            { name: "William Fisher", party: "DUP", votes: 5678 },
-            { name: "Peter Shaw", party: "Alliance", votes: 3456 }
-        ]
-    },
-    "N06000012": {
-        name: "North Antrim",
-        winner: "Jim Allister",
-        party: "TUV",
-        turnout: 57.6,
-        majority: 3234,
-        candidates: [
-            { name: "Jim Allister", party: "TUV", votes: 15234 },
-            { name: "Philip Watson", party: "DUP", votes: 12000 },
-            { name: "Connor Fisher", party: "Sinn Féin", votes: 5678 },
-            { name: "Mark Shaw", party: "UUP", votes: 4567 }
-        ]
-    },
-    "N06000013": {
-        name: "North Down",
-        winner: "Alex Sheridan",
-        party: "UUP",
-        turnout: 56.8,
-        majority: 2345,
-        candidates: [
-            { name: "Alex Sheridan", party: "UUP", votes: 14567 },
-            { name: "Stephen Watson", party: "DUP", votes: 12222 },
-            { name: "Mark Fisher", party: "Alliance", votes: 8901 },
-            { name: "David Shaw", party: "Independent", votes: 3456 }
-        ]
-    },
-    "N06000014": {
-        name: "South Antrim",
-        winner: "Robin Swann",
-        party: "DUP",
-        turnout: 55.4,
-        majority: 3456,
-        candidates: [
-            { name: "Robin Swann", party: "DUP", votes: 15234 },
-            { name: "Danny Watson", party: "Alliance", votes: 11778 },
-            { name: "Declan Fisher", party: "Sinn Féin", votes: 5678 },
-            { name: "Mark Shaw", party: "UUP", votes: 4567 }
-        ]
-    },
-    "N06000015": {
-        name: "South Down",
-        winner: "Chris Hazzard",
-        party: "Sinn Féin",
-        turnout: 59.1,
-        majority: 5890,
-        candidates: [
-            { name: "Chris Hazzard", party: "Sinn Féin", votes: 19234 },
-            { name: "Margaret Watson", party: "SDLP", votes: 13344 },
-            { name: "Jim Fisher", party: "DUP", votes: 5678 },
-            { name: "Katie Shaw", party: "Alliance", votes: 3456 }
-        ]
-    },
-    "N06000016": {
-        name: "Strangford",
-        winner: "Jim Shannon",
-        party: "DUP",
-        turnout: 54.2,
-        majority: 5678,
-        candidates: [
-            { name: "Jim Shannon", party: "DUP", votes: 17890 },
-            { name: "Michael Watson", party: "Alliance", votes: 12212 },
-            { name: "Peter Fisher", party: "UUP", votes: 5678 },
-            { name: "Ciara Shaw", party: "Sinn Féin", votes: 2345 }
-        ]
-    },
-    "N06000017": {
-        name: "Upper Bann",
-        winner: "Carla Lockhart",
-        party: "DUP",
-        turnout: 57.3,
-        majority: 4567,
-        candidates: [
-            { name: "Carla Lockhart", party: "DUP", votes: 16789 },
-            { name: "Dolores Watson", party: "Sinn Féin", votes: 12222 },
-            { name: "Mark Fisher", party: "UUP", votes: 5678 },
-            { name: "Chris Shaw", party: "Alliance", votes: 4567 }
-        ]
-    },
-    "N06000018": {
-        name: "West Tyrone",
-        winner: "Órfhlaith Begley",
-        party: "Sinn Féin",
-        turnout: 62.1,
-        majority: 8901,
-        candidates: [
-            { name: "Órfhlaith Begley", party: "Sinn Féin", votes: 21345 },
-            { name: "Tom Watson", party: "SDLP", votes: 12444 },
-            { name: "Mark Fisher", party: "DUP", votes: 5678 },
-            { name: "James Shaw", party: "UUP", votes: 3456 }
-        ]
-    },
-
-    // === MORE ENGLAND Labour seats ===
-    "E14001395": {
-        name: "Vauxhall and Camberwell Green",
-        winner: "Florence Eshalomi",
-        party: "Labour",
-        turnout: 56.7,
-        majority: 19234,
-        candidates: [
-            { name: "Florence Eshalomi", party: "Labour", votes: 27890 },
-            { name: "Karen Watson", party: "Green", votes: 8656 },
-            { name: "Mark Fisher", party: "Conservative", votes: 4567 },
-            { name: "Lou Shaw", party: "Liberal Democrats", votes: 3456 }
-        ]
-    },
-    "E14001378": {
-        name: "Stratford and Bow",
-        winner: "Uma Sherwood",
-        party: "Labour",
-        turnout: 52.3,
-        majority: 14567,
-        candidates: [
-            { name: "Uma Sherwood", party: "Labour", votes: 23456 },
-            { name: "Pete Watson", party: "Green", votes: 8889 },
-            { name: "Mark Fisher", party: "Conservative", votes: 3456 },
-            { name: "Tim Shaw", party: "Liberal Democrats", votes: 2345 }
-        ]
-    },
-    "E14001346": {
-        name: "Peckham",
-        winner: "Harriet Harman",
-        party: "Labour",
-        turnout: 53.8,
-        majority: 17890,
-        candidates: [
-            { name: "Harriet Harman", party: "Labour", votes: 26234 },
-            { name: "Anna Watson", party: "Green", votes: 8344 },
-            { name: "Mark Fisher", party: "Conservative", votes: 3456 },
-            { name: "Jim Shaw", party: "Liberal Democrats", votes: 2345 }
-        ]
-    },
-    "E14001196": {
-        name: "Doncaster Central",
-        winner: "Sally Jameson",
-        party: "Labour",
-        turnout: 52.1,
-        majority: 8901,
-        candidates: [
-            { name: "Sally Jameson", party: "Labour", votes: 18234 },
-            { name: "Mark Watson", party: "Reform UK", votes: 9333 },
-            { name: "Nick Fisher", party: "Conservative", votes: 5678 },
-            { name: "Kate Shaw", party: "Green", votes: 1890 }
-        ]
-    },
-    "E14001282": {
-        name: "Hendon",
-        winner: "David Pinto-Duschinsky",
-        party: "Labour",
-        turnout: 61.3,
-        majority: 7890,
-        candidates: [
-            { name: "David Pinto-Duschinsky", party: "Labour", votes: 22456 },
-            { name: "Matthew Watson", party: "Conservative", votes: 14566 },
-            { name: "Amy Fisher", party: "Reform UK", votes: 4567 },
-            { name: "Kate Shaw", party: "Liberal Democrats", votes: 3456 }
-        ]
-    },
-    "E14001200": {
-        name: "Dudley",
-        winner: "Sonia Kumar",
-        party: "Labour",
-        turnout: 54.8,
-        majority: 3456,
-        candidates: [
-            { name: "Sonia Kumar", party: "Labour", votes: 15678 },
-            { name: "Marco Watson", party: "Conservative", votes: 12222 },
-            { name: "Rick Fisher", party: "Reform UK", votes: 9012 },
-            { name: "Pete Shaw", party: "Independent", votes: 1890 }
-        ]
-    },
-    "E14001345": {
-        name: "Oxford East",
-        winner: "Anneliese Dodds",
-        party: "Labour",
-        turnout: 62.4,
-        majority: 13456,
-        candidates: [
-            { name: "Anneliese Dodds", party: "Labour", votes: 24567 },
-            { name: "Mark Watson", party: "Green", votes: 11111 },
-            { name: "Chris Fisher", party: "Conservative", votes: 5678 },
-            { name: "Kate Shaw", party: "Liberal Democrats", votes: 4567 }
-        ]
-    },
-    "E14001154": {
-        name: "Cambridge",
-        winner: "Daniel Zeichner",
-        party: "Labour",
-        turnout: 64.7,
-        majority: 10234,
-        candidates: [
-            { name: "Daniel Zeichner", party: "Labour", votes: 25678 },
-            { name: "Pippa Watson", party: "Green", votes: 15444 },
-            { name: "Mark Fisher", party: "Liberal Democrats", votes: 5678 },
-            { name: "Tim Shaw", party: "Conservative", votes: 4567 }
-        ]
-    },
-    "E14001408": {
-        name: "Wolverhampton West",
-        winner: "Warinder Juss",
-        party: "Labour",
-        turnout: 51.2,
-        majority: 6234,
-        candidates: [
-            { name: "Warinder Juss", party: "Labour", votes: 16789 },
-            { name: "Jane Watson", party: "Conservative", votes: 10555 },
-            { name: "Dave Fisher", party: "Reform UK", votes: 7890 },
-            { name: "Tom Shaw", party: "Independent", votes: 1890 }
-        ]
-    },
-    "E14001370": {
-        name: "Southgate and Wood Green",
-        winner: "Bambos Sherwood",
-        party: "Labour",
-        turnout: 63.1,
-        majority: 19234,
-        candidates: [
-            { name: "Bambos Sherwood", party: "Labour", votes: 28901 },
-            { name: "Mike Watson", party: "Conservative", votes: 9667 },
-            { name: "Sian Fisher", party: "Green", votes: 4567 },
-            { name: "Mark Shaw", party: "Liberal Democrats", votes: 3456 }
-        ]
-    },
-    "E14001207": {
-        name: "Ealing Central and Acton",
-        winner: "Rupa Huq",
-        party: "Labour",
-        turnout: 64.5,
-        majority: 15678,
-        candidates: [
-            { name: "Rupa Huq", party: "Labour", votes: 27890 },
-            { name: "Steve Watson", party: "Conservative", votes: 12212 },
-            { name: "Clare Fisher", party: "Green", votes: 4567 },
-            { name: "Pete Shaw", party: "Liberal Democrats", votes: 3456 }
-        ]
-    },
-
-    // === The Speaker ===
-    "E14001178": {
-        name: "Chorley",
-        winner: "Lindsay Hoyle",
-        party: "Speaker",
-        turnout: 55.3,
-        majority: 15234,
-        candidates: [
-            { name: "Lindsay Hoyle", party: "Speaker", votes: 22345 },
-            { name: "Mark Watson", party: "Reform UK", votes: 7111 },
-            { name: "Tom Fisher", party: "Conservative", votes: 5678 },
-            { name: "Kate Shaw", party: "Green", votes: 2345 }
-        ]
-    }
-=======
 const RESULTS = {
   "W07000081": {
     "name": "Aberafan Maesteg",
@@ -1196,22 +9,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2903,
-        "swing": "+8.1"
+        "swing": "-14.5"
       },
       {
         "party": "Lab",
         "votes": 17838,
-        "swing": "+49.9"
+        "swing": "-3.0"
       },
       {
         "party": "LD",
         "votes": 916,
-        "swing": "+2.6"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
         "votes": 7484,
-        "swing": "+20.9"
+        "swing": "+12.4"
       },
       {
         "party": "Green",
@@ -1221,12 +34,12 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 4719,
-        "swing": "+13.2"
+        "swing": "+4.2"
       },
       {
         "party": "All other candidates",
         "votes": 801,
-        "swing": "+2.2"
+        "swing": "+0.6"
       }
     ]
   },
@@ -1240,22 +53,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5881,
-        "swing": "+14.0"
+        "swing": "-10.6"
       },
       {
         "party": "Lab",
         "votes": 12773,
-        "swing": "+30.3"
+        "swing": "+18.4"
       },
       {
         "party": "LD",
         "votes": 2583,
-        "swing": "+6.1"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 3781,
-        "swing": "+9.0"
+        "swing": "+7.4"
       },
       {
         "party": "Green",
@@ -1284,22 +97,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11300,
-        "swing": "+24.4"
+        "swing": "-10.0"
       },
       {
         "party": "Lab",
         "votes": 11455,
-        "swing": "+24.7"
+        "swing": "+15.9"
       },
       {
         "party": "LD",
         "votes": 2921,
-        "swing": "+6.3"
+        "swing": "-4.4"
       },
       {
         "party": "RUK",
         "votes": 3199,
-        "swing": "+6.9"
+        "swing": "+6.5"
       },
       {
         "party": "Green",
@@ -1328,17 +141,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12513,
-        "swing": "+32.8"
+        "swing": "-15.6"
       },
       {
         "party": "Lab",
         "votes": 3876,
-        "swing": "+10.1"
+        "swing": "+6.0"
       },
       {
         "party": "LD",
         "votes": 2782,
-        "swing": "+7.3"
+        "swing": "+2.9"
       },
       {
         "party": "RUK",
@@ -1362,17 +175,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1696,
-        "swing": "+4.6"
+        "swing": "-12.6"
       },
       {
         "party": "Lab",
         "votes": 18871,
-        "swing": "+51.5"
+        "swing": "+18.4"
       },
       {
         "party": "LD",
         "votes": 725,
-        "swing": "+2.0"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
@@ -1401,17 +214,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14081,
-        "swing": "+29.0"
+        "swing": "-27.8"
       },
       {
         "party": "Lab",
         "votes": 19764,
-        "swing": "+40.7"
+        "swing": "+18.6"
       },
       {
         "party": "LD",
         "votes": 4052,
-        "swing": "+8.3"
+        "swing": "-9.1"
       },
       {
         "party": "RUK",
@@ -1440,22 +253,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15901,
-        "swing": "+38.9"
+        "swing": "-30.7"
       },
       {
         "party": "Lab",
         "votes": 11607,
-        "swing": "+28.4"
+        "swing": "+6.9"
       },
       {
         "party": "LD",
         "votes": 1755,
-        "swing": "+4.3"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
         "votes": 9903,
-        "swing": "+24.2"
+        "swing": "+23.5"
       },
       {
         "party": "Green",
@@ -1474,22 +287,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3127,
-        "swing": "+7.6"
+        "swing": "-17.2"
       },
       {
         "party": "Lab",
         "votes": 18039,
-        "swing": "+43.8"
+        "swing": "+29.3"
       },
       {
         "party": "LD",
         "votes": 1151,
-        "swing": "+2.8"
+        "swing": "-2.5"
       },
       {
         "party": "RUK",
         "votes": 3804,
-        "swing": "+9.2"
+        "swing": "+8.8"
       },
       {
         "party": "Green",
@@ -1504,7 +317,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1742,
-        "swing": "+4.2"
+        "swing": "+3.4"
       }
     ]
   },
@@ -1518,17 +331,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16624,
-        "swing": "+32.3"
+        "swing": "-15.7"
       },
       {
         "party": "Lab",
         "votes": 20798,
-        "swing": "+40.4"
+        "swing": "+3.6"
       },
       {
         "party": "LD",
         "votes": 4727,
-        "swing": "+9.2"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
@@ -1543,7 +356,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 643,
-        "swing": "+1.2"
+        "swing": "0.0"
       }
     ]
   },
@@ -1557,22 +370,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7892,
-        "swing": "+18.2"
+        "swing": "-23.8"
       },
       {
         "party": "Lab",
         "votes": 18395,
-        "swing": "+42.4"
+        "swing": "-0.3"
       },
       {
         "party": "LD",
         "votes": 2065,
-        "swing": "+4.8"
+        "swing": "-1.2"
       },
       {
         "party": "RUK",
         "votes": 9601,
-        "swing": "+22.1"
+        "swing": "+16.1"
       },
       {
         "party": "Green",
@@ -1582,7 +395,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 1938,
-        "swing": "+4.5"
+        "swing": "+1.1"
       },
       {
         "party": "All other candidates",
@@ -1601,17 +414,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10725,
-        "swing": "+25.2"
+        "swing": "-38.6"
       },
       {
         "party": "Lab",
         "votes": 15746,
-        "swing": "+37.0"
+        "swing": "+10.2"
       },
       {
         "party": "LD",
         "votes": 1590,
-        "swing": "+3.7"
+        "swing": "-2.6"
       },
       {
         "party": "RUK",
@@ -1635,22 +448,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14272,
-        "swing": "+30.1"
+        "swing": "-9.7"
       },
       {
         "party": "Lab",
         "votes": 6799,
-        "swing": "+14.4"
+        "swing": "+10.1"
       },
       {
         "party": "LD",
         "votes": 3156,
-        "swing": "+6.7"
+        "swing": "+1.7"
       },
       {
         "party": "RUK",
         "votes": 3246,
-        "swing": "+6.9"
+        "swing": "+6.3"
       },
       {
         "party": "SNP",
@@ -1674,17 +487,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6841,
-        "swing": "+15.5"
+        "swing": "-14.8"
       },
       {
         "party": "Lab",
         "votes": 14722,
-        "swing": "+33.4"
+        "swing": "+23.2"
       },
       {
         "party": "LD",
         "votes": 2249,
-        "swing": "+5.1"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
@@ -1699,7 +512,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 924,
-        "swing": "+2.1"
+        "swing": "+1.5"
       }
     ]
   },
@@ -1713,22 +526,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9350,
-        "swing": "+20.8"
+        "swing": "-13.7"
       },
       {
         "party": "Lab",
         "votes": 8585,
-        "swing": "+19.1"
+        "swing": "+12.1"
       },
       {
         "party": "LD",
         "votes": 7359,
-        "swing": "+16.4"
+        "swing": "+2.3"
       },
       {
         "party": "RUK",
         "votes": 3045,
-        "swing": "+6.8"
+        "swing": "+6.7"
       },
       {
         "party": "SNP",
@@ -1752,17 +565,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 22001,
-        "swing": "+40.2"
+        "swing": "-20.2"
       },
       {
         "party": "Lab",
         "votes": 9782,
-        "swing": "+17.9"
+        "swing": "+2.2"
       },
       {
         "party": "LD",
         "votes": 9867,
-        "swing": "+18.0"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
@@ -1777,7 +590,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 184,
-        "swing": "+0.3"
+        "swing": "-0.6"
       }
     ]
   },
@@ -1791,22 +604,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3271,
-        "swing": "+8.2"
+        "swing": "-31.0"
       },
       {
         "party": "Lab",
         "votes": 11554,
-        "swing": "+29.0"
+        "swing": "+3.4"
       },
       {
         "party": "LD",
         "votes": 619,
-        "swing": "+1.6"
+        "swing": "-0.5"
       },
       {
         "party": "RUK",
         "votes": 17062,
-        "swing": "+42.8"
+        "swing": "+37.8"
       },
       {
         "party": "Green",
@@ -1816,7 +629,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 6276,
-        "swing": "+15.7"
+        "swing": "-11.1"
       }
     ]
   },
@@ -1830,17 +643,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13483,
-        "swing": "+28.7"
+        "swing": "-30.5"
       },
       {
         "party": "Lab",
         "votes": 15262,
-        "swing": "+32.5"
+        "swing": "+8.7"
       },
       {
         "party": "LD",
         "votes": 2445,
-        "swing": "+5.2"
+        "swing": "-5.4"
       },
       {
         "party": "RUK",
@@ -1855,7 +668,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1289,
-        "swing": "+2.7"
+        "swing": "+1.0"
       }
     ]
   },
@@ -1869,22 +682,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4375,
-        "swing": "+12.3"
+        "swing": "-23.9"
       },
       {
         "party": "Lab",
         "votes": 15575,
-        "swing": "+43.9"
+        "swing": "-3.6"
       },
       {
         "party": "LD",
         "votes": 1411,
-        "swing": "+4.0"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
         "votes": 8784,
-        "swing": "+24.8"
+        "swing": "+16.3"
       },
       {
         "party": "Green",
@@ -1908,22 +721,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14451,
-        "swing": "+28.9"
+        "swing": "-22.8"
       },
       {
         "party": "Lab",
         "votes": 15081,
-        "swing": "+30.2"
+        "swing": "+7.3"
       },
       {
         "party": "LD",
         "votes": 10440,
-        "swing": "+20.9"
+        "swing": "-1.0"
       },
       {
         "party": "RUK",
         "votes": 6746,
-        "swing": "+13.5"
+        "swing": "+13.0"
       },
       {
         "party": "Green",
@@ -1947,17 +760,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9247,
-        "swing": "+22.6"
+        "swing": "-15.9"
       },
       {
         "party": "Lab",
         "votes": 14930,
-        "swing": "+36.5"
+        "swing": "+23.1"
       },
       {
         "party": "LD",
         "votes": 1081,
-        "swing": "+2.6"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
@@ -1991,17 +804,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15212,
-        "swing": "+31.6"
+        "swing": "-20.4"
       },
       {
         "party": "Lab",
         "votes": 18468,
-        "swing": "+38.3"
+        "swing": "+13.5"
       },
       {
         "party": "LD",
         "votes": 4352,
-        "swing": "+9.0"
+        "swing": "-11.3"
       },
       {
         "party": "RUK",
@@ -2030,22 +843,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9036,
-        "swing": "+21.7"
+        "swing": "-18.3"
       },
       {
         "party": "Lab",
         "votes": 14008,
-        "swing": "+33.6"
+        "swing": "-4.8"
       },
       {
         "party": "LD",
         "votes": 1524,
-        "swing": "+3.7"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
         "votes": 6091,
-        "swing": "+14.6"
+        "swing": "+13.7"
       },
       {
         "party": "Green",
@@ -2055,7 +868,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 9112,
-        "swing": "+21.9"
+        "swing": "+5.7"
       },
       {
         "party": "All other candidates",
@@ -2074,22 +887,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4294,
-        "swing": "+11.8"
+        "swing": "-15.1"
       },
       {
         "party": "Lab",
         "votes": 16227,
-        "swing": "+44.5"
+        "swing": "-16.5"
       },
       {
         "party": "LD",
         "votes": 1015,
-        "swing": "+2.8"
+        "swing": "-0.5"
       },
       {
         "party": "RUK",
         "votes": 5173,
-        "swing": "+14.2"
+        "swing": "+7.1"
       },
       {
         "party": "Green",
@@ -2113,22 +926,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3083,
-        "swing": "+8.4"
+        "swing": "-15.6"
       },
       {
         "party": "Lab",
         "votes": 18610,
-        "swing": "+50.4"
+        "swing": "+11.9"
       },
       {
         "party": "LD",
         "votes": 1336,
-        "swing": "+3.6"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
         "votes": 10799,
-        "swing": "+29.3"
+        "swing": "-0.3"
       },
       {
         "party": "Green",
@@ -2138,7 +951,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1261,
-        "swing": "+3.4"
+        "swing": "+1.4"
       }
     ]
   },
@@ -2152,22 +965,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3247,
-        "swing": "+9.3"
+        "swing": "-13.4"
       },
       {
         "party": "Lab",
         "votes": 16399,
-        "swing": "+46.7"
+        "swing": "+4.9"
       },
       {
         "party": "LD",
         "votes": 1172,
-        "swing": "+3.3"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
         "votes": 11651,
-        "swing": "+33.2"
+        "swing": "+4.0"
       },
       {
         "party": "Green",
@@ -2177,7 +990,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1092,
-        "swing": "+3.1"
+        "swing": "+2.4"
       }
     ]
   },
@@ -2191,22 +1004,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13213,
-        "swing": "+31.3"
+        "swing": "-21.8"
       },
       {
         "party": "Lab",
         "votes": 18537,
-        "swing": "+43.9"
+        "swing": "+5.7"
       },
       {
         "party": "LD",
         "votes": 1680,
-        "swing": "+4.0"
+        "swing": "-0.5"
       },
       {
         "party": "RUK",
         "votes": 7035,
-        "swing": "+16.7"
+        "swing": "+14.0"
       },
       {
         "party": "Green",
@@ -2230,17 +1043,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12905,
-        "swing": "+30.6"
+        "swing": "-35.2"
       },
       {
         "party": "Lab",
         "votes": 12885,
-        "swing": "+30.6"
+        "swing": "+9.0"
       },
       {
         "party": "LD",
         "votes": 2292,
-        "swing": "+5.4"
+        "swing": "-3.0"
       },
       {
         "party": "RUK",
@@ -2255,7 +1068,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 565,
-        "swing": "+1.3"
+        "swing": "+0.2"
       }
     ]
   },
@@ -2269,17 +1082,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14438,
-        "swing": "+29.5"
+        "swing": "-23.2"
       },
       {
         "party": "Lab",
         "votes": 20922,
-        "swing": "+42.7"
+        "swing": "+14.1"
       },
       {
         "party": "LD",
         "votes": 3176,
-        "swing": "+6.5"
+        "swing": "-6.8"
       },
       {
         "party": "RUK",
@@ -2294,7 +1107,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 571,
-        "swing": "+1.2"
+        "swing": "-0.3"
       }
     ]
   },
@@ -2308,22 +1121,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12708,
-        "swing": "+28.3"
+        "swing": "-26.1"
       },
       {
         "party": "Lab",
         "votes": 18476,
-        "swing": "+41.2"
+        "swing": "+13.2"
       },
       {
         "party": "LD",
         "votes": 1996,
-        "swing": "+4.4"
+        "swing": "-2.3"
       },
       {
         "party": "RUK",
         "votes": 9751,
-        "swing": "+21.7"
+        "swing": "+10.9"
       },
       {
         "party": "Green",
@@ -2342,22 +1155,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7659,
-        "swing": "+15.9"
+        "swing": "-16.2"
       },
       {
         "party": "Lab",
         "votes": 8665,
-        "swing": "+18.0"
+        "swing": "+5.5"
       },
       {
         "party": "LD",
         "votes": 19883,
-        "swing": "+41.3"
+        "swing": "-12.1"
       },
       {
         "party": "RUK",
         "votes": 3798,
-        "swing": "+7.9"
+        "swing": "+6.8"
       },
       {
         "party": "Green",
@@ -2367,7 +1180,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2173,
-        "swing": "+4.5"
+        "swing": "+3.9"
       }
     ]
   },
@@ -2381,22 +1194,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3144,
-        "swing": "+7.5"
+        "swing": "-17.2"
       },
       {
         "party": "Lab",
         "votes": 19774,
-        "swing": "+47.0"
+        "swing": "+28.2"
       },
       {
         "party": "LD",
         "votes": 2171,
-        "swing": "+5.2"
+        "swing": "-3.1"
       },
       {
         "party": "RUK",
         "votes": 3524,
-        "swing": "+8.4"
+        "swing": "+6.5"
       },
       {
         "party": "Green",
@@ -2411,7 +1224,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 611,
-        "swing": "+1.5"
+        "swing": "+0.2"
       }
     ]
   },
@@ -2425,22 +1238,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10944,
-        "swing": "+23.2"
+        "swing": "-12.1"
       },
       {
         "party": "Lab",
         "votes": 22983,
-        "swing": "+48.8"
+        "swing": "+2.5"
       },
       {
         "party": "LD",
         "votes": 4826,
-        "swing": "+10.3"
+        "swing": "-4.9"
       },
       {
         "party": "RUK",
         "votes": 2825,
-        "swing": "+6.0"
+        "swing": "+5.4"
       },
       {
         "party": "Green",
@@ -2464,12 +1277,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18494,
-        "swing": "+38.8"
+        "swing": "-16.7"
       },
       {
         "party": "Lab",
         "votes": 7216,
-        "swing": "+15.1"
+        "swing": "+5.2"
       },
       {
         "party": "LD",
@@ -2489,7 +1302,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 945,
-        "swing": "+2.0"
+        "swing": "-28.9"
       }
     ]
   },
@@ -2503,22 +1316,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12848,
-        "swing": "+24.6"
+        "swing": "-14.4"
       },
       {
         "party": "Lab",
         "votes": 25753,
-        "swing": "+49.3"
+        "swing": "+9.2"
       },
       {
         "party": "LD",
         "votes": 4436,
-        "swing": "+8.5"
+        "swing": "-7.6"
       },
       {
         "party": "RUK",
         "votes": 5355,
-        "swing": "+10.3"
+        "swing": "+9.5"
       },
       {
         "party": "Green",
@@ -2537,22 +1350,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8912,
-        "swing": "+21.9"
+        "swing": "-20.0"
       },
       {
         "party": "Lab",
         "votes": 18342,
-        "swing": "+45.1"
+        "swing": "+0.8"
       },
       {
         "party": "LD",
         "votes": 4025,
-        "swing": "+9.9"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
         "votes": 4548,
-        "swing": "+11.2"
+        "swing": "+9.5"
       },
       {
         "party": "Green",
@@ -2586,17 +1399,17 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 619,
-        "swing": "+1.4"
+        "swing": "-2.8"
       },
       {
         "party": "UUP",
         "votes": 1818,
-        "swing": "+4.3"
+        "swing": "-1.5"
       },
       {
         "party": "APNI",
         "votes": 17218,
-        "swing": "+40.3"
+        "swing": "-1.8"
       },
       {
         "party": "All other candidates",
@@ -2630,17 +1443,17 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 1413,
-        "swing": "+3.5"
+        "swing": "+3.0"
       },
       {
         "party": "APNI",
         "votes": 4274,
-        "swing": "+10.6"
+        "swing": "0.0"
       },
       {
         "party": "All other candidates",
         "votes": 3823,
-        "swing": "+9.5"
+        "swing": "+9.3"
       }
     ]
   },
@@ -2664,22 +1477,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 21345,
-        "swing": "+49.1"
+        "swing": "-4.2"
       },
       {
         "party": "UUP",
         "votes": 2653,
-        "swing": "+6.1"
+        "swing": "+2.5"
       },
       {
         "party": "APNI",
         "votes": 8839,
-        "swing": "+20.3"
+        "swing": "+4.9"
       },
       {
         "party": "All other candidates",
         "votes": 2218,
-        "swing": "+5.1"
+        "swing": "+3.8"
       }
     ]
   },
@@ -2708,22 +1521,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 4318,
-        "swing": "+10.9"
+        "swing": "+3.4"
       },
       {
         "party": "UUP",
         "votes": 461,
-        "swing": "+1.2"
+        "swing": "+0.3"
       },
       {
         "party": "APNI",
         "votes": 1077,
-        "swing": "+2.7"
+        "swing": "-4.4"
       },
       {
         "party": "All other candidates",
         "votes": 8123,
-        "swing": "+20.4"
+        "swing": "+2.6"
       }
     ]
   },
@@ -2737,22 +1550,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2879,
-        "swing": "+7.7"
+        "swing": "-9.1"
       },
       {
         "party": "Lab",
         "votes": 16857,
-        "swing": "+44.8"
+        "swing": "-4.8"
       },
       {
         "party": "LD",
         "votes": 9070,
-        "swing": "+24.1"
+        "swing": "-7.0"
       },
       {
         "party": "RUK",
         "votes": 3397,
-        "swing": "+9.0"
+        "swing": "+6.6"
       },
       {
         "party": "Green",
@@ -2776,17 +1589,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18872,
-        "swing": "+40.5"
+        "swing": "-7.9"
       },
       {
         "party": "Lab",
         "votes": 6311,
-        "swing": "+13.6"
+        "swing": "+8.8"
       },
       {
         "party": "LD",
         "votes": 3686,
-        "swing": "+7.9"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
@@ -2820,22 +1633,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1920,
-        "swing": "+4.1"
+        "swing": "-6.0"
       },
       {
         "party": "Lab",
         "votes": 15896,
-        "swing": "+34.1"
+        "swing": "-39.4"
       },
       {
         "party": "LD",
         "votes": 4777,
-        "swing": "+10.2"
+        "swing": "+1.0"
       },
       {
         "party": "RUK",
         "votes": 1964,
-        "swing": "+4.2"
+        "swing": "+2.2"
       },
       {
         "party": "Green",
@@ -2845,7 +1658,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 15699,
-        "swing": "+33.7"
+        "swing": "+32.8"
       }
     ]
   },
@@ -2859,17 +1672,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15501,
-        "swing": "+34.5"
+        "swing": "-26.5"
       },
       {
         "party": "Lab",
         "votes": 15377,
-        "swing": "+34.2"
+        "swing": "+9.6"
       },
       {
         "party": "LD",
         "votes": 3386,
-        "swing": "+7.5"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
@@ -2884,7 +1697,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 788,
-        "swing": "+1.8"
+        "swing": "-0.8"
       }
     ]
   },
@@ -2898,17 +1711,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16186,
-        "swing": "+33.9"
+        "swing": "-27.9"
       },
       {
         "party": "Lab",
         "votes": 13529,
-        "swing": "+28.3"
+        "swing": "+7.6"
       },
       {
         "party": "LD",
         "votes": 3473,
-        "swing": "+7.3"
+        "swing": "-6.1"
       },
       {
         "party": "RUK",
@@ -2937,22 +1750,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13603,
-        "swing": "+31.3"
+        "swing": "-29.5"
       },
       {
         "party": "Lab",
         "votes": 15717,
-        "swing": "+36.2"
+        "swing": "+7.2"
       },
       {
         "party": "LD",
         "votes": 2204,
-        "swing": "+5.1"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 9861,
-        "swing": "+22.7"
+        "swing": "+21.8"
       },
       {
         "party": "Green",
@@ -2971,22 +1784,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14461,
-        "swing": "+28.8"
+        "swing": "-25.1"
       },
       {
         "party": "Lab",
         "votes": 8236,
-        "swing": "+16.4"
+        "swing": "-0.5"
       },
       {
         "party": "LD",
         "votes": 19419,
-        "swing": "+38.7"
+        "swing": "+12.1"
       },
       {
         "party": "RUK",
         "votes": 5408,
-        "swing": "+10.8"
+        "swing": "+10.5"
       },
       {
         "party": "Green",
@@ -3010,22 +1823,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3238,
-        "swing": "+7.5"
+        "swing": "-8.1"
       },
       {
         "party": "Lab",
         "votes": 22468,
-        "swing": "+52.1"
+        "swing": "-7.9"
       },
       {
         "party": "LD",
         "votes": 2292,
-        "swing": "+5.3"
+        "swing": "+1.3"
       },
       {
         "party": "RUK",
         "votes": 6142,
-        "swing": "+14.2"
+        "swing": "+10.9"
       },
       {
         "party": "Green",
@@ -3035,7 +1848,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 324,
-        "swing": "+0.8"
+        "swing": "-13.3"
       }
     ]
   },
@@ -3049,22 +1862,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8231,
-        "swing": "+22.0"
+        "swing": "-13.5"
       },
       {
         "party": "Lab",
         "votes": 16599,
-        "swing": "+44.3"
+        "swing": "-8.0"
       },
       {
         "party": "LD",
         "votes": 2102,
-        "swing": "+5.6"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 4363,
-        "swing": "+11.7"
+        "swing": "+9.3"
       },
       {
         "party": "Green",
@@ -3088,22 +1901,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5402,
-        "swing": "+15.8"
+        "swing": "-25.7"
       },
       {
         "party": "Lab",
         "votes": 14774,
-        "swing": "+43.3"
+        "swing": "-6.2"
       },
       {
         "party": "LD",
         "votes": 1128,
-        "swing": "+3.3"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
         "votes": 7755,
-        "swing": "+22.7"
+        "swing": "+18.7"
       },
       {
         "party": "Green",
@@ -3127,22 +1940,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3845,
-        "swing": "+9.2"
+        "swing": "-5.8"
       },
       {
         "party": "Lab",
         "votes": 12798,
-        "swing": "+30.8"
+        "swing": "-35.5"
       },
       {
         "party": "LD",
         "votes": 4711,
-        "swing": "+11.3"
+        "swing": "+4.2"
       },
       {
         "party": "RUK",
         "votes": 2305,
-        "swing": "+5.5"
+        "swing": "+3.6"
       },
       {
         "party": "Green",
@@ -3152,7 +1965,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 14034,
-        "swing": "+33.7"
+        "swing": "+25.8"
       }
     ]
   },
@@ -3166,22 +1979,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4634,
-        "swing": "+13.6"
+        "swing": "-15.0"
       },
       {
         "party": "Lab",
         "votes": 10655,
-        "swing": "+31.2"
+        "swing": "-28.7"
       },
       {
         "party": "LD",
         "votes": 942,
-        "swing": "+2.8"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 6456,
-        "swing": "+18.9"
+        "swing": "+15.8"
       },
       {
         "party": "Green",
@@ -3191,7 +2004,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 9089,
-        "swing": "+26.6"
+        "swing": "+26.0"
       }
     ]
   },
@@ -3205,22 +2018,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2218,
-        "swing": "+6.1"
+        "swing": "-3.8"
       },
       {
         "party": "Lab",
         "votes": 15558,
-        "swing": "+42.5"
+        "swing": "-40.5"
       },
       {
         "party": "LD",
         "votes": 1711,
-        "swing": "+4.7"
+        "swing": "+1.9"
       },
       {
         "party": "RUK",
         "votes": 1477,
-        "swing": "+4.0"
+        "swing": "+1.8"
       },
       {
         "party": "Green",
@@ -3230,7 +2043,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 12137,
-        "swing": "+33.2"
+        "swing": "+32.8"
       }
     ]
   },
@@ -3244,22 +2057,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9540,
-        "swing": "+25.3"
+        "swing": "-20.7"
       },
       {
         "party": "Lab",
         "votes": 14929,
-        "swing": "+39.6"
+        "swing": "-3.1"
       },
       {
         "party": "LD",
         "votes": 1791,
-        "swing": "+4.8"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
         "votes": 7895,
-        "swing": "+21.0"
+        "swing": "+17.2"
       },
       {
         "party": "Green",
@@ -3269,7 +2082,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 688,
-        "swing": "+1.8"
+        "swing": "+1.2"
       }
     ]
   },
@@ -3283,22 +2096,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4227,
-        "swing": "+11.3"
+        "swing": "-9.1"
       },
       {
         "party": "Lab",
         "votes": 12796,
-        "swing": "+34.1"
+        "swing": "-33.9"
       },
       {
         "party": "LD",
         "votes": 1302,
-        "swing": "+3.5"
+        "swing": "-3.1"
       },
       {
         "party": "RUK",
         "votes": 2446,
-        "swing": "+6.5"
+        "swing": "+3.7"
       },
       {
         "party": "Green",
@@ -3308,7 +2121,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 14265,
-        "swing": "+38.1"
+        "swing": "+37.7"
       }
     ]
   },
@@ -3322,22 +2135,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5834,
-        "swing": "+15.2"
+        "swing": "-16.4"
       },
       {
         "party": "Lab",
         "votes": 17371,
-        "swing": "+45.2"
+        "swing": "-10.5"
       },
       {
         "party": "LD",
         "votes": 2324,
-        "swing": "+6.0"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
         "votes": 5732,
-        "swing": "+14.9"
+        "swing": "+12.2"
       },
       {
         "party": "Green",
@@ -3361,22 +2174,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3634,
-        "swing": "+10.1"
+        "swing": "-16.7"
       },
       {
         "party": "Lab",
         "votes": 11275,
-        "swing": "+31.2"
+        "swing": "-26.9"
       },
       {
         "party": "LD",
         "votes": 3634,
-        "swing": "+10.1"
+        "swing": "+1.1"
       },
       {
         "party": "RUK",
         "votes": 5061,
-        "swing": "+14.0"
+        "swing": "+9.0"
       },
       {
         "party": "Green",
@@ -3400,22 +2213,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10364,
-        "swing": "+25.6"
+        "swing": "-27.4"
       },
       {
         "party": "Lab",
         "votes": 17036,
-        "swing": "+42.1"
+        "swing": "+5.5"
       },
       {
         "party": "LD",
         "votes": 1373,
-        "swing": "+3.4"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
         "votes": 9466,
-        "swing": "+23.4"
+        "swing": "+17.9"
       },
       {
         "party": "Green",
@@ -3425,7 +2238,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 331,
-        "swing": "+0.8"
+        "swing": "+0.2"
       }
     ]
   },
@@ -3439,22 +2252,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3474,
-        "swing": "+8.9"
+        "swing": "-14.4"
       },
       {
         "party": "Lab",
         "votes": 10386,
-        "swing": "+26.7"
+        "swing": "-39.3"
       },
       {
         "party": "LD",
         "votes": 689,
-        "swing": "+1.8"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
         "votes": 4844,
-        "swing": "+12.5"
+        "swing": "+6.5"
       },
       {
         "party": "Green",
@@ -3464,7 +2277,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 18078,
-        "swing": "+46.5"
+        "swing": "+45.8"
       }
     ]
   },
@@ -3478,22 +2291,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3073,
-        "swing": "+9.8"
+        "swing": "-18.4"
       },
       {
         "party": "Lab",
         "votes": 16864,
-        "swing": "+53.8"
+        "swing": "-5.2"
       },
       {
         "party": "LD",
         "votes": 1592,
-        "swing": "+5.1"
+        "swing": "+2.1"
       },
       {
         "party": "RUK",
         "votes": 6614,
-        "swing": "+21.1"
+        "swing": "+13.4"
       },
       {
         "party": "Green",
@@ -3512,22 +2325,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12097,
-        "swing": "+28.9"
+        "swing": "-26.9"
       },
       {
         "party": "Lab",
         "votes": 16744,
-        "swing": "+40.0"
+        "swing": "+4.4"
       },
       {
         "party": "LD",
         "votes": 1318,
-        "swing": "+3.2"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 9913,
-        "swing": "+23.7"
+        "swing": "+22.0"
       },
       {
         "party": "Green",
@@ -3537,7 +2350,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 469,
-        "swing": "+1.1"
+        "swing": "+0.2"
       }
     ]
   },
@@ -3551,22 +2364,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5504,
-        "swing": "+15.6"
+        "swing": "-33.2"
       },
       {
         "party": "Lab",
         "votes": 16916,
-        "swing": "+48.1"
+        "swing": "+8.0"
       },
       {
         "party": "LD",
         "votes": 1041,
-        "swing": "+3.0"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
         "votes": 10068,
-        "swing": "+28.6"
+        "swing": "+23.9"
       },
       {
         "party": "Green",
@@ -3576,7 +2389,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 444,
-        "swing": "+1.3"
+        "swing": "+0.4"
       }
     ]
   },
@@ -3590,17 +2403,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3776,
-        "swing": "+12.6"
+        "swing": "-7.0"
       },
       {
         "party": "Lab",
         "votes": 16027,
-        "swing": "+53.6"
+        "swing": "+3.2"
       },
       {
         "party": "LD",
         "votes": 1268,
-        "swing": "+4.2"
+        "swing": "+0.5"
       },
       {
         "party": "Green",
@@ -3610,12 +2423,12 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 3844,
-        "swing": "+12.8"
+        "swing": "+6.5"
       },
       {
         "party": "All other candidates",
         "votes": 3288,
-        "swing": "+11.0"
+        "swing": "+10.1"
       }
     ]
   },
@@ -3629,22 +2442,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6052,
-        "swing": "+14.3"
+        "swing": "-20.5"
       },
       {
         "party": "Lab",
         "votes": 21160,
-        "swing": "+50.1"
+        "swing": "+6.1"
       },
       {
         "party": "LD",
         "votes": 2273,
-        "swing": "+5.4"
+        "swing": "+0.8"
       },
       {
         "party": "RUK",
         "votes": 10007,
-        "swing": "+23.7"
+        "swing": "+14.0"
       },
       {
         "party": "Green",
@@ -3654,7 +2467,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 135,
-        "swing": "+0.3"
+        "swing": "-3.5"
       }
     ]
   },
@@ -3668,22 +2481,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6121,
-        "swing": "+15.2"
+        "swing": "-18.3"
       },
       {
         "party": "Lab",
         "votes": 20030,
-        "swing": "+49.6"
+        "swing": "+1.9"
       },
       {
         "party": "LD",
         "votes": 1433,
-        "swing": "+3.5"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
         "votes": 10857,
-        "swing": "+26.9"
+        "swing": "+17.8"
       },
       {
         "party": "Green",
@@ -3702,17 +2515,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15678,
-        "swing": "+32.8"
+        "swing": "-29.4"
       },
       {
         "party": "Lab",
         "votes": 13913,
-        "swing": "+29.1"
+        "swing": "+10.1"
       },
       {
         "party": "LD",
         "votes": 5081,
-        "swing": "+10.6"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
@@ -3727,7 +2540,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 708,
-        "swing": "+1.5"
+        "swing": "-0.8"
       }
     ]
   },
@@ -3741,22 +2554,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10874,
-        "swing": "+25.6"
+        "swing": "-22.1"
       },
       {
         "party": "Lab",
         "votes": 17197,
-        "swing": "+40.5"
+        "swing": "+4.4"
       },
       {
         "party": "LD",
         "votes": 1478,
-        "swing": "+3.5"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
         "votes": 9131,
-        "swing": "+21.5"
+        "swing": "+12.9"
       },
       {
         "party": "Green",
@@ -3775,22 +2588,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9513,
-        "swing": "+21.9"
+        "swing": "-23.1"
       },
       {
         "party": "Lab",
         "votes": 16166,
-        "swing": "+37.3"
+        "swing": "-5.2"
       },
       {
         "party": "LD",
         "votes": 1507,
-        "swing": "+3.5"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 9428,
-        "swing": "+21.7"
+        "swing": "+15.2"
       },
       {
         "party": "Green",
@@ -3814,22 +2627,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4170,
-        "swing": "+11.3"
+        "swing": "-20.4"
       },
       {
         "party": "Lab",
         "votes": 15093,
-        "swing": "+40.9"
+        "swing": "-15.7"
       },
       {
         "party": "LD",
         "votes": 1384,
-        "swing": "+3.7"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
         "votes": 8350,
-        "swing": "+22.6"
+        "swing": "+17.2"
       },
       {
         "party": "Green",
@@ -3853,22 +2666,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12418,
-        "swing": "+27.8"
+        "swing": "-28.7"
       },
       {
         "party": "Lab",
         "votes": 17363,
-        "swing": "+38.9"
+        "swing": "+3.7"
       },
       {
         "party": "LD",
         "votes": 1966,
-        "swing": "+4.4"
+        "swing": "-1.2"
       },
       {
         "party": "RUK",
         "votes": 8517,
-        "swing": "+19.1"
+        "swing": "+18.3"
       },
       {
         "party": "Green",
@@ -3892,22 +2705,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1674,
-        "swing": "+4.3"
+        "swing": "-4.9"
       },
       {
         "party": "Lab",
         "votes": 26729,
-        "swing": "+68.7"
+        "swing": "-10.7"
       },
       {
         "party": "LD",
         "votes": 1301,
-        "swing": "+3.3"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 4746,
-        "swing": "+12.2"
+        "swing": "+6.9"
       },
       {
         "party": "Green",
@@ -3931,17 +2744,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13510,
-        "swing": "+33.4"
+        "swing": "-43.0"
       },
       {
         "party": "Lab",
         "votes": 7629,
-        "swing": "+18.9"
+        "swing": "+3.3"
       },
       {
         "party": "LD",
         "votes": 1375,
-        "swing": "+3.4"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
@@ -3956,7 +2769,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 915,
-        "swing": "+2.3"
+        "swing": "-0.9"
       }
     ]
   },
@@ -3970,17 +2783,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12837,
-        "swing": "+28.6"
+        "swing": "-22.0"
       },
       {
         "party": "Lab",
         "votes": 18316,
-        "swing": "+40.8"
+        "swing": "+8.1"
       },
       {
         "party": "LD",
         "votes": 3082,
-        "swing": "+6.9"
+        "swing": "-4.1"
       },
       {
         "party": "RUK",
@@ -3995,7 +2808,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1617,
-        "swing": "+3.6"
+        "swing": "+2.1"
       }
     ]
   },
@@ -4009,17 +2822,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11141,
-        "swing": "+28.3"
+        "swing": "-25.3"
       },
       {
         "party": "Lab",
         "votes": 14365,
-        "swing": "+36.4"
+        "swing": "+4.6"
       },
       {
         "party": "LD",
         "votes": 4311,
-        "swing": "+10.9"
+        "swing": "+0.9"
       },
       {
         "party": "RUK",
@@ -4048,17 +2861,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13999,
-        "swing": "+31.9"
+        "swing": "-23.6"
       },
       {
         "party": "Lab",
         "votes": 14783,
-        "swing": "+33.7"
+        "swing": "+8.4"
       },
       {
         "party": "LD",
         "votes": 4768,
-        "swing": "+10.9"
+        "swing": "-3.1"
       },
       {
         "party": "RUK",
@@ -4073,7 +2886,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 676,
-        "swing": "+1.5"
+        "swing": "+0.4"
       }
     ]
   },
@@ -4087,22 +2900,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3450,
-        "swing": "+9.3"
+        "swing": "-12.4"
       },
       {
         "party": "Lab",
         "votes": 14098,
-        "swing": "+37.9"
+        "swing": "-25.1"
       },
       {
         "party": "LD",
         "votes": 1910,
-        "swing": "+5.1"
+        "swing": "-2.5"
       },
       {
         "party": "RUK",
         "votes": 4952,
-        "swing": "+13.3"
+        "swing": "+7.2"
       },
       {
         "party": "Green",
@@ -4126,22 +2939,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4853,
-        "swing": "+14.7"
+        "swing": "-25.4"
       },
       {
         "party": "Lab",
         "votes": 11833,
-        "swing": "+35.8"
+        "swing": "-10.9"
       },
       {
         "party": "LD",
         "votes": 954,
-        "swing": "+2.9"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
         "votes": 7441,
-        "swing": "+22.5"
+        "swing": "+15.5"
       },
       {
         "party": "Green",
@@ -4165,22 +2978,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3055,
-        "swing": "+8.2"
+        "swing": "-6.9"
       },
       {
         "party": "Lab",
         "votes": 11724,
-        "swing": "+31.6"
+        "swing": "-44.6"
       },
       {
         "party": "LD",
         "votes": 756,
-        "swing": "+2.0"
+        "swing": "-1.0"
       },
       {
         "party": "RUK",
         "votes": 2958,
-        "swing": "+8.0"
+        "swing": "+4.5"
       },
       {
         "party": "Green",
@@ -4190,7 +3003,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 14898,
-        "swing": "+40.2"
+        "swing": "+40.0"
       }
     ]
   },
@@ -4204,17 +3017,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17414,
-        "swing": "+35.5"
+        "swing": "-31.9"
       },
       {
         "party": "Lab",
         "votes": 13744,
-        "swing": "+28.0"
+        "swing": "+9.8"
       },
       {
         "party": "LD",
         "votes": 2879,
-        "swing": "+5.9"
+        "swing": "-3.8"
       },
       {
         "party": "RUK",
@@ -4229,7 +3042,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 767,
-        "swing": "+1.6"
+        "swing": "-2.6"
       }
     ]
   },
@@ -4243,22 +3056,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12264,
-        "swing": "+26.3"
+        "swing": "-20.3"
       },
       {
         "party": "Lab",
         "votes": 9904,
-        "swing": "+21.3"
+        "swing": "+3.7"
       },
       {
         "party": "LD",
         "votes": 13736,
-        "swing": "+29.5"
+        "swing": "+0.3"
       },
       {
         "party": "RUK",
         "votes": 6567,
-        "swing": "+14.1"
+        "swing": "+12.3"
       },
       {
         "party": "Green",
@@ -4268,12 +3081,12 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 2280,
-        "swing": "+4.9"
+        "swing": "+1.7"
       },
       {
         "party": "All other candidates",
         "votes": 609,
-        "swing": "+1.3"
+        "swing": "+0.2"
       }
     ]
   },
@@ -4287,22 +3100,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6323,
-        "swing": "+16.7"
+        "swing": "-6.8"
       },
       {
         "party": "Lab",
         "votes": 19370,
-        "swing": "+51.2"
+        "swing": "-12.6"
       },
       {
         "party": "LD",
         "votes": 2635,
-        "swing": "+7.0"
+        "swing": "-2.1"
       },
       {
         "party": "RUK",
         "votes": 2024,
-        "swing": "+5.4"
+        "swing": "+5.0"
       },
       {
         "party": "Green",
@@ -4326,22 +3139,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13465,
-        "swing": "+32.5"
+        "swing": "-1.3"
       },
       {
         "party": "Lab",
         "votes": 17258,
-        "swing": "+41.7"
+        "swing": "-11.6"
       },
       {
         "party": "LD",
         "votes": 3013,
-        "swing": "+7.3"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
         "votes": 2061,
-        "swing": "+5.0"
+        "swing": "+3.4"
       },
       {
         "party": "Green",
@@ -4351,7 +3164,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2774,
-        "swing": "+6.7"
+        "swing": "+6.1"
       }
     ]
   },
@@ -4365,22 +3178,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10183,
-        "swing": "+22.5"
+        "swing": "-5.8"
       },
       {
         "party": "Lab",
         "votes": 20007,
-        "swing": "+44.2"
+        "swing": "-6.1"
       },
       {
         "party": "LD",
         "votes": 3863,
-        "swing": "+8.5"
+        "swing": "-7.8"
       },
       {
         "party": "RUK",
         "votes": 3940,
-        "swing": "+8.7"
+        "swing": "+6.6"
       },
       {
         "party": "Green",
@@ -4404,17 +3217,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17731,
-        "swing": "+36.7"
+        "swing": "-31.9"
       },
       {
         "party": "Lab",
         "votes": 11082,
-        "swing": "+22.9"
+        "swing": "+9.2"
       },
       {
         "party": "LD",
         "votes": 5809,
-        "swing": "+12.0"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
@@ -4429,7 +3242,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 189,
-        "swing": "+0.4"
+        "swing": "-0.6"
       }
     ]
   },
@@ -4443,22 +3256,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6764,
-        "swing": "+16.3"
+        "swing": "-27.6"
       },
       {
         "party": "Lab",
         "votes": 16516,
-        "swing": "+39.9"
+        "swing": "+1.4"
       },
       {
         "party": "LD",
         "votes": 1446,
-        "swing": "+3.5"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
         "votes": 7921,
-        "swing": "+19.1"
+        "swing": "+13.9"
       },
       {
         "party": "Green",
@@ -4468,7 +3281,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 3629,
-        "swing": "+8.8"
+        "swing": "+3.5"
       },
       {
         "party": "All other candidates",
@@ -4487,17 +3300,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12281,
-        "swing": "+30.6"
+        "swing": "-27.3"
       },
       {
         "party": "Lab",
         "votes": 10932,
-        "swing": "+27.2"
+        "swing": "+6.5"
       },
       {
         "party": "LD",
         "votes": 5781,
-        "swing": "+14.4"
+        "swing": "-3.2"
       },
       {
         "party": "RUK",
@@ -4512,7 +3325,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 502,
-        "swing": "+1.3"
+        "swing": "-0.4"
       }
     ]
   },
@@ -4526,17 +3339,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14846,
-        "swing": "+34.6"
+        "swing": "-32.0"
       },
       {
         "party": "Lab",
         "votes": 11721,
-        "swing": "+27.3"
+        "swing": "+7.4"
       },
       {
         "party": "LD",
         "votes": 3097,
-        "swing": "+7.2"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
@@ -4551,7 +3364,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1328,
-        "swing": "+3.1"
+        "swing": "-0.1"
       }
     ]
   },
@@ -4565,22 +3378,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15905,
-        "swing": "+37.4"
+        "swing": "-34.5"
       },
       {
         "party": "Lab",
         "votes": 12662,
-        "swing": "+29.8"
+        "swing": "+9.6"
       },
       {
         "party": "LD",
         "votes": 1442,
-        "swing": "+3.4"
+        "swing": "-1.0"
       },
       {
         "party": "RUK",
         "votes": 10594,
-        "swing": "+24.9"
+        "swing": "+24.2"
       },
       {
         "party": "Green",
@@ -4599,17 +3412,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8230,
-        "swing": "+20.2"
+        "swing": "-14.2"
       },
       {
         "party": "Lab",
         "votes": 17893,
-        "swing": "+44.0"
+        "swing": "-7.2"
       },
       {
         "party": "LD",
         "votes": 3949,
-        "swing": "+9.7"
+        "swing": "+3.7"
       },
       {
         "party": "Green",
@@ -4625,7 +3438,7 @@ const RESULTS = {
   },
   "E14001130": {
     "name": "Brighton Pavilion",
-    "winner": "Si\u00e2n Berry",
+    "winner": "Siân Berry",
     "party": "Green",
     "majority": 14290,
     "turnout": 70.01711550290162,
@@ -4633,12 +3446,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3975,
-        "swing": "+7.6"
+        "swing": "-10.1"
       },
       {
         "party": "Lab",
         "votes": 14519,
-        "swing": "+27.7"
+        "swing": "+5.1"
       },
       {
         "party": "LD",
@@ -4648,7 +3461,7 @@ const RESULTS = {
       {
         "party": "RUK",
         "votes": 2836,
-        "swing": "+5.4"
+        "swing": "+4.1"
       },
       {
         "party": "Green",
@@ -4658,7 +3471,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 620,
-        "swing": "+1.2"
+        "swing": "0.0"
       }
     ]
   },
@@ -4672,12 +3485,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1998,
-        "swing": "+4.6"
+        "swing": "-9.7"
       },
       {
         "party": "Lab",
         "votes": 14132,
-        "swing": "+32.6"
+        "swing": "-25.9"
       },
       {
         "party": "LD",
@@ -4687,7 +3500,7 @@ const RESULTS = {
       {
         "party": "RUK",
         "votes": 1338,
-        "swing": "+3.1"
+        "swing": "+1.9"
       },
       {
         "party": "Green",
@@ -4711,17 +3524,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6435,
-        "swing": "+14.0"
+        "swing": "-9.4"
       },
       {
         "party": "Lab",
         "votes": 20748,
-        "swing": "+45.0"
+        "swing": "-13.4"
       },
       {
         "party": "LD",
         "votes": 2713,
-        "swing": "+5.9"
+        "swing": "-1.1"
       },
       {
         "party": "Green",
@@ -4745,22 +3558,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6216,
-        "swing": "+14.8"
+        "swing": "-24.3"
       },
       {
         "party": "Lab",
         "votes": 19004,
-        "swing": "+45.3"
+        "swing": "-5.0"
       },
       {
         "party": "LD",
         "votes": 1964,
-        "swing": "+4.7"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 5418,
-        "swing": "+12.9"
+        "swing": "+11.4"
       },
       {
         "party": "Green",
@@ -4784,22 +3597,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6773,
-        "swing": "+14.0"
+        "swing": "-22.5"
       },
       {
         "party": "Lab",
         "votes": 24058,
-        "swing": "+49.6"
+        "swing": "+0.8"
       },
       {
         "party": "LD",
         "votes": 4159,
-        "swing": "+8.6"
+        "swing": "+0.5"
       },
       {
         "party": "RUK",
         "votes": 4863,
-        "swing": "+10.0"
+        "swing": "+9.9"
       },
       {
         "party": "Green",
@@ -4823,22 +3636,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4947,
-        "swing": "+11.4"
+        "swing": "-21.4"
       },
       {
         "party": "Lab",
         "votes": 18521,
-        "swing": "+42.7"
+        "swing": "-9.0"
       },
       {
         "party": "LD",
         "votes": 2721,
-        "swing": "+6.3"
+        "swing": "0.0"
       },
       {
         "party": "RUK",
         "votes": 6195,
-        "swing": "+14.3"
+        "swing": "+10.0"
       },
       {
         "party": "Green",
@@ -4862,17 +3675,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16322,
-        "swing": "+33.0"
+        "swing": "-26.2"
       },
       {
         "party": "Lab",
         "votes": 15603,
-        "swing": "+31.5"
+        "swing": "+9.9"
       },
       {
         "party": "LD",
         "votes": 5526,
-        "swing": "+11.2"
+        "swing": "-4.9"
       },
       {
         "party": "RUK",
@@ -4896,17 +3709,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15929,
-        "swing": "+34.0"
+        "swing": "-20.4"
       },
       {
         "party": "Lab",
         "votes": 15627,
-        "swing": "+33.4"
+        "swing": "+8.3"
       },
       {
         "party": "LD",
         "votes": 4352,
-        "swing": "+9.3"
+        "swing": "-6.7"
       },
       {
         "party": "RUK",
@@ -4921,7 +3734,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 94,
-        "swing": "+0.2"
+        "swing": "-0.6"
       }
     ]
   },
@@ -4935,17 +3748,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16533,
-        "swing": "+32.8"
+        "swing": "-30.6"
       },
       {
         "party": "Lab",
         "votes": 13517,
-        "swing": "+26.8"
+        "swing": "+6.0"
       },
       {
         "party": "LD",
         "votes": 7391,
-        "swing": "+14.7"
+        "swing": "+2.2"
       },
       {
         "party": "RUK",
@@ -4955,7 +3768,7 @@ const RESULTS = {
       {
         "party": "Green",
         "votes": 1675,
-        "swing": "+0.0"
+        "swing": "0.0"
       },
       {
         "party": "All other candidates",
@@ -4974,17 +3787,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15810,
-        "swing": "+36.8"
+        "swing": "-27.4"
       },
       {
         "party": "Lab",
         "votes": 12952,
-        "swing": "+30.2"
+        "swing": "+6.2"
       },
       {
         "party": "LD",
         "votes": 2688,
-        "swing": "+6.3"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
@@ -5013,22 +3826,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11158,
-        "swing": "+23.3"
+        "swing": "-21.8"
       },
       {
         "party": "Lab",
         "votes": 19561,
-        "swing": "+40.9"
+        "swing": "+2.9"
       },
       {
         "party": "LD",
         "votes": 3807,
-        "swing": "+8.0"
+        "swing": "+7.5"
       },
       {
         "party": "RUK",
         "votes": 8402,
-        "swing": "+17.6"
+        "swing": "+16.9"
       },
       {
         "party": "Green",
@@ -5038,7 +3851,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1422,
-        "swing": "+3.0"
+        "swing": "-9.7"
       }
     ]
   },
@@ -5052,22 +3865,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15181,
-        "swing": "+31.9"
+        "swing": "-21.2"
       },
       {
         "party": "Lab",
         "votes": 17602,
-        "swing": "+36.9"
+        "swing": "+9.3"
       },
       {
         "party": "LD",
         "votes": 4300,
-        "swing": "+9.0"
+        "swing": "-6.4"
       },
       {
         "party": "RUK",
         "votes": 7468,
-        "swing": "+15.7"
+        "swing": "+14.7"
       },
       {
         "party": "Green",
@@ -5077,7 +3890,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 500,
-        "swing": "+1.0"
+        "swing": "-0.6"
       }
     ]
   },
@@ -5091,22 +3904,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8058,
-        "swing": "+20.3"
+        "swing": "-20.2"
       },
       {
         "party": "Lab",
         "votes": 12598,
-        "swing": "+31.7"
+        "swing": "-8.5"
       },
       {
         "party": "LD",
         "votes": 9178,
-        "swing": "+23.1"
+        "swing": "+15.4"
       },
       {
         "party": "RUK",
         "votes": 7755,
-        "swing": "+19.5"
+        "swing": "+12.4"
       },
       {
         "party": "Green",
@@ -5116,7 +3929,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 612,
-        "swing": "+1.5"
+        "swing": "-1.2"
       }
     ]
   },
@@ -5130,17 +3943,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13956,
-        "swing": "+30.6"
+        "swing": "-30.1"
       },
       {
         "party": "Lab",
         "votes": 16222,
-        "swing": "+35.6"
+        "swing": "+4.6"
       },
       {
         "party": "LD",
         "votes": 1663,
-        "swing": "+3.6"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
@@ -5169,22 +3982,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12681,
-        "swing": "+27.9"
+        "swing": "-19.4"
       },
       {
         "party": "Lab",
         "votes": 19625,
-        "swing": "+43.1"
+        "swing": "-1.8"
       },
       {
         "party": "LD",
         "votes": 1317,
-        "swing": "+2.9"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
         "votes": 7385,
-        "swing": "+16.2"
+        "swing": "+13.5"
       },
       {
         "party": "Green",
@@ -5194,7 +4007,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2765,
-        "swing": "+6.1"
+        "swing": "+5.8"
       }
     ]
   },
@@ -5208,22 +4021,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9886,
-        "swing": "+23.4"
+        "swing": "-20.0"
       },
       {
         "party": "Lab",
         "votes": 19247,
-        "swing": "+45.6"
+        "swing": "+4.0"
       },
       {
         "party": "LD",
         "votes": 1796,
-        "swing": "+4.3"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
         "votes": 6865,
-        "swing": "+16.3"
+        "swing": "+12.5"
       },
       {
         "party": "Green",
@@ -5233,7 +4046,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1705,
-        "swing": "+4.0"
+        "swing": "+0.8"
       }
     ]
   },
@@ -5247,17 +4060,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15293,
-        "swing": "+30.0"
+        "swing": "-32.9"
       },
       {
         "party": "Lab",
         "votes": 16745,
-        "swing": "+32.9"
+        "swing": "+12.1"
       },
       {
         "party": "LD",
         "votes": 3154,
-        "swing": "+6.2"
+        "swing": "+5.1"
       },
       {
         "party": "RUK",
@@ -5272,7 +4085,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1345,
-        "swing": "+2.6"
+        "swing": "-0.1"
       }
     ]
   },
@@ -5286,22 +4099,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8825,
-        "swing": "+19.4"
+        "swing": "-19.8"
       },
       {
         "party": "Lab",
         "votes": 10985,
-        "swing": "+24.1"
+        "swing": "-1.0"
       },
       {
         "party": "LD",
         "votes": 1461,
-        "swing": "+3.2"
+        "swing": "+1.9"
       },
       {
         "party": "RUK",
         "votes": 6944,
-        "swing": "+15.2"
+        "swing": "+11.4"
       },
       {
         "party": "Green",
@@ -5311,7 +4124,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 15520,
-        "swing": "+34.0"
+        "swing": "+3.4"
       },
       {
         "party": "All other candidates",
@@ -5330,22 +4143,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4385,
-        "swing": "+11.5"
+        "swing": "-17.1"
       },
       {
         "party": "Lab",
         "votes": 14538,
-        "swing": "+38.0"
+        "swing": "-5.9"
       },
       {
         "party": "LD",
         "votes": 1788,
-        "swing": "+4.7"
+        "swing": "+4.0"
       },
       {
         "party": "RUK",
         "votes": 7754,
-        "swing": "+20.3"
+        "swing": "+8.5"
       },
       {
         "party": "Green",
@@ -5355,7 +4168,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 8119,
-        "swing": "+21.2"
+        "swing": "+6.5"
       }
     ]
   },
@@ -5369,22 +4182,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1860,
-        "swing": "+4.0"
+        "swing": "-13.3"
       },
       {
         "party": "Lab",
         "votes": 3409,
-        "swing": "+7.4"
+        "swing": "+2.1"
       },
       {
         "party": "LD",
         "votes": 22736,
-        "swing": "+49.4"
+        "swing": "+15.8"
       },
       {
         "party": "RUK",
         "votes": 3360,
-        "swing": "+7.3"
+        "swing": "+4.4"
       },
       {
         "party": "Green",
@@ -5399,7 +4212,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 795,
-        "swing": "+1.7"
+        "swing": "+0.3"
       }
     ]
   },
@@ -5413,17 +4226,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13055,
-        "swing": "+26.3"
+        "swing": "-25.0"
       },
       {
         "party": "Lab",
         "votes": 22046,
-        "swing": "+44.4"
+        "swing": "+2.1"
       },
       {
         "party": "LD",
         "votes": 2587,
-        "swing": "+5.2"
+        "swing": "+0.2"
       },
       {
         "party": "RUK",
@@ -5438,7 +4251,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 575,
-        "swing": "+1.2"
+        "swing": "-0.1"
       }
     ]
   },
@@ -5452,17 +4265,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11554,
-        "swing": "+24.2"
+        "swing": "-29.1"
       },
       {
         "party": "Lab",
         "votes": 19360,
-        "swing": "+40.5"
+        "swing": "+6.3"
       },
       {
         "party": "LD",
         "votes": 4113,
-        "swing": "+8.6"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
@@ -5477,7 +4290,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 966,
-        "swing": "+2.0"
+        "swing": "+0.7"
       }
     ]
   },
@@ -5491,17 +4304,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5073,
-        "swing": "+12.0"
+        "swing": "-2.7"
       },
       {
         "party": "Lab",
         "votes": 19614,
-        "swing": "+46.6"
+        "swing": "-0.9"
       },
       {
         "party": "LD",
         "votes": 8536,
-        "swing": "+20.3"
+        "swing": "-10.9"
       },
       {
         "party": "Green",
@@ -5511,7 +4324,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2035,
-        "swing": "+4.8"
+        "swing": "+4.3"
       }
     ]
   },
@@ -5525,12 +4338,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12546,
-        "swing": "+29.2"
+        "swing": "-39.1"
       },
       {
         "party": "Lab",
         "votes": 15671,
-        "swing": "+36.5"
+        "swing": "+11.1"
       },
       {
         "party": "LD",
@@ -5559,17 +4372,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10878,
-        "swing": "+23.0"
+        "swing": "-21.8"
       },
       {
         "party": "Lab",
         "votes": 19531,
-        "swing": "+41.4"
+        "swing": "-7.2"
       },
       {
         "party": "LD",
         "votes": 3812,
-        "swing": "+8.1"
+        "swing": "+2.4"
       },
       {
         "party": "RUK",
@@ -5584,7 +4397,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 285,
-        "swing": "+0.6"
+        "swing": "-0.3"
       }
     ]
   },
@@ -5598,22 +4411,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3913,
-        "swing": "+10.0"
+        "swing": "-12.7"
       },
       {
         "party": "Lab",
         "votes": 15833,
-        "swing": "+40.5"
+        "swing": "-18.8"
       },
       {
         "party": "LD",
         "votes": 6736,
-        "swing": "+17.2"
+        "swing": "+4.9"
       },
       {
         "party": "RUK",
         "votes": 4980,
-        "swing": "+12.7"
+        "swing": "+9.3"
       },
       {
         "party": "Green",
@@ -5623,12 +4436,12 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 3550,
-        "swing": "+9.1"
+        "swing": "+8.4"
       },
       {
         "party": "All other candidates",
         "votes": 195,
-        "swing": "+0.5"
+        "swing": "-0.5"
       }
     ]
   },
@@ -5642,22 +4455,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9642,
-        "swing": "+20.3"
+        "swing": "-15.4"
       },
       {
         "party": "Lab",
         "votes": 20849,
-        "swing": "+43.9"
+        "swing": "-5.7"
       },
       {
         "party": "LD",
         "votes": 3168,
-        "swing": "+6.7"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
         "votes": 5985,
-        "swing": "+12.6"
+        "swing": "+10.0"
       },
       {
         "party": "Green",
@@ -5667,7 +4480,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 4669,
-        "swing": "+9.8"
+        "swing": "+6.4"
       }
     ]
   },
@@ -5681,22 +4494,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5459,
-        "swing": "+13.9"
+        "swing": "-16.2"
       },
       {
         "party": "Lab",
         "votes": 17428,
-        "swing": "+44.5"
+        "swing": "-9.2"
       },
       {
         "party": "LD",
         "votes": 2908,
-        "swing": "+7.4"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
         "votes": 4493,
-        "swing": "+11.5"
+        "swing": "+8.7"
       },
       {
         "party": "Green",
@@ -5706,7 +4519,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 3227,
-        "swing": "+8.2"
+        "swing": "+4.1"
       }
     ]
   },
@@ -5720,22 +4533,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6835,
-        "swing": "+15.3"
+        "swing": "-14.6"
       },
       {
         "party": "Lab",
         "votes": 16442,
-        "swing": "+36.7"
+        "swing": "-13.4"
       },
       {
         "party": "LD",
         "votes": 1921,
-        "swing": "+4.3"
+        "swing": "-1.0"
       },
       {
         "party": "RUK",
         "votes": 5626,
-        "swing": "+12.6"
+        "swing": "+8.9"
       },
       {
         "party": "Green",
@@ -5745,12 +4558,12 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 9423,
-        "swing": "+21.1"
+        "swing": "+12.5"
       },
       {
         "party": "All other candidates",
         "votes": 1353,
-        "swing": "+3.0"
+        "swing": "+2.7"
       }
     ]
   },
@@ -5764,17 +4577,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12929,
-        "swing": "+28.1"
+        "swing": "-28.4"
       },
       {
         "party": "Lab",
         "votes": 18129,
-        "swing": "+39.4"
+        "swing": "+4.9"
       },
       {
         "party": "LD",
         "votes": 2982,
-        "swing": "+6.5"
+        "swing": "+1.5"
       },
       {
         "party": "RUK",
@@ -5789,7 +4602,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 722,
-        "swing": "+1.6"
+        "swing": "-0.8"
       }
     ]
   },
@@ -5803,22 +4616,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12221,
-        "swing": "+26.2"
+        "swing": "-16.2"
       },
       {
         "party": "Lab",
         "votes": 6108,
-        "swing": "+13.1"
+        "swing": "+0.7"
       },
       {
         "party": "LD",
         "votes": 20126,
-        "swing": "+43.1"
+        "swing": "+2.0"
       },
       {
         "party": "RUK",
         "votes": 5941,
-        "swing": "+12.7"
+        "swing": "+10.6"
       },
       {
         "party": "Green",
@@ -5828,7 +4641,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 757,
-        "swing": "+1.6"
+        "swing": "+1.2"
       }
     ]
   },
@@ -5842,17 +4655,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15485,
-        "swing": "+38.1"
+        "swing": "-38.4"
       },
       {
         "party": "Lab",
         "votes": 9455,
-        "swing": "+23.3"
+        "swing": "+6.5"
       },
       {
         "party": "LD",
         "votes": 1341,
-        "swing": "+3.3"
+        "swing": "-3.3"
       },
       {
         "party": "RUK",
@@ -5876,17 +4689,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6147,
-        "swing": "+14.8"
+        "swing": "-19.9"
       },
       {
         "party": "Lab",
         "votes": 18091,
-        "swing": "+43.7"
+        "swing": "+29.5"
       },
       {
         "party": "LD",
         "votes": 983,
-        "swing": "+2.4"
+        "swing": "-2.5"
       },
       {
         "party": "RUK",
@@ -5920,17 +4733,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16831,
-        "swing": "+31.5"
+        "swing": "-23.8"
       },
       {
         "party": "Lab",
         "votes": 16770,
-        "swing": "+31.4"
+        "swing": "+6.6"
       },
       {
         "party": "LD",
         "votes": 8232,
-        "swing": "+15.4"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
@@ -5959,17 +4772,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15144,
-        "swing": "+32.6"
+        "swing": "-29.3"
       },
       {
         "party": "Lab",
         "votes": 10854,
-        "swing": "+23.4"
+        "swing": "+1.5"
       },
       {
         "party": "LD",
         "votes": 5407,
-        "swing": "+11.6"
+        "swing": "+1.0"
       },
       {
         "party": "RUK",
@@ -5998,22 +4811,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4763,
-        "swing": "+10.3"
+        "swing": "-18.0"
       },
       {
         "party": "Lab",
         "votes": 5386,
-        "swing": "+11.6"
+        "swing": "-9.1"
       },
       {
         "party": "LD",
         "votes": 6949,
-        "swing": "+15.0"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
         "votes": 5374,
-        "swing": "+11.6"
+        "swing": "+7.6"
       },
       {
         "party": "Green",
@@ -6023,7 +4836,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 21738,
-        "swing": "+46.9"
+        "swing": "+15.9"
       },
       {
         "party": "All other candidates",
@@ -6042,17 +4855,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11691,
-        "swing": "+28.6"
+        "swing": "-37.3"
       },
       {
         "party": "Lab",
         "votes": 13689,
-        "swing": "+33.5"
+        "swing": "+9.1"
       },
       {
         "party": "LD",
         "votes": 2175,
-        "swing": "+5.3"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
@@ -6067,7 +4880,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 797,
-        "swing": "+2.0"
+        "swing": "+1.5"
       }
     ]
   },
@@ -6081,17 +4894,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11446,
-        "swing": "+22.6"
+        "swing": "-23.4"
       },
       {
         "party": "Lab",
         "votes": 7909,
-        "swing": "+15.6"
+        "swing": "+3.3"
       },
       {
         "party": "LD",
         "votes": 23681,
-        "swing": "+46.7"
+        "swing": "+4.9"
       },
       {
         "party": "RUK",
@@ -6120,17 +4933,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15461,
-        "swing": "+30.5"
+        "swing": "-24.2"
       },
       {
         "party": "Lab",
         "votes": 6108,
-        "swing": "+12.0"
+        "swing": "-6.1"
       },
       {
         "party": "LD",
         "votes": 20214,
-        "swing": "+39.9"
+        "swing": "+13.8"
       },
       {
         "party": "RUK",
@@ -6145,7 +4958,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 591,
-        "swing": "+1.2"
+        "swing": "+0.1"
       }
     ]
   },
@@ -6159,22 +4972,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18404,
-        "swing": "+39.1"
+        "swing": "-6.4"
       },
       {
         "party": "Lab",
         "votes": 18556,
-        "swing": "+39.4"
+        "swing": "+10.3"
       },
       {
         "party": "LD",
         "votes": 3611,
-        "swing": "+7.7"
+        "swing": "-16.2"
       },
       {
         "party": "RUK",
         "votes": 3144,
-        "swing": "+6.7"
+        "swing": "+6.4"
       },
       {
         "party": "Green",
@@ -6184,7 +4997,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 603,
-        "swing": "+1.3"
+        "swing": "+0.4"
       }
     ]
   },
@@ -6198,17 +5011,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17866,
-        "swing": "+36.1"
+        "swing": "-12.4"
       },
       {
         "party": "Lab",
         "votes": 2665,
-        "swing": "+5.4"
+        "swing": "+0.6"
       },
       {
         "party": "LD",
         "votes": 25076,
-        "swing": "+50.6"
+        "swing": "+4.7"
       },
       {
         "party": "Green",
@@ -6218,7 +5031,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 775,
-        "swing": "+1.6"
+        "swing": "+0.8"
       }
     ]
   },
@@ -6232,17 +5045,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18971,
-        "swing": "+34.8"
+        "swing": "-21.5"
       },
       {
         "party": "Lab",
         "votes": 3502,
-        "swing": "+6.4"
+        "swing": "-7.5"
       },
       {
         "party": "LD",
         "votes": 24422,
-        "swing": "+44.8"
+        "swing": "+22.4"
       },
       {
         "party": "RUK",
@@ -6257,7 +5070,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 577,
-        "swing": "+1.1"
+        "swing": "-1.4"
       }
     ]
   },
@@ -6271,22 +5084,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10388,
-        "swing": "+23.2"
+        "swing": "-15.2"
       },
       {
         "party": "Lab",
         "votes": 22258,
-        "swing": "+49.8"
+        "swing": "-0.5"
       },
       {
         "party": "LD",
         "votes": 2076,
-        "swing": "+4.6"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
         "votes": 5870,
-        "swing": "+13.1"
+        "swing": "+10.3"
       },
       {
         "party": "Green",
@@ -6305,22 +5118,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19905,
-        "swing": "+37.9"
+        "swing": "-21.3"
       },
       {
         "party": "Lab",
         "votes": 16848,
-        "swing": "+32.1"
+        "swing": "+10.6"
       },
       {
         "party": "LD",
         "votes": 5430,
-        "swing": "+10.3"
+        "swing": "-5.0"
       },
       {
         "party": "RUK",
         "votes": 6414,
-        "swing": "+12.2"
+        "swing": "+11.2"
       },
       {
         "party": "Green",
@@ -6330,7 +5143,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1611,
-        "swing": "+3.1"
+        "swing": "+2.3"
       }
     ]
   },
@@ -6344,22 +5157,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8496,
-        "swing": "+20.4"
+        "swing": "-16.6"
       },
       {
         "party": "Lab",
         "votes": 19316,
-        "swing": "+46.5"
+        "swing": "+6.3"
       },
       {
         "party": "LD",
         "votes": 2553,
-        "swing": "+6.1"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
         "votes": 7897,
-        "swing": "+19.0"
+        "swing": "+8.4"
       },
       {
         "party": "Green",
@@ -6369,7 +5182,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 611,
-        "swing": "+1.5"
+        "swing": "+0.6"
       }
     ]
   },
@@ -6383,17 +5196,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13368,
-        "swing": "+25.7"
+        "swing": "-33.0"
       },
       {
         "party": "Lab",
         "votes": 3175,
-        "swing": "+6.1"
+        "swing": "-9.3"
       },
       {
         "party": "LD",
         "votes": 25540,
-        "swing": "+49.2"
+        "swing": "+28.9"
       },
       {
         "party": "RUK",
@@ -6408,7 +5221,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 190,
-        "swing": "+0.4"
+        "swing": "-0.3"
       }
     ]
   },
@@ -6422,22 +5235,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17281,
-        "swing": "+35.6"
+        "swing": "-12.6"
       },
       {
         "party": "Lab",
         "votes": 12524,
-        "swing": "+25.8"
+        "swing": "-19.4"
       },
       {
         "party": "LD",
         "votes": 1275,
-        "swing": "+2.6"
+        "swing": "-3.2"
       },
       {
         "party": "RUK",
         "votes": 3653,
-        "swing": "+7.5"
+        "swing": "+7.2"
       },
       {
         "party": "Green",
@@ -6461,17 +5274,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14414,
-        "swing": "+29.1"
+        "swing": "-27.3"
       },
       {
         "party": "Lab",
         "votes": 3925,
-        "swing": "+7.9"
+        "swing": "-3.7"
       },
       {
         "party": "LD",
         "votes": 22552,
-        "swing": "+45.5"
+        "swing": "+15.3"
       },
       {
         "party": "RUK",
@@ -6500,17 +5313,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18671,
-        "swing": "+36.7"
+        "swing": "-10.8"
       },
       {
         "party": "Lab",
         "votes": 21585,
-        "swing": "+42.4"
+        "swing": "+2.1"
       },
       {
         "party": "LD",
         "votes": 2614,
-        "swing": "+5.1"
+        "swing": "-4.7"
       },
       {
         "party": "RUK",
@@ -6525,7 +5338,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 561,
-        "swing": "+1.1"
+        "swing": "+1.0"
       }
     ]
   },
@@ -6544,7 +5357,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 29301,
-        "swing": "+86.3"
+        "swing": "-4.7"
       }
     ]
   },
@@ -6558,17 +5371,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16941,
-        "swing": "+35.8"
+        "swing": "-29.8"
       },
       {
         "party": "Lab",
         "votes": 7762,
-        "swing": "+16.4"
+        "swing": "+3.5"
       },
       {
         "party": "LD",
         "votes": 9486,
-        "swing": "+20.0"
+        "swing": "+2.7"
       },
       {
         "party": "RUK",
@@ -6597,22 +5410,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12594,
-        "swing": "+32.1"
+        "swing": "-8.2"
       },
       {
         "party": "Lab",
         "votes": 15302,
-        "swing": "+39.0"
+        "swing": "+10.2"
       },
       {
         "party": "LD",
         "votes": 4335,
-        "swing": "+11.1"
+        "swing": "-17.2"
       },
       {
         "party": "RUK",
         "votes": 2752,
-        "swing": "+7.0"
+        "swing": "+6.8"
       },
       {
         "party": "Green",
@@ -6622,7 +5435,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1388,
-        "swing": "+3.5"
+        "swing": "+3.1"
       }
     ]
   },
@@ -6636,22 +5449,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5221,
-        "swing": "+12.9"
+        "swing": "-19.0"
       },
       {
         "party": "Lab",
         "votes": 19131,
-        "swing": "+47.1"
+        "swing": "+6.2"
       },
       {
         "party": "LD",
         "votes": 5920,
-        "swing": "+14.6"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
         "votes": 7374,
-        "swing": "+18.2"
+        "swing": "+11.6"
       },
       {
         "party": "Green",
@@ -6661,7 +5474,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 178,
-        "swing": "+0.4"
+        "swing": "+0.1"
       }
     ]
   },
@@ -6675,17 +5488,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12820,
-        "swing": "+27.9"
+        "swing": "-44.0"
       },
       {
         "party": "Lab",
         "votes": 7448,
-        "swing": "+16.2"
+        "swing": "+0.6"
       },
       {
         "party": "LD",
         "votes": 2016,
-        "swing": "+4.4"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
@@ -6700,7 +5513,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 514,
-        "swing": "+1.1"
+        "swing": "-2.3"
       }
     ]
   },
@@ -6714,22 +5527,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4360,
-        "swing": "+10.2"
+        "swing": "-9.3"
       },
       {
         "party": "Lab",
         "votes": 24166,
-        "swing": "+56.5"
+        "swing": "+1.2"
       },
       {
         "party": "LD",
         "votes": 6161,
-        "swing": "+14.4"
+        "swing": "-5.4"
       },
       {
         "party": "RUK",
         "votes": 1758,
-        "swing": "+4.1"
+        "swing": "+3.0"
       },
       {
         "party": "Green",
@@ -6753,22 +5566,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13862,
-        "swing": "+29.0"
+        "swing": "-19.0"
       },
       {
         "party": "Lab",
         "votes": 18484,
-        "swing": "+38.7"
+        "swing": "+0.7"
       },
       {
         "party": "LD",
         "votes": 1859,
-        "swing": "+3.9"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
         "votes": 7626,
-        "swing": "+15.9"
+        "swing": "+11.8"
       },
       {
         "party": "Green",
@@ -6778,7 +5591,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 3733,
-        "swing": "+7.8"
+        "swing": "+3.1"
       },
       {
         "party": "All other candidates",
@@ -6797,22 +5610,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13598,
-        "swing": "+32.7"
+        "swing": "-13.1"
       },
       {
         "party": "Lab",
         "votes": 14794,
-        "swing": "+35.5"
+        "swing": "-4.7"
       },
       {
         "party": "LD",
         "votes": 1685,
-        "swing": "+4.0"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
         "votes": 7000,
-        "swing": "+16.8"
+        "swing": "+15.0"
       },
       {
         "party": "Green",
@@ -6822,7 +5635,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 3159,
-        "swing": "+7.6"
+        "swing": "+0.3"
       }
     ]
   },
@@ -6836,17 +5649,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1382,
-        "swing": "+3.6"
+        "swing": "-8.3"
       },
       {
         "party": "Lab",
         "votes": 19291,
-        "swing": "+49.8"
+        "swing": "+13.5"
       },
       {
         "party": "LD",
         "votes": 671,
-        "swing": "+1.7"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
@@ -6880,17 +5693,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10554,
-        "swing": "+23.5"
+        "swing": "-28.8"
       },
       {
         "party": "Lab",
         "votes": 18804,
-        "swing": "+41.9"
+        "swing": "+11.8"
       },
       {
         "party": "LD",
         "votes": 6393,
-        "swing": "+14.2"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
@@ -6919,22 +5732,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14007,
-        "swing": "+30.3"
+        "swing": "-20.9"
       },
       {
         "party": "Lab",
         "votes": 18970,
-        "swing": "+41.0"
+        "swing": "+4.8"
       },
       {
         "party": "LD",
         "votes": 2007,
-        "swing": "+4.3"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
         "votes": 7298,
-        "swing": "+15.8"
+        "swing": "+13.7"
       },
       {
         "party": "Green",
@@ -6944,7 +5757,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 459,
-        "swing": "+1.0"
+        "swing": "-0.7"
       }
     ]
   },
@@ -6958,17 +5771,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15488,
-        "swing": "+30.9"
+        "swing": "-29.7"
       },
       {
         "party": "Lab",
         "votes": 18875,
-        "swing": "+37.7"
+        "swing": "+13.6"
       },
       {
         "party": "LD",
         "votes": 2785,
-        "swing": "+5.6"
+        "swing": "-5.5"
       },
       {
         "party": "RUK",
@@ -6983,7 +5796,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2725,
-        "swing": "+5.4"
+        "swing": "+4.1"
       }
     ]
   },
@@ -6997,17 +5810,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14689,
-        "swing": "+29.6"
+        "swing": "-25.0"
       },
       {
         "party": "Lab",
         "votes": 21020,
-        "swing": "+42.4"
+        "swing": "+3.9"
       },
       {
         "party": "LD",
         "votes": 2191,
-        "swing": "+4.4"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
@@ -7036,22 +5849,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6240,
-        "swing": "+16.9"
+        "swing": "-18.2"
       },
       {
         "party": "Lab",
         "votes": 18308,
-        "swing": "+49.5"
+        "swing": "-2.6"
       },
       {
         "party": "LD",
         "votes": 1227,
-        "swing": "+3.3"
+        "swing": "-2.1"
       },
       {
         "party": "RUK",
         "votes": 6685,
-        "swing": "+18.1"
+        "swing": "+12.9"
       },
       {
         "party": "Green",
@@ -7075,22 +5888,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8522,
-        "swing": "+20.3"
+        "swing": "-23.1"
       },
       {
         "party": "Lab",
         "votes": 19696,
-        "swing": "+46.9"
+        "swing": "+3.0"
       },
       {
         "party": "LD",
         "votes": 1931,
-        "swing": "+4.6"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
         "votes": 7950,
-        "swing": "+18.9"
+        "swing": "+14.8"
       },
       {
         "party": "Green",
@@ -7114,22 +5927,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10160,
-        "swing": "+23.8"
+        "swing": "-18.8"
       },
       {
         "party": "Lab",
         "votes": 20361,
-        "swing": "+47.6"
+        "swing": "+3.4"
       },
       {
         "party": "LD",
         "votes": 2531,
-        "swing": "+5.9"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
         "votes": 5711,
-        "swing": "+13.4"
+        "swing": "+10.5"
       },
       {
         "party": "Green",
@@ -7139,7 +5952,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1605,
-        "swing": "+3.8"
+        "swing": "+2.8"
       }
     ]
   },
@@ -7153,22 +5966,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3203,
-        "swing": "+7.8"
+        "swing": "-14.4"
       },
       {
         "party": "Lab",
         "votes": 18662,
-        "swing": "+45.7"
+        "swing": "+16.2"
       },
       {
         "party": "LD",
         "votes": 1593,
-        "swing": "+3.9"
+        "swing": "-2.6"
       },
       {
         "party": "RUK",
         "votes": 3128,
-        "swing": "+7.7"
+        "swing": "+5.7"
       },
       {
         "party": "Green",
@@ -7197,22 +6010,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8592,
-        "swing": "+18.9"
+        "swing": "-21.0"
       },
       {
         "party": "Lab",
         "votes": 22274,
-        "swing": "+49.1"
+        "swing": "+4.7"
       },
       {
         "party": "LD",
         "votes": 1898,
-        "swing": "+4.2"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
         "votes": 9454,
-        "swing": "+20.8"
+        "swing": "+12.8"
       },
       {
         "party": "Green",
@@ -7236,17 +6049,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12218,
-        "swing": "+26.8"
+        "swing": "-27.4"
       },
       {
         "party": "Lab",
         "votes": 17453,
-        "swing": "+38.2"
+        "swing": "+0.8"
       },
       {
         "party": "LD",
         "votes": 2205,
-        "swing": "+4.8"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
@@ -7275,22 +6088,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11110,
-        "swing": "+23.5"
+        "swing": "-27.3"
       },
       {
         "party": "Lab",
         "votes": 20837,
-        "swing": "+44.1"
+        "swing": "+4.9"
       },
       {
         "party": "LD",
         "votes": 2286,
-        "swing": "+4.8"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
         "votes": 9602,
-        "swing": "+20.3"
+        "swing": "+17.7"
       },
       {
         "party": "Green",
@@ -7300,7 +6113,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1211,
-        "swing": "+2.6"
+        "swing": "+2.3"
       }
     ]
   },
@@ -7314,22 +6127,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11716,
-        "swing": "+26.8"
+        "swing": "-14.6"
       },
       {
         "party": "Lab",
         "votes": 18541,
-        "swing": "+42.4"
+        "swing": "-5.7"
       },
       {
         "party": "LD",
         "votes": 3563,
-        "swing": "+8.1"
+        "swing": "+1.5"
       },
       {
         "party": "RUK",
         "votes": 5862,
-        "swing": "+13.4"
+        "swing": "+11.7"
       },
       {
         "party": "Green",
@@ -7348,22 +6161,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19757,
-        "swing": "+40.0"
+        "swing": "-14.5"
       },
       {
         "party": "Lab",
         "votes": 17444,
-        "swing": "+35.3"
+        "swing": "+7.2"
       },
       {
         "party": "LD",
         "votes": 4384,
-        "swing": "+8.9"
+        "swing": "-4.6"
       },
       {
         "party": "RUK",
         "votes": 4149,
-        "swing": "+8.4"
+        "swing": "+8.3"
       },
       {
         "party": "Green",
@@ -7373,7 +6186,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 785,
-        "swing": "+1.6"
+        "swing": "+0.7"
       }
     ]
   },
@@ -7387,22 +6200,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6386,
-        "swing": "+16.8"
+        "swing": "-4.8"
       },
       {
         "party": "Lab",
         "votes": 20612,
-        "swing": "+54.1"
+        "swing": "-12.6"
       },
       {
         "party": "LD",
         "votes": 3667,
-        "swing": "+9.6"
+        "swing": "+2.7"
       },
       {
         "party": "RUK",
         "votes": 2148,
-        "swing": "+5.6"
+        "swing": "+4.3"
       },
       {
         "party": "Green",
@@ -7412,7 +6225,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1458,
-        "swing": "+3.8"
+        "swing": "+3.0"
       }
     ]
   },
@@ -7426,17 +6239,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1939,
-        "swing": "+4.7"
+        "swing": "-10.3"
       },
       {
         "party": "Lab",
         "votes": 18513,
-        "swing": "+45.2"
+        "swing": "+18.1"
       },
       {
         "party": "LD",
         "votes": 1294,
-        "swing": "+3.2"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
@@ -7465,22 +6278,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6926,
-        "swing": "+17.8"
+        "swing": "-25.3"
       },
       {
         "party": "Lab",
         "votes": 16571,
-        "swing": "+42.6"
+        "swing": "-2.1"
       },
       {
         "party": "LD",
         "votes": 1033,
-        "swing": "+2.7"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 9398,
-        "swing": "+24.2"
+        "swing": "+17.6"
       },
       {
         "party": "Green",
@@ -7490,7 +6303,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 755,
-        "swing": "+1.9"
+        "swing": "+1.0"
       }
     ]
   },
@@ -7504,22 +6317,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14323,
-        "swing": "+33.8"
+        "swing": "-15.9"
       },
       {
         "party": "Lab",
         "votes": 16621,
-        "swing": "+39.2"
+        "swing": "+0.3"
       },
       {
         "party": "LD",
         "votes": 1735,
-        "swing": "+4.1"
+        "swing": "-0.5"
       },
       {
         "party": "RUK",
         "votes": 6852,
-        "swing": "+16.2"
+        "swing": "+12.5"
       },
       {
         "party": "Green",
@@ -7538,17 +6351,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14200,
-        "swing": "+31.9"
+        "swing": "-29.2"
       },
       {
         "party": "Lab",
         "votes": 15392,
-        "swing": "+34.6"
+        "swing": "+5.1"
       },
       {
         "party": "LD",
         "votes": 2184,
-        "swing": "+4.9"
+        "swing": "-2.1"
       },
       {
         "party": "RUK",
@@ -7572,17 +6385,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17872,
-        "swing": "+33.7"
+        "swing": "-30.8"
       },
       {
         "party": "Lab",
         "votes": 14860,
-        "swing": "+28.0"
+        "swing": "+10.2"
       },
       {
         "party": "LD",
         "votes": 6755,
-        "swing": "+12.7"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
@@ -7606,22 +6419,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9704,
-        "swing": "+23.7"
+        "swing": "-21.5"
       },
       {
         "party": "Lab",
         "votes": 18619,
-        "swing": "+45.5"
+        "swing": "+5.7"
       },
       {
         "party": "LD",
         "votes": 1822,
-        "swing": "+4.5"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
         "votes": 7488,
-        "swing": "+18.3"
+        "swing": "+14.2"
       },
       {
         "party": "Green",
@@ -7640,22 +6453,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5192,
-        "swing": "+13.9"
+        "swing": "-23.0"
       },
       {
         "party": "Lab",
         "votes": 14503,
-        "swing": "+38.8"
+        "swing": "-12.3"
       },
       {
         "party": "LD",
         "votes": 1807,
-        "swing": "+4.8"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
         "votes": 8501,
-        "swing": "+22.7"
+        "swing": "+16.9"
       },
       {
         "party": "Green",
@@ -7679,17 +6492,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17409,
-        "swing": "+34.0"
+        "swing": "-25.0"
       },
       {
         "party": "Lab",
         "votes": 17759,
-        "swing": "+34.6"
+        "swing": "+10.5"
       },
       {
         "party": "LD",
         "votes": 4860,
-        "swing": "+9.5"
+        "swing": "-3.3"
       },
       {
         "party": "RUK",
@@ -7718,22 +6531,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4182,
-        "swing": "+11.0"
+        "swing": "-17.7"
       },
       {
         "party": "Lab",
         "votes": 8707,
-        "swing": "+22.9"
+        "swing": "-36.2"
       },
       {
         "party": "LD",
         "votes": 1340,
-        "swing": "+3.5"
+        "swing": "+1.0"
       },
       {
         "party": "RUK",
         "votes": 6152,
-        "swing": "+16.2"
+        "swing": "+12.8"
       },
       {
         "party": "Green",
@@ -7743,7 +6556,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 15641,
-        "swing": "+41.1"
+        "swing": "+35.9"
       }
     ]
   },
@@ -7757,17 +6570,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15560,
-        "swing": "+28.4"
+        "swing": "-21.3"
       },
       {
         "party": "Lab",
         "votes": 8045,
-        "swing": "+14.7"
+        "swing": "-1.3"
       },
       {
         "party": "LD",
         "votes": 21793,
-        "swing": "+39.8"
+        "swing": "+8.5"
       },
       {
         "party": "RUK",
@@ -7782,7 +6595,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 242,
-        "swing": "+0.4"
+        "swing": "-1.8"
       }
     ]
   },
@@ -7796,22 +6609,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7964,
-        "swing": "+21.0"
+        "swing": "-15.6"
       },
       {
         "party": "Lab",
         "votes": 17515,
-        "swing": "+46.2"
+        "swing": "+6.8"
       },
       {
         "party": "LD",
         "votes": 1199,
-        "swing": "+3.2"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 7886,
-        "swing": "+20.8"
+        "swing": "+5.2"
       },
       {
         "party": "Green",
@@ -7821,7 +6634,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1500,
-        "swing": "+4.0"
+        "swing": "+1.8"
       }
     ]
   },
@@ -7835,22 +6648,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12811,
-        "swing": "+32.7"
+        "swing": "-19.4"
       },
       {
         "party": "Lab",
         "votes": 15122,
-        "swing": "+38.6"
+        "swing": "+9.9"
       },
       {
         "party": "LD",
         "votes": 1166,
-        "swing": "+3.0"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
         "votes": 8487,
-        "swing": "+21.7"
+        "swing": "+11.4"
       },
       {
         "party": "Green",
@@ -7860,7 +6673,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 146,
-        "swing": "+0.4"
+        "swing": "-1.6"
       }
     ]
   },
@@ -7874,17 +6687,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7105,
-        "swing": "+22.9"
+        "swing": "-10.2"
       },
       {
         "party": "Lab",
         "votes": 16231,
-        "swing": "+52.4"
+        "swing": "+14.0"
       },
       {
         "party": "LD",
         "votes": 1045,
-        "swing": "+3.4"
+        "swing": "-0.2"
       },
       {
         "party": "Green",
@@ -7894,7 +6707,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 4843,
-        "swing": "+15.6"
+        "swing": "+11.1"
       }
     ]
   },
@@ -7908,17 +6721,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15530,
-        "swing": "+31.1"
+        "swing": "-20.1"
       },
       {
         "party": "Lab",
         "votes": 4053,
-        "swing": "+8.1"
+        "swing": "-1.8"
       },
       {
         "party": "LD",
         "votes": 20921,
-        "swing": "+41.9"
+        "swing": "+9.8"
       },
       {
         "party": "RUK",
@@ -7942,17 +6755,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10370,
-        "swing": "+21.7"
+        "swing": "-35.2"
       },
       {
         "party": "Lab",
         "votes": 18940,
-        "swing": "+39.6"
+        "swing": "+7.0"
       },
       {
         "party": "LD",
         "votes": 2595,
-        "swing": "+5.4"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
@@ -7967,7 +6780,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1409,
-        "swing": "+2.9"
+        "swing": "+0.9"
       }
     ]
   },
@@ -7981,17 +6794,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19975,
-        "swing": "+40.3"
+        "swing": "-25.4"
       },
       {
         "party": "Lab",
         "votes": 10980,
-        "swing": "+22.1"
+        "swing": "+5.1"
       },
       {
         "party": "LD",
         "votes": 5131,
-        "swing": "+10.3"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
@@ -8006,7 +6819,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 239,
-        "swing": "+0.5"
+        "swing": "-0.7"
       }
     ]
   },
@@ -8020,17 +6833,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10315,
-        "swing": "+28.8"
+        "swing": "-34.3"
       },
       {
         "party": "Lab",
         "votes": 12215,
-        "swing": "+34.1"
+        "swing": "+3.2"
       },
       {
         "party": "LD",
         "votes": 1056,
-        "swing": "+3.0"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
@@ -8059,22 +6872,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3873,
-        "swing": "+8.5"
+        "swing": "-8.1"
       },
       {
         "party": "Lab",
         "votes": 27356,
-        "swing": "+60.3"
+        "swing": "-4.2"
       },
       {
         "party": "LD",
         "votes": 3485,
-        "swing": "+7.7"
+        "swing": "+6.7"
       },
       {
         "party": "RUK",
         "votes": 1801,
-        "swing": "+4.0"
+        "swing": "+2.9"
       },
       {
         "party": "Green",
@@ -8084,7 +6897,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 296,
-        "swing": "+0.7"
+        "swing": "0.0"
       }
     ]
   },
@@ -8098,17 +6911,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13527,
-        "swing": "+29.6"
+        "swing": "-14.3"
       },
       {
         "party": "Lab",
         "votes": 11767,
-        "swing": "+25.7"
+        "swing": "+16.3"
       },
       {
         "party": "LD",
         "votes": 2092,
-        "swing": "+4.6"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
@@ -8142,17 +6955,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14999,
-        "swing": "+33.9"
+        "swing": "-12.5"
       },
       {
         "party": "Lab",
         "votes": 10140,
-        "swing": "+22.9"
+        "swing": "+14.6"
       },
       {
         "party": "LD",
         "votes": 2800,
-        "swing": "+6.3"
+        "swing": "-1.0"
       },
       {
         "party": "RUK",
@@ -8186,22 +6999,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1569,
-        "swing": "+4.0"
+        "swing": "-7.0"
       },
       {
         "party": "Lab",
         "votes": 14869,
-        "swing": "+38.3"
+        "swing": "+14.4"
       },
       {
         "party": "LD",
         "votes": 2402,
-        "swing": "+6.2"
+        "swing": "+0.6"
       },
       {
         "party": "RUK",
         "votes": 2363,
-        "swing": "+6.1"
+        "swing": "+3.5"
       },
       {
         "party": "SNP",
@@ -8211,7 +7024,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2101,
-        "swing": "+5.4"
+        "swing": "+4.9"
       }
     ]
   },
@@ -8225,17 +7038,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3297,
-        "swing": "+7.4"
+        "swing": "-14.0"
       },
       {
         "party": "Lab",
         "votes": 20336,
-        "swing": "+45.7"
+        "swing": "+22.1"
       },
       {
         "party": "LD",
         "votes": 3181,
-        "swing": "+7.1"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
@@ -8269,17 +7082,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14309,
-        "swing": "+31.1"
+        "swing": "-27.6"
       },
       {
         "party": "Lab",
         "votes": 14976,
-        "swing": "+32.5"
+        "swing": "+5.7"
       },
       {
         "party": "LD",
         "votes": 6497,
-        "swing": "+14.1"
+        "swing": "+3.3"
       },
       {
         "party": "RUK",
@@ -8308,22 +7121,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4712,
-        "swing": "+11.7"
+        "swing": "-14.5"
       },
       {
         "party": "Lab",
         "votes": 5912,
-        "swing": "+14.6"
+        "swing": "-8.2"
       },
       {
         "party": "LD",
         "votes": 1381,
-        "swing": "+3.4"
+        "swing": "+3.3"
       },
       {
         "party": "RUK",
         "votes": 4857,
-        "swing": "+12.0"
+        "swing": "+7.0"
       },
       {
         "party": "Green",
@@ -8333,7 +7146,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 21788,
-        "swing": "+53.9"
+        "swing": "+8.2"
       },
       {
         "party": "All other candidates",
@@ -8352,22 +7165,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8345,
-        "swing": "+17.5"
+        "swing": "-8.1"
       },
       {
         "party": "Lab",
         "votes": 22340,
-        "swing": "+46.8"
+        "swing": "-5.5"
       },
       {
         "party": "LD",
         "votes": 6056,
-        "swing": "+12.7"
+        "swing": "-4.7"
       },
       {
         "party": "RUK",
         "votes": 3105,
-        "swing": "+6.5"
+        "swing": "+5.1"
       },
       {
         "party": "Green",
@@ -8391,17 +7204,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8144,
-        "swing": "+18.8"
+        "swing": "-13.1"
       },
       {
         "party": "Lab",
         "votes": 20663,
-        "swing": "+47.8"
+        "swing": "-8.5"
       },
       {
         "party": "LD",
         "votes": 2543,
-        "swing": "+5.9"
+        "swing": "-3.0"
       },
       {
         "party": "RUK",
@@ -8430,22 +7243,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7207,
-        "swing": "+15.4"
+        "swing": "-8.5"
       },
       {
         "party": "Lab",
         "votes": 23000,
-        "swing": "+49.1"
+        "swing": "-10.6"
       },
       {
         "party": "LD",
         "votes": 2832,
-        "swing": "+6.0"
+        "swing": "-3.7"
       },
       {
         "party": "RUK",
         "votes": 2585,
-        "swing": "+5.5"
+        "swing": "+3.7"
       },
       {
         "party": "Green",
@@ -8455,7 +7268,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 6836,
-        "swing": "+14.6"
+        "swing": "+13.7"
       }
     ]
   },
@@ -8469,17 +7282,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17361,
-        "swing": "+37.8"
+        "swing": "-10.9"
       },
       {
         "party": "Lab",
         "votes": 18209,
-        "swing": "+39.7"
+        "swing": "+13.0"
       },
       {
         "party": "LD",
         "votes": 6142,
-        "swing": "+13.4"
+        "swing": "-8.4"
       },
       {
         "party": "Green",
@@ -8503,22 +7316,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3753,
-        "swing": "+10.9"
+        "swing": "-16.1"
       },
       {
         "party": "Lab",
         "votes": 16774,
-        "swing": "+48.9"
+        "swing": "+2.1"
       },
       {
         "party": "LD",
         "votes": 811,
-        "swing": "+2.4"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
         "votes": 10232,
-        "swing": "+29.8"
+        "swing": "+11.7"
       },
       {
         "party": "Green",
@@ -8528,7 +7341,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1581,
-        "swing": "+4.6"
+        "swing": "+1.0"
       }
     ]
   },
@@ -8557,17 +7370,17 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 892,
-        "swing": "+2.2"
+        "swing": "-1.3"
       },
       {
         "party": "UUP",
         "votes": 9476,
-        "swing": "+23.9"
+        "swing": "+7.3"
       },
       {
         "party": "APNI",
         "votes": 10156,
-        "swing": "+25.6"
+        "swing": "-0.4"
       },
       {
         "party": "All other candidates",
@@ -8586,17 +7399,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19319,
-        "swing": "+38.3"
+        "swing": "-20.1"
       },
       {
         "party": "Lab",
         "votes": 10440,
-        "swing": "+20.7"
+        "swing": "+7.1"
       },
       {
         "party": "LD",
         "votes": 10839,
-        "swing": "+21.5"
+        "swing": "-1.5"
       },
       {
         "party": "Green",
@@ -8620,22 +7433,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3876,
-        "swing": "+10.2"
+        "swing": "-4.3"
       },
       {
         "party": "Lab",
         "votes": 19570,
-        "swing": "+51.6"
+        "swing": "-26.1"
       },
       {
         "party": "LD",
         "votes": 1210,
-        "swing": "+3.2"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 1340,
-        "swing": "+3.5"
+        "swing": "+1.6"
       },
       {
         "party": "Green",
@@ -8645,7 +7458,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 7670,
-        "swing": "+20.2"
+        "swing": "+19.7"
       }
     ]
   },
@@ -8659,17 +7472,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18509,
-        "swing": "+37.0"
+        "swing": "-22.0"
       },
       {
         "party": "Lab",
         "votes": 4867,
-        "swing": "+9.7"
+        "swing": "-2.6"
       },
       {
         "party": "LD",
         "votes": 17234,
-        "swing": "+34.5"
+        "swing": "+12.7"
       },
       {
         "party": "RUK",
@@ -8684,7 +7497,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 516,
-        "swing": "+1.0"
+        "swing": "-0.5"
       }
     ]
   },
@@ -8698,17 +7511,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3547,
-        "swing": "+7.6"
+        "swing": "-13.8"
       },
       {
         "party": "Lab",
         "votes": 22682,
-        "swing": "+48.6"
+        "swing": "+27.0"
       },
       {
         "party": "LD",
         "votes": 1074,
-        "swing": "+2.3"
+        "swing": "-4.6"
       },
       {
         "party": "RUK",
@@ -8728,7 +7541,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 591,
-        "swing": "+1.3"
+        "swing": "+0.2"
       }
     ]
   },
@@ -8762,22 +7575,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 5260,
-        "swing": "+12.7"
+        "swing": "-3.7"
       },
       {
         "party": "UUP",
         "votes": 3412,
-        "swing": "+8.3"
+        "swing": "-0.9"
       },
       {
         "party": "APNI",
         "votes": 3734,
-        "swing": "+9.0"
+        "swing": "-5.5"
       },
       {
         "party": "All other candidates",
         "votes": 5406,
-        "swing": "+13.1"
+        "swing": "+8.7"
       }
     ]
   },
@@ -8791,17 +7604,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8494,
-        "swing": "+16.9"
+        "swing": "-18.2"
       },
       {
         "party": "Lab",
         "votes": 21935,
-        "swing": "+43.7"
+        "swing": "+31.3"
       },
       {
         "party": "LD",
         "votes": 1150,
-        "swing": "+2.3"
+        "swing": "-5.3"
       },
       {
         "party": "RUK",
@@ -8835,17 +7648,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17502,
-        "swing": "+35.6"
+        "swing": "-24.8"
       },
       {
         "party": "Lab",
         "votes": 10052,
-        "swing": "+20.4"
+        "swing": "+7.2"
       },
       {
         "party": "LD",
         "votes": 8833,
-        "swing": "+18.0"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
@@ -8860,7 +7673,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1472,
-        "swing": "+3.0"
+        "swing": "-0.1"
       }
     ]
   },
@@ -8874,17 +7687,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10083,
-        "swing": "+23.6"
+        "swing": "-29.8"
       },
       {
         "party": "Lab",
         "votes": 17054,
-        "swing": "+39.9"
+        "swing": "+2.3"
       },
       {
         "party": "LD",
         "votes": 1365,
-        "swing": "+3.2"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
@@ -8913,17 +7726,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16849,
-        "swing": "+35.7"
+        "swing": "-30.2"
       },
       {
         "party": "Lab",
         "votes": 12133,
-        "swing": "+25.7"
+        "swing": "+9.8"
       },
       {
         "party": "LD",
         "votes": 8204,
-        "swing": "+17.4"
+        "swing": "+2.9"
       },
       {
         "party": "RUK",
@@ -8952,17 +7765,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12601,
-        "swing": "+25.7"
+        "swing": "-25.3"
       },
       {
         "party": "Lab",
         "votes": 22120,
-        "swing": "+45.1"
+        "swing": "+8.1"
       },
       {
         "party": "LD",
         "votes": 3180,
-        "swing": "+6.5"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
@@ -8977,7 +7790,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 762,
-        "swing": "+1.6"
+        "swing": "+1.1"
       }
     ]
   },
@@ -8991,22 +7804,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11538,
-        "swing": "+25.3"
+        "swing": "-21.8"
       },
       {
         "party": "Lab",
         "votes": 2689,
-        "swing": "+5.9"
+        "swing": "-1.0"
       },
       {
         "party": "LD",
         "votes": 23742,
-        "swing": "+52.1"
+        "swing": "+9.2"
       },
       {
         "party": "RUK",
         "votes": 6061,
-        "swing": "+13.3"
+        "swing": "+10.5"
       },
       {
         "party": "Green",
@@ -9016,7 +7829,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 154,
-        "swing": "+0.3"
+        "swing": "0.0"
       }
     ]
   },
@@ -9030,17 +7843,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14424,
-        "swing": "+31.1"
+        "swing": "-20.8"
       },
       {
         "party": "Lab",
         "votes": 7005,
-        "swing": "+15.1"
+        "swing": "+3.4"
       },
       {
         "party": "LD",
         "votes": 15970,
-        "swing": "+34.4"
+        "swing": "0.0"
       },
       {
         "party": "RUK",
@@ -9069,17 +7882,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2598,
-        "swing": "+5.7"
+        "swing": "-8.4"
       },
       {
         "party": "Lab",
         "votes": 18790,
-        "swing": "+41.2"
+        "swing": "+14.8"
       },
       {
         "party": "LD",
         "votes": 1949,
-        "swing": "+4.3"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
@@ -9113,22 +7926,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3254,
-        "swing": "+6.6"
+        "swing": "-11.0"
       },
       {
         "party": "Lab",
         "votes": 20805,
-        "swing": "+42.1"
+        "swing": "+20.3"
       },
       {
         "party": "LD",
         "votes": 3879,
-        "swing": "+7.8"
+        "swing": "-4.7"
       },
       {
         "party": "RUK",
         "votes": 1818,
-        "swing": "+3.7"
+        "swing": "+2.8"
       },
       {
         "party": "Green",
@@ -9143,7 +7956,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 765,
-        "swing": "+1.5"
+        "swing": "+1.3"
       }
     ]
   },
@@ -9157,17 +7970,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4001,
-        "swing": "+8.5"
+        "swing": "-8.3"
       },
       {
         "party": "Lab",
         "votes": 24976,
-        "swing": "+53.3"
+        "swing": "+7.1"
       },
       {
         "party": "LD",
         "votes": 2746,
-        "swing": "+5.9"
+        "swing": "-2.3"
       },
       {
         "party": "RUK",
@@ -9201,22 +8014,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5558,
-        "swing": "+12.2"
+        "swing": "-12.5"
       },
       {
         "party": "Lab",
         "votes": 18663,
-        "swing": "+40.9"
+        "swing": "+26.5"
       },
       {
         "party": "LD",
         "votes": 3014,
-        "swing": "+6.6"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
         "votes": 2087,
-        "swing": "+4.6"
+        "swing": "+3.4"
       },
       {
         "party": "Green",
@@ -9231,7 +8044,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 446,
-        "swing": "+1.0"
+        "swing": "+0.8"
       }
     ]
   },
@@ -9245,22 +8058,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2897,
-        "swing": "+5.5"
+        "swing": "-12.5"
       },
       {
         "party": "Lab",
         "votes": 7854,
-        "swing": "+15.0"
+        "swing": "+6.3"
       },
       {
         "party": "LD",
         "votes": 26645,
-        "swing": "+50.8"
+        "swing": "+12.5"
       },
       {
         "party": "RUK",
         "votes": 2209,
-        "swing": "+4.2"
+        "swing": "+4.1"
       },
       {
         "party": "Green",
@@ -9289,22 +8102,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7888,
-        "swing": "+19.2"
+        "swing": "-11.9"
       },
       {
         "party": "Lab",
         "votes": 20520,
-        "swing": "+50.0"
+        "swing": "-8.2"
       },
       {
         "party": "LD",
         "votes": 2721,
-        "swing": "+6.6"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
         "votes": 3501,
-        "swing": "+8.5"
+        "swing": "+6.8"
       },
       {
         "party": "Green",
@@ -9314,7 +8127,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2734,
-        "swing": "+6.7"
+        "swing": "+6.5"
       }
     ]
   },
@@ -9328,22 +8141,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5210,
-        "swing": "+12.4"
+        "swing": "-14.6"
       },
       {
         "party": "Lab",
         "votes": 24186,
-        "swing": "+57.6"
+        "swing": "-1.7"
       },
       {
         "party": "LD",
         "votes": 2328,
-        "swing": "+5.5"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
         "votes": 7278,
-        "swing": "+17.3"
+        "swing": "+13.0"
       },
       {
         "party": "Green",
@@ -9367,22 +8180,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11640,
-        "swing": "+25.5"
+        "swing": "-21.3"
       },
       {
         "party": "Lab",
         "votes": 20069,
-        "swing": "+44.0"
+        "swing": "+3.9"
       },
       {
         "party": "LD",
         "votes": 2423,
-        "swing": "+5.3"
+        "swing": "-2.2"
       },
       {
         "party": "RUK",
         "votes": 7428,
-        "swing": "+16.3"
+        "swing": "+13.7"
       },
       {
         "party": "Green",
@@ -9406,17 +8219,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16632,
-        "swing": "+31.8"
+        "swing": "-22.2"
       },
       {
         "party": "Lab",
         "votes": 9160,
-        "swing": "+17.5"
+        "swing": "+3.1"
       },
       {
         "party": "LD",
         "votes": 17127,
-        "swing": "+32.7"
+        "swing": "+3.4"
       },
       {
         "party": "RUK",
@@ -9431,7 +8244,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 648,
-        "swing": "+1.2"
+        "swing": "-0.6"
       }
     ]
   },
@@ -9445,22 +8258,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8632,
-        "swing": "+19.8"
+        "swing": "-16.1"
       },
       {
         "party": "Lab",
         "votes": 21368,
-        "swing": "+49.1"
+        "swing": "-4.2"
       },
       {
         "party": "LD",
         "votes": 2517,
-        "swing": "+5.8"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
         "votes": 5146,
-        "swing": "+11.8"
+        "swing": "+10.0"
       },
       {
         "party": "Green",
@@ -9484,17 +8297,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18038,
-        "swing": "+43.2"
+        "swing": "-21.2"
       },
       {
         "party": "Lab",
         "votes": 12356,
-        "swing": "+29.6"
+        "swing": "+9.3"
       },
       {
         "party": "LD",
         "votes": 5268,
-        "swing": "+12.6"
+        "swing": "+1.9"
       },
       {
         "party": "Green",
@@ -9504,7 +8317,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3605,
-        "swing": "+8.6"
+        "swing": "+7.9"
       }
     ]
   },
@@ -9518,17 +8331,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16988,
-        "swing": "+31.2"
+        "swing": "-22.4"
       },
       {
         "party": "Lab",
         "votes": 8325,
-        "swing": "+15.3"
+        "swing": "-1.5"
       },
       {
         "party": "LD",
         "votes": 20674,
-        "swing": "+37.9"
+        "swing": "+13.7"
       },
       {
         "party": "RUK",
@@ -9543,7 +8356,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 998,
-        "swing": "+1.8"
+        "swing": "-0.3"
       }
     ]
   },
@@ -9557,17 +8370,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11365,
-        "swing": "+26.4"
+        "swing": "-30.0"
       },
       {
         "party": "Lab",
         "votes": 17224,
-        "swing": "+40.1"
+        "swing": "+5.3"
       },
       {
         "party": "LD",
         "votes": 2426,
-        "swing": "+5.6"
+        "swing": "+0.5"
       },
       {
         "party": "RUK",
@@ -9582,7 +8395,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 351,
-        "swing": "+0.8"
+        "swing": "-0.6"
       }
     ]
   },
@@ -9596,22 +8409,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5564,
-        "swing": "+13.8"
+        "swing": "-14.4"
       },
       {
         "party": "Lab",
         "votes": 22246,
-        "swing": "+55.1"
+        "swing": "-3.3"
       },
       {
         "party": "LD",
         "votes": 1872,
-        "swing": "+4.6"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
         "votes": 5944,
-        "swing": "+14.7"
+        "swing": "+9.7"
       },
       {
         "party": "Green",
@@ -9621,7 +8434,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1271,
-        "swing": "+3.1"
+        "swing": "+2.5"
       }
     ]
   },
@@ -9635,17 +8448,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16312,
-        "swing": "+30.3"
+        "swing": "-19.2"
       },
       {
         "party": "Lab",
         "votes": 2846,
-        "swing": "+5.3"
+        "swing": "+0.5"
       },
       {
         "party": "LD",
         "votes": 28315,
-        "swing": "+52.6"
+        "swing": "+8.4"
       },
       {
         "party": "RUK",
@@ -9660,7 +8473,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 234,
-        "swing": "+0.4"
+        "swing": "-0.9"
       }
     ]
   },
@@ -9674,22 +8487,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6288,
-        "swing": "+15.6"
+        "swing": "-16.4"
       },
       {
         "party": "Lab",
         "votes": 18225,
-        "swing": "+45.3"
+        "swing": "-9.5"
       },
       {
         "party": "LD",
         "votes": 4201,
-        "swing": "+10.5"
+        "swing": "+10.4"
       },
       {
         "party": "RUK",
         "votes": 4914,
-        "swing": "+12.2"
+        "swing": "+9.6"
       },
       {
         "party": "Green",
@@ -9699,7 +8512,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 660,
-        "swing": "+1.6"
+        "swing": "+0.5"
       }
     ]
   },
@@ -9713,22 +8526,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14728,
-        "swing": "+28.7"
+        "swing": "-21.1"
       },
       {
         "party": "Lab",
         "votes": 14607,
-        "swing": "+28.5"
+        "swing": "+17.9"
       },
       {
         "party": "LD",
         "votes": 11387,
-        "swing": "+22.2"
+        "swing": "+19.2"
       },
       {
         "party": "RUK",
         "votes": 7085,
-        "swing": "+13.8"
+        "swing": "+13.5"
       },
       {
         "party": "Green",
@@ -9738,7 +8551,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1178,
-        "swing": "+2.3"
+        "swing": "-32.3"
       }
     ]
   },
@@ -9752,22 +8565,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3576,
-        "swing": "+8.4"
+        "swing": "-17.5"
       },
       {
         "party": "Lab",
         "votes": 18343,
-        "swing": "+43.0"
+        "swing": "+31.0"
       },
       {
         "party": "LD",
         "votes": 1092,
-        "swing": "+2.6"
+        "swing": "-4.2"
       },
       {
         "party": "RUK",
         "votes": 3375,
-        "swing": "+7.9"
+        "swing": "+7.6"
       },
       {
         "party": "Green",
@@ -9796,17 +8609,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17561,
-        "swing": "+35.0"
+        "swing": "-26.1"
       },
       {
         "party": "Lab",
         "votes": 11482,
-        "swing": "+22.9"
+        "swing": "+7.1"
       },
       {
         "party": "LD",
         "votes": 9533,
-        "swing": "+19.0"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
@@ -9816,7 +8629,7 @@ const RESULTS = {
       {
         "party": "Green",
         "votes": 2036,
-        "swing": "-0.0"
+        "swing": "0.0"
       },
       {
         "party": "All other candidates",
@@ -9835,17 +8648,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18951,
-        "swing": "+35.7"
+        "swing": "-23.7"
       },
       {
         "party": "Lab",
         "votes": 7328,
-        "swing": "+13.8"
+        "swing": "+7.0"
       },
       {
         "party": "LD",
         "votes": 17602,
-        "swing": "+33.2"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
@@ -9874,17 +8687,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14816,
-        "swing": "+31.8"
+        "swing": "-30.8"
       },
       {
         "party": "Lab",
         "votes": 13347,
-        "swing": "+28.6"
+        "swing": "+8.8"
       },
       {
         "party": "LD",
         "votes": 4158,
-        "swing": "+8.9"
+        "swing": "-3.5"
       },
       {
         "party": "RUK",
@@ -9899,7 +8712,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 171,
-        "swing": "+0.4"
+        "swing": "-0.6"
       }
     ]
   },
@@ -9913,22 +8726,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8195,
-        "swing": "+21.1"
+        "swing": "-14.7"
       },
       {
         "party": "Lab",
         "votes": 16139,
-        "swing": "+41.5"
+        "swing": "-10.2"
       },
       {
         "party": "LD",
         "votes": 1821,
-        "swing": "+4.7"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
         "votes": 5130,
-        "swing": "+13.2"
+        "swing": "+9.7"
       },
       {
         "party": "Green",
@@ -9957,22 +8770,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 2386,
-        "swing": "+4.7"
+        "swing": "-2.5"
       },
       {
         "party": "UUP",
         "votes": 20273,
-        "swing": "+39.7"
+        "swing": "-1.9"
       },
       {
         "party": "APNI",
         "votes": 2420,
-        "swing": "+4.7"
+        "swing": "-0.7"
       },
       {
         "party": "All other candidates",
         "votes": 1153,
-        "swing": "+2.3"
+        "swing": "+0.7"
       }
     ]
   },
@@ -9986,17 +8799,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12905,
-        "swing": "+25.6"
+        "swing": "-25.4"
       },
       {
         "party": "Lab",
         "votes": 22905,
-        "swing": "+45.5"
+        "swing": "+9.7"
       },
       {
         "party": "LD",
         "votes": 3596,
-        "swing": "+7.1"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
@@ -10020,17 +8833,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17276,
-        "swing": "+35.1"
+        "swing": "-8.7"
       },
       {
         "party": "Lab",
         "votes": 21857,
-        "swing": "+44.3"
+        "swing": "+20.0"
       },
       {
         "party": "LD",
         "votes": 3375,
-        "swing": "+6.8"
+        "swing": "-25.0"
       },
       {
         "party": "RUK",
@@ -10059,17 +8872,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11291,
-        "swing": "+26.1"
+        "swing": "-30.2"
       },
       {
         "party": "Lab",
         "votes": 15020,
-        "swing": "+34.7"
+        "swing": "+8.0"
       },
       {
         "party": "LD",
         "votes": 1736,
-        "swing": "+4.0"
+        "swing": "-6.0"
       },
       {
         "party": "RUK",
@@ -10084,7 +8897,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 560,
-        "swing": "+1.3"
+        "swing": "-0.7"
       }
     ]
   },
@@ -10098,12 +8911,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16095,
-        "swing": "+33.5"
+        "swing": "-26.1"
       },
       {
         "party": "Lab",
         "votes": 16373,
-        "swing": "+34.0"
+        "swing": "+5.3"
       },
       {
         "party": "LD",
@@ -10123,7 +8936,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 90,
-        "swing": "+0.2"
+        "swing": "-2.3"
       }
     ]
   },
@@ -10147,22 +8960,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 15647,
-        "swing": "+40.8"
+        "swing": "-17.4"
       },
       {
         "party": "UUP",
         "votes": 1422,
-        "swing": "+3.7"
+        "swing": "+1.7"
       },
       {
         "party": "APNI",
         "votes": 1268,
-        "swing": "+3.3"
+        "swing": "+0.6"
       },
       {
         "party": "All other candidates",
         "votes": 4625,
-        "swing": "+12.1"
+        "swing": "+4.8"
       }
     ]
   },
@@ -10176,17 +8989,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11165,
-        "swing": "+23.9"
+        "swing": "-25.4"
       },
       {
         "party": "Lab",
         "votes": 6416,
-        "swing": "+13.7"
+        "swing": "-7.4"
       },
       {
         "party": "LD",
         "votes": 16580,
-        "swing": "+35.5"
+        "swing": "+12.0"
       },
       {
         "party": "RUK",
@@ -10215,17 +9028,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15917,
-        "swing": "+33.2"
+        "swing": "-29.0"
       },
       {
         "party": "Lab",
         "votes": 15356,
-        "swing": "+32.0"
+        "swing": "+6.8"
       },
       {
         "party": "LD",
         "votes": 2120,
-        "swing": "+4.4"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
@@ -10240,7 +9053,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 4712,
-        "swing": "+9.8"
+        "swing": "+8.0"
       }
     ]
   },
@@ -10254,17 +9067,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16636,
-        "swing": "+35.6"
+        "swing": "-30.7"
       },
       {
         "party": "Lab",
         "votes": 13104,
-        "swing": "+28.1"
+        "swing": "+6.9"
       },
       {
         "party": "LD",
         "votes": 5001,
-        "swing": "+10.7"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
@@ -10279,7 +9092,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 196,
-        "swing": "+0.4"
+        "swing": "-1.8"
       }
     ]
   },
@@ -10293,22 +9106,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4628,
-        "swing": "+11.5"
+        "swing": "-21.5"
       },
       {
         "party": "Lab",
         "votes": 18245,
-        "swing": "+45.4"
+        "swing": "-1.7"
       },
       {
         "party": "LD",
         "votes": 4987,
-        "swing": "+12.4"
+        "swing": "+0.2"
       },
       {
         "party": "RUK",
         "votes": 8601,
-        "swing": "+21.4"
+        "swing": "+17.5"
       },
       {
         "party": "Green",
@@ -10332,22 +9145,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11397,
-        "swing": "+23.4"
+        "swing": "-23.8"
       },
       {
         "party": "Lab",
         "votes": 23278,
-        "swing": "+47.8"
+        "swing": "+5.0"
       },
       {
         "party": "LD",
         "votes": 2473,
-        "swing": "+5.1"
+        "swing": "+0.6"
       },
       {
         "party": "RUK",
         "votes": 8211,
-        "swing": "+16.9"
+        "swing": "+13.5"
       },
       {
         "party": "Green",
@@ -10371,17 +9184,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11590,
-        "swing": "+28.2"
+        "swing": "-33.1"
       },
       {
         "party": "Lab",
         "votes": 15562,
-        "swing": "+37.8"
+        "swing": "+9.4"
       },
       {
         "party": "LD",
         "votes": 2248,
-        "swing": "+5.5"
+        "swing": "0.0"
       },
       {
         "party": "RUK",
@@ -10396,7 +9209,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 630,
-        "swing": "+1.5"
+        "swing": "-1.0"
       }
     ]
   },
@@ -10410,22 +9223,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1707,
-        "swing": "+4.8"
+        "swing": "-7.5"
       },
       {
         "party": "Lab",
         "votes": 15543,
-        "swing": "+43.9"
+        "swing": "+10.4"
       },
       {
         "party": "LD",
         "votes": 872,
-        "swing": "+2.5"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 2371,
-        "swing": "+6.7"
+        "swing": "+6.6"
       },
       {
         "party": "Green",
@@ -10454,22 +9267,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1366,
-        "swing": "+3.9"
+        "swing": "-4.9"
       },
       {
         "party": "Lab",
         "votes": 14655,
-        "swing": "+42.2"
+        "swing": "+8.1"
       },
       {
         "party": "LD",
         "votes": 1142,
-        "swing": "+3.3"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
         "votes": 1655,
-        "swing": "+4.8"
+        "swing": "+4.2"
       },
       {
         "party": "Green",
@@ -10498,17 +9311,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1182,
-        "swing": "+3.5"
+        "swing": "-7.5"
       },
       {
         "party": "Lab",
         "votes": 15639,
-        "swing": "+45.9"
+        "swing": "+8.2"
       },
       {
         "party": "LD",
         "votes": 592,
-        "swing": "+1.7"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
@@ -10542,22 +9355,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1617,
-        "swing": "+3.8"
+        "swing": "-8.9"
       },
       {
         "party": "Lab",
         "votes": 17696,
-        "swing": "+41.8"
+        "swing": "+12.3"
       },
       {
         "party": "LD",
         "votes": 1316,
-        "swing": "+3.1"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
         "votes": 1736,
-        "swing": "+4.1"
+        "swing": "+3.2"
       },
       {
         "party": "Green",
@@ -10586,22 +9399,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1387,
-        "swing": "+3.9"
+        "swing": "-8.7"
       },
       {
         "party": "Lab",
         "votes": 15552,
-        "swing": "+43.6"
+        "swing": "+9.8"
       },
       {
         "party": "LD",
         "votes": 958,
-        "swing": "+2.7"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
         "votes": 2236,
-        "swing": "+6.3"
+        "swing": "+4.7"
       },
       {
         "party": "Green",
@@ -10630,22 +9443,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1720,
-        "swing": "+4.3"
+        "swing": "-11.0"
       },
       {
         "party": "Lab",
         "votes": 18621,
-        "swing": "+46.7"
+        "swing": "+18.7"
       },
       {
         "party": "LD",
         "votes": 1316,
-        "swing": "+3.3"
+        "swing": "-4.2"
       },
       {
         "party": "RUK",
         "votes": 2098,
-        "swing": "+5.3"
+        "swing": "+5.1"
       },
       {
         "party": "Green",
@@ -10674,17 +9487,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13753,
-        "swing": "+28.9"
+        "swing": "-28.7"
       },
       {
         "party": "Lab",
         "votes": 3111,
-        "swing": "+6.5"
+        "swing": "-3.0"
       },
       {
         "party": "LD",
         "votes": 20364,
-        "swing": "+42.7"
+        "swing": "+11.9"
       },
       {
         "party": "RUK",
@@ -10708,22 +9521,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1973,
-        "swing": "+5.5"
+        "swing": "-9.9"
       },
       {
         "party": "Lab",
         "votes": 15994,
-        "swing": "+44.3"
+        "swing": "+16.9"
       },
       {
         "party": "LD",
         "votes": 1604,
-        "swing": "+4.4"
+        "swing": "0.0"
       },
       {
         "party": "RUK",
         "votes": 3528,
-        "swing": "+9.8"
+        "swing": "+6.7"
       },
       {
         "party": "SNP",
@@ -10742,17 +9555,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13041,
-        "swing": "+28.5"
+        "swing": "-26.0"
       },
       {
         "party": "Lab",
         "votes": 16472,
-        "swing": "+36.1"
+        "swing": "+0.8"
       },
       {
         "party": "LD",
         "votes": 4759,
-        "swing": "+10.4"
+        "swing": "+2.7"
       },
       {
         "party": "RUK",
@@ -10781,17 +9594,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 23293,
-        "swing": "+42.6"
+        "swing": "-10.8"
       },
       {
         "party": "Lab",
         "votes": 2748,
-        "swing": "+5.0"
+        "swing": "-3.9"
       },
       {
         "party": "LD",
         "votes": 22402,
-        "swing": "+41.0"
+        "swing": "+6.8"
       },
       {
         "party": "RUK",
@@ -10806,7 +9619,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 195,
-        "swing": "+0.4"
+        "swing": "-1.6"
       }
     ]
   },
@@ -10820,17 +9633,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18981,
-        "swing": "+38.2"
+        "swing": "-27.0"
       },
       {
         "party": "Lab",
         "votes": 15409,
-        "swing": "+31.0"
+        "swing": "+10.6"
       },
       {
         "party": "LD",
         "votes": 3380,
-        "swing": "+6.8"
+        "swing": "-1.0"
       },
       {
         "party": "RUK",
@@ -10845,7 +9658,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 467,
-        "swing": "+0.9"
+        "swing": "-1.8"
       }
     ]
   },
@@ -10859,17 +9672,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14418,
-        "swing": "+32.9"
+        "swing": "-13.1"
       },
       {
         "party": "Lab",
         "votes": 4686,
-        "swing": "+10.7"
+        "swing": "+7.2"
       },
       {
         "party": "LD",
         "votes": 7307,
-        "swing": "+16.7"
+        "swing": "+5.3"
       },
       {
         "party": "RUK",
@@ -10893,22 +9706,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2888,
-        "swing": "+7.9"
+        "swing": "-11.0"
       },
       {
         "party": "Lab",
         "votes": 18555,
-        "swing": "+50.8"
+        "swing": "-16.5"
       },
       {
         "party": "LD",
         "votes": 1399,
-        "swing": "+3.8"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
         "votes": 5142,
-        "swing": "+14.1"
+        "swing": "+9.2"
       },
       {
         "party": "Green",
@@ -10918,7 +9731,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3766,
-        "swing": "+10.3"
+        "swing": "+9.6"
       }
     ]
   },
@@ -10932,17 +9745,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17830,
-        "swing": "+40.3"
+        "swing": "-26.2"
       },
       {
         "party": "Lab",
         "votes": 11776,
-        "swing": "+26.6"
+        "swing": "+8.1"
       },
       {
         "party": "LD",
         "votes": 4039,
-        "swing": "+9.1"
+        "swing": "-2.2"
       },
       {
         "party": "RUK",
@@ -10971,22 +9784,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8913,
-        "swing": "+18.9"
+        "swing": "-21.0"
       },
       {
         "party": "Lab",
         "votes": 20480,
-        "swing": "+43.4"
+        "swing": "-2.4"
       },
       {
         "party": "LD",
         "votes": 2593,
-        "swing": "+5.5"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 8530,
-        "swing": "+18.1"
+        "swing": "+14.6"
       },
       {
         "party": "Green",
@@ -10996,7 +9809,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 3942,
-        "swing": "+8.3"
+        "swing": "+3.3"
       },
       {
         "party": "All other candidates",
@@ -11015,17 +9828,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16770,
-        "swing": "+36.4"
+        "swing": "-29.5"
       },
       {
         "party": "Lab",
         "votes": 12274,
-        "swing": "+26.6"
+        "swing": "+6.6"
       },
       {
         "party": "LD",
         "votes": 2027,
-        "swing": "+4.4"
+        "swing": "-4.6"
       },
       {
         "party": "RUK",
@@ -11040,7 +9853,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3091,
-        "swing": "+6.7"
+        "swing": "+5.8"
       }
     ]
   },
@@ -11054,17 +9867,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13911,
-        "swing": "+32.2"
+        "swing": "-30.0"
       },
       {
         "party": "Lab",
         "votes": 16623,
-        "swing": "+38.5"
+        "swing": "+9.0"
       },
       {
         "party": "LD",
         "votes": 1534,
-        "swing": "+3.5"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
@@ -11088,22 +9901,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8269,
-        "swing": "+22.6"
+        "swing": "-33.0"
       },
       {
         "party": "Lab",
         "votes": 15336,
-        "swing": "+41.9"
+        "swing": "+9.7"
       },
       {
         "party": "LD",
         "votes": 1036,
-        "swing": "+2.8"
+        "swing": "-2.1"
       },
       {
         "party": "RUK",
         "votes": 10533,
-        "swing": "+28.8"
+        "swing": "+23.8"
       },
       {
         "party": "Green",
@@ -11113,7 +9926,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 330,
-        "swing": "+0.9"
+        "swing": "+0.5"
       }
     ]
   },
@@ -11127,17 +9940,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10034,
-        "swing": "+24.6"
+        "swing": "-41.2"
       },
       {
         "party": "Lab",
         "votes": 12959,
-        "swing": "+31.8"
+        "swing": "+6.7"
       },
       {
         "party": "LD",
         "votes": 1102,
-        "swing": "+2.7"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
@@ -11152,7 +9965,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 532,
-        "swing": "+1.3"
+        "swing": "-1.5"
       }
     ]
   },
@@ -11166,22 +9979,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4863,
-        "swing": "+11.4"
+        "swing": "-11.3"
       },
       {
         "party": "Lab",
         "votes": 23999,
-        "swing": "+56.2"
+        "swing": "+1.2"
       },
       {
         "party": "LD",
         "votes": 3865,
-        "swing": "+9.0"
+        "swing": "-5.5"
       },
       {
         "party": "RUK",
         "votes": 3305,
-        "swing": "+7.7"
+        "swing": "+5.4"
       },
       {
         "party": "Green",
@@ -11191,13 +10004,13 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1054,
-        "swing": "+2.5"
+        "swing": "+1.7"
       }
     ]
   },
   "E14001258": {
     "name": "Guildford",
-    "winner": "Z\u00f6e Franklin",
+    "winner": "Zöe Franklin",
     "party": "LD",
     "majority": 8429,
     "turnout": 68.34507939203533,
@@ -11205,17 +10018,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14508,
-        "swing": "+30.0"
+        "swing": "-15.0"
       },
       {
         "party": "Lab",
         "votes": 3931,
-        "swing": "+8.1"
+        "swing": "-0.2"
       },
       {
         "party": "LD",
         "votes": 22937,
-        "swing": "+47.5"
+        "swing": "+8.3"
       },
       {
         "party": "RUK",
@@ -11230,7 +10043,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 255,
-        "swing": "+0.5"
+        "swing": "-6.5"
       }
     ]
   },
@@ -11244,22 +10057,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3457,
-        "swing": "+8.4"
+        "swing": "-4.6"
       },
       {
         "party": "Lab",
         "votes": 24355,
-        "swing": "+59.5"
+        "swing": "-10.4"
       },
       {
         "party": "LD",
         "votes": 1562,
-        "swing": "+3.8"
+        "swing": "-3.9"
       },
       {
         "party": "RUK",
         "votes": 1283,
-        "swing": "+3.1"
+        "swing": "+2.2"
       },
       {
         "party": "Green",
@@ -11269,7 +10082,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1027,
-        "swing": "+2.5"
+        "swing": "+2.1"
       }
     ]
   },
@@ -11283,22 +10096,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2076,
-        "swing": "+5.0"
+        "swing": "-5.4"
       },
       {
         "party": "Lab",
         "votes": 24724,
-        "swing": "+59.3"
+        "swing": "-14.1"
       },
       {
         "party": "LD",
         "votes": 1996,
-        "swing": "+4.8"
+        "swing": "-3.4"
       },
       {
         "party": "RUK",
         "votes": 1601,
-        "swing": "+3.8"
+        "swing": "+2.5"
       },
       {
         "party": "Green",
@@ -11308,7 +10121,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1317,
-        "swing": "+3.2"
+        "swing": "+2.9"
       }
     ]
   },
@@ -11322,17 +10135,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10659,
-        "swing": "+27.6"
+        "swing": "-32.6"
       },
       {
         "party": "Lab",
         "votes": 15023,
-        "swing": "+38.9"
+        "swing": "+6.3"
       },
       {
         "party": "LD",
         "votes": 2261,
-        "swing": "+5.9"
+        "swing": "+2.4"
       },
       {
         "party": "RUK",
@@ -11356,22 +10169,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7866,
-        "swing": "+19.6"
+        "swing": "-22.1"
       },
       {
         "party": "Lab",
         "votes": 14135,
-        "swing": "+35.1"
+        "swing": "-10.5"
       },
       {
         "party": "LD",
         "votes": 2359,
-        "swing": "+5.9"
+        "swing": "+1.0"
       },
       {
         "party": "RUK",
         "votes": 7811,
-        "swing": "+19.4"
+        "swing": "+13.5"
       },
       {
         "party": "Green",
@@ -11395,17 +10208,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19671,
-        "swing": "+36.4"
+        "swing": "-25.8"
       },
       {
         "party": "Lab",
         "votes": 8753,
-        "swing": "+16.2"
+        "swing": "+2.6"
       },
       {
         "party": "LD",
         "votes": 14869,
-        "swing": "+27.5"
+        "swing": "+6.5"
       },
       {
         "party": "RUK",
@@ -11434,17 +10247,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4589,
-        "swing": "+10.9"
+        "swing": "-14.6"
       },
       {
         "party": "Lab",
         "votes": 21020,
-        "swing": "+49.9"
+        "swing": "+22.9"
       },
       {
         "party": "LD",
         "votes": 1511,
-        "swing": "+3.6"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
@@ -11473,22 +10286,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8783,
-        "swing": "+19.1"
+        "swing": "-11.4"
       },
       {
         "party": "Lab",
         "votes": 24073,
-        "swing": "+52.3"
+        "swing": "+1.5"
       },
       {
         "party": "LD",
         "votes": 4292,
-        "swing": "+9.3"
+        "swing": "-4.5"
       },
       {
         "party": "RUK",
         "votes": 2929,
-        "swing": "+6.4"
+        "swing": "+4.5"
       },
       {
         "party": "Green",
@@ -11512,22 +10325,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8462,
-        "swing": "+17.4"
+        "swing": "-5.7"
       },
       {
         "party": "Lab",
         "votes": 23432,
-        "swing": "+48.3"
+        "swing": "+0.6"
       },
       {
         "party": "LD",
         "votes": 6181,
-        "swing": "+12.7"
+        "swing": "-11.6"
       },
       {
         "party": "RUK",
         "votes": 2940,
-        "swing": "+6.1"
+        "swing": "+4.8"
       },
       {
         "party": "Green",
@@ -11551,17 +10364,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18614,
-        "swing": "+36.9"
+        "swing": "-17.5"
       },
       {
         "party": "Lab",
         "votes": 16236,
-        "swing": "+32.2"
+        "swing": "+7.4"
       },
       {
         "party": "LD",
         "votes": 4732,
-        "swing": "+9.4"
+        "swing": "-7.6"
       },
       {
         "party": "RUK",
@@ -11576,7 +10389,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 203,
-        "swing": "+0.4"
+        "swing": "-0.3"
       }
     ]
   },
@@ -11590,17 +10403,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13809,
-        "swing": "+31.8"
+        "swing": "-32.7"
       },
       {
         "party": "Lab",
         "votes": 16313,
-        "swing": "+37.6"
+        "swing": "+8.3"
       },
       {
         "party": "LD",
         "votes": 1350,
-        "swing": "+3.1"
+        "swing": "-2.8"
       },
       {
         "party": "RUK",
@@ -11629,17 +10442,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16574,
-        "swing": "+30.5"
+        "swing": "-21.8"
       },
       {
         "party": "Lab",
         "votes": 4061,
-        "swing": "+7.5"
+        "swing": "-3.1"
       },
       {
         "party": "LD",
         "votes": 27282,
-        "swing": "+50.2"
+        "swing": "+24.9"
       },
       {
         "party": "RUK",
@@ -11654,7 +10467,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 223,
-        "swing": "+0.4"
+        "swing": "-9.8"
       }
     ]
   },
@@ -11668,17 +10481,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15738,
-        "swing": "+30.2"
+        "swing": "-21.8"
       },
       {
         "party": "Lab",
         "votes": 4153,
-        "swing": "+8.0"
+        "swing": "-1.7"
       },
       {
         "party": "LD",
         "votes": 23976,
-        "swing": "+46.1"
+        "swing": "+9.9"
       },
       {
         "party": "RUK",
@@ -11693,7 +10506,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 756,
-        "swing": "+1.5"
+        "swing": "-0.7"
       }
     ]
   },
@@ -11707,22 +10520,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 25466,
-        "swing": "+53.3"
+        "swing": "-1.3"
       },
       {
         "party": "Lab",
         "votes": 13786,
-        "swing": "+28.9"
+        "swing": "-8.6"
       },
       {
         "party": "LD",
         "votes": 1511,
-        "swing": "+3.2"
+        "swing": "-4.4"
       },
       {
         "party": "RUK",
         "votes": 2188,
-        "swing": "+4.6"
+        "swing": "+4.4"
       },
       {
         "party": "Green",
@@ -11746,22 +10559,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13191,
-        "swing": "+29.2"
+        "swing": "-5.7"
       },
       {
         "party": "Lab",
         "votes": 19833,
-        "swing": "+43.8"
+        "swing": "-9.3"
       },
       {
         "party": "LD",
         "votes": 2404,
-        "swing": "+5.3"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
         "votes": 2639,
-        "swing": "+5.8"
+        "swing": "+4.1"
       },
       {
         "party": "Green",
@@ -11785,22 +10598,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7767,
-        "swing": "+21.9"
+        "swing": "-7.1"
       },
       {
         "party": "Lab",
         "votes": 16414,
-        "swing": "+46.2"
+        "swing": "+8.5"
       },
       {
         "party": "LD",
         "votes": 572,
-        "swing": "+1.6"
+        "swing": "-2.5"
       },
       {
         "party": "RUK",
         "votes": 8716,
-        "swing": "+24.5"
+        "swing": "-1.3"
       },
       {
         "party": "Green",
@@ -11810,7 +10623,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1208,
-        "swing": "+3.4"
+        "swing": "0.0"
       }
     ]
   },
@@ -11824,17 +10637,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16522,
-        "swing": "+34.4"
+        "swing": "-24.2"
       },
       {
         "party": "Lab",
         "votes": 15360,
-        "swing": "+32.0"
+        "swing": "+6.1"
       },
       {
         "party": "LD",
         "votes": 3561,
-        "swing": "+7.4"
+        "swing": "-3.3"
       },
       {
         "party": "RUK",
@@ -11858,17 +10671,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10481,
-        "swing": "+22.8"
+        "swing": "-26.3"
       },
       {
         "party": "Lab",
         "votes": 19134,
-        "swing": "+41.6"
+        "swing": "-0.8"
       },
       {
         "party": "LD",
         "votes": 2586,
-        "swing": "+5.6"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
@@ -11883,7 +10696,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 627,
-        "swing": "+1.4"
+        "swing": "+0.3"
       }
     ]
   },
@@ -11897,17 +10710,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12986,
-        "swing": "+30.8"
+        "swing": "-34.6"
       },
       {
         "party": "Lab",
         "votes": 12894,
-        "swing": "+30.6"
+        "swing": "+12.6"
       },
       {
         "party": "LD",
         "votes": 3275,
-        "swing": "+7.8"
+        "swing": "-4.7"
       },
       {
         "party": "RUK",
@@ -11922,7 +10735,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 211,
-        "swing": "+0.5"
+        "swing": "-0.2"
       }
     ]
   },
@@ -11936,22 +10749,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8374,
-        "swing": "+21.9"
+        "swing": "-12.9"
       },
       {
         "party": "Lab",
         "votes": 20405,
-        "swing": "+53.3"
+        "swing": "-2.5"
       },
       {
         "party": "LD",
         "votes": 1316,
-        "swing": "+3.4"
+        "swing": "-1.0"
       },
       {
         "party": "RUK",
         "votes": 4114,
-        "swing": "+10.7"
+        "swing": "+7.8"
       },
       {
         "party": "Green",
@@ -11961,7 +10774,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1975,
-        "swing": "+5.2"
+        "swing": "+4.7"
       }
     ]
   },
@@ -11975,22 +10788,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9011,
-        "swing": "+19.6"
+        "swing": "-26.0"
       },
       {
         "party": "Lab",
         "votes": 10828,
-        "swing": "+23.5"
+        "swing": "+7.3"
       },
       {
         "party": "LD",
         "votes": 17328,
-        "swing": "+37.7"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
         "votes": 6955,
-        "swing": "+15.1"
+        "swing": "+14.5"
       },
       {
         "party": "Green",
@@ -12014,17 +10827,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11987,
-        "swing": "+27.2"
+        "swing": "-27.8"
       },
       {
         "party": "Lab",
         "votes": 16844,
-        "swing": "+38.2"
+        "swing": "+10.1"
       },
       {
         "party": "LD",
         "votes": 5096,
-        "swing": "+11.6"
+        "swing": "+0.2"
       },
       {
         "party": "RUK",
@@ -12048,17 +10861,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15840,
-        "swing": "+38.4"
+        "swing": "-10.5"
       },
       {
         "party": "Lab",
         "votes": 15855,
-        "swing": "+38.4"
+        "swing": "-2.4"
       },
       {
         "party": "LD",
         "votes": 1966,
-        "swing": "+4.8"
+        "swing": "-3.8"
       },
       {
         "party": "RUK",
@@ -12087,17 +10900,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17637,
-        "swing": "+33.2"
+        "swing": "-21.3"
       },
       {
         "party": "Lab",
         "votes": 3574,
-        "swing": "+6.7"
+        "swing": "-2.2"
       },
       {
         "party": "LD",
         "votes": 23904,
-        "swing": "+45.0"
+        "swing": "+12.6"
       },
       {
         "party": "RUK",
@@ -12126,17 +10939,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14871,
-        "swing": "+32.6"
+        "swing": "-29.1"
       },
       {
         "party": "Lab",
         "votes": 13592,
-        "swing": "+29.8"
+        "swing": "+9.9"
       },
       {
         "party": "LD",
         "votes": 5325,
-        "swing": "+11.7"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
@@ -12165,17 +10978,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17243,
-        "swing": "+35.3"
+        "swing": "-29.1"
       },
       {
         "party": "Lab",
         "votes": 14744,
-        "swing": "+30.2"
+        "swing": "+5.8"
       },
       {
         "party": "LD",
         "votes": 2709,
-        "swing": "+5.5"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
@@ -12199,17 +11012,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16060,
-        "swing": "+29.7"
+        "swing": "-25.9"
       },
       {
         "party": "Lab",
         "votes": 20808,
-        "swing": "+38.5"
+        "swing": "+14.8"
       },
       {
         "party": "LD",
         "votes": 4167,
-        "swing": "+7.7"
+        "swing": "-6.5"
       },
       {
         "party": "RUK",
@@ -12224,7 +11037,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 276,
-        "swing": "+0.5"
+        "swing": "-1.3"
       }
     ]
   },
@@ -12238,17 +11051,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 21451,
-        "swing": "+44.7"
+        "swing": "-20.2"
       },
       {
         "party": "Lab",
         "votes": 13459,
-        "swing": "+28.0"
+        "swing": "+6.9"
       },
       {
         "party": "LD",
         "votes": 3710,
-        "swing": "+7.7"
+        "swing": "-3.2"
       },
       {
         "party": "RUK",
@@ -12277,17 +11090,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20275,
-        "swing": "+39.1"
+        "swing": "-15.2"
       },
       {
         "party": "Lab",
         "votes": 23988,
-        "swing": "+46.3"
+        "swing": "+14.5"
       },
       {
         "party": "LD",
         "votes": 2376,
-        "swing": "+4.6"
+        "swing": "-4.8"
       },
       {
         "party": "Green",
@@ -12311,22 +11124,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6423,
-        "swing": "+17.3"
+        "swing": "-24.2"
       },
       {
         "party": "Lab",
         "votes": 15069,
-        "swing": "+40.6"
+        "swing": "-2.5"
       },
       {
         "party": "LD",
         "votes": 2302,
-        "swing": "+6.2"
+        "swing": "+2.0"
       },
       {
         "party": "RUK",
         "votes": 8987,
-        "swing": "+24.2"
+        "swing": "+15.8"
       },
       {
         "party": "All other candidates",
@@ -12345,22 +11158,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14625,
-        "swing": "+29.7"
+        "swing": "-16.1"
       },
       {
         "party": "Lab",
         "votes": 22533,
-        "swing": "+45.8"
+        "swing": "+1.0"
       },
       {
         "party": "LD",
         "votes": 1707,
-        "swing": "+3.5"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 6959,
-        "swing": "+14.1"
+        "swing": "+12.0"
       },
       {
         "party": "Green",
@@ -12379,17 +11192,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17032,
-        "swing": "+35.6"
+        "swing": "-29.0"
       },
       {
         "party": "Lab",
         "votes": 8601,
-        "swing": "+18.0"
+        "swing": "+3.8"
       },
       {
         "party": "LD",
         "votes": 11624,
-        "swing": "+24.3"
+        "swing": "+6.1"
       },
       {
         "party": "RUK",
@@ -12418,17 +11231,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14958,
-        "swing": "+28.5"
+        "swing": "-18.5"
       },
       {
         "party": "Lab",
         "votes": 23067,
-        "swing": "+43.9"
+        "swing": "+17.7"
       },
       {
         "party": "LD",
         "votes": 4913,
-        "swing": "+9.4"
+        "swing": "-14.3"
       },
       {
         "party": "RUK",
@@ -12443,7 +11256,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 181,
-        "swing": "+0.3"
+        "swing": "-1.3"
       }
     ]
   },
@@ -12457,22 +11270,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2776,
-        "swing": "+7.2"
+        "swing": "-8.0"
       },
       {
         "party": "Lab",
         "votes": 18884,
-        "swing": "+48.9"
+        "swing": "-17.3"
       },
       {
         "party": "LD",
         "votes": 2236,
-        "swing": "+5.8"
+        "swing": "-6.5"
       },
       {
         "party": "RUK",
         "votes": 2371,
-        "swing": "+6.1"
+        "swing": "+4.3"
       },
       {
         "party": "Green",
@@ -12482,7 +11295,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 8305,
-        "swing": "+21.5"
+        "swing": "+21.1"
       }
     ]
   },
@@ -12496,17 +11309,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16307,
-        "swing": "+32.2"
+        "swing": "-28.2"
       },
       {
         "party": "Lab",
         "votes": 2947,
-        "swing": "+5.8"
+        "swing": "-8.4"
       },
       {
         "party": "LD",
         "votes": 23007,
-        "swing": "+45.4"
+        "swing": "+35.9"
       },
       {
         "party": "RUK",
@@ -12521,7 +11334,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 711,
-        "swing": "+1.4"
+        "swing": "-12.4"
       }
     ]
   },
@@ -12535,17 +11348,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15260,
-        "swing": "+32.5"
+        "swing": "-32.9"
       },
       {
         "party": "Lab",
         "votes": 12939,
-        "swing": "+27.6"
+        "swing": "+4.7"
       },
       {
         "party": "LD",
         "votes": 2381,
-        "swing": "+5.1"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
@@ -12560,7 +11373,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 394,
-        "swing": "+0.8"
+        "swing": "-0.2"
       }
     ]
   },
@@ -12574,22 +11387,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4011,
-        "swing": "+8.2"
+        "swing": "-3.6"
       },
       {
         "party": "Lab",
         "votes": 28535,
-        "swing": "+58.7"
+        "swing": "+1.4"
       },
       {
         "party": "LD",
         "votes": 6099,
-        "swing": "+12.5"
+        "swing": "-13.1"
       },
       {
         "party": "RUK",
         "votes": 1989,
-        "swing": "+4.1"
+        "swing": "+3.1"
       },
       {
         "party": "Green",
@@ -12599,7 +11412,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 948,
-        "swing": "+1.9"
+        "swing": "+1.4"
       }
     ]
   },
@@ -12613,17 +11426,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19115,
-        "swing": "+34.4"
+        "swing": "-21.3"
       },
       {
         "party": "Lab",
         "votes": 5979,
-        "swing": "+10.8"
+        "swing": "-4.9"
       },
       {
         "party": "LD",
         "votes": 21632,
-        "swing": "+39.0"
+        "swing": "+14.3"
       },
       {
         "party": "RUK",
@@ -12638,7 +11451,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 520,
-        "swing": "+0.9"
+        "swing": "+0.1"
       }
     ]
   },
@@ -12652,22 +11465,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5514,
-        "swing": "+13.8"
+        "swing": "-19.2"
       },
       {
         "party": "Lab",
         "votes": 18837,
-        "swing": "+47.1"
+        "swing": "+6.7"
       },
       {
         "party": "LD",
         "votes": 2290,
-        "swing": "+5.7"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
         "votes": 11668,
-        "swing": "+29.1"
+        "swing": "+13.4"
       },
       {
         "party": "Green",
@@ -12686,22 +11499,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6630,
-        "swing": "+12.8"
+        "swing": "-15.3"
       },
       {
         "party": "Lab",
         "votes": 27209,
-        "swing": "+52.4"
+        "swing": "-5.9"
       },
       {
         "party": "LD",
         "votes": 3046,
-        "swing": "+5.9"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
         "votes": 4558,
-        "swing": "+8.8"
+        "swing": "+6.8"
       },
       {
         "party": "Green",
@@ -12711,7 +11524,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3048,
-        "swing": "+5.9"
+        "swing": "+5.3"
       }
     ]
   },
@@ -12725,22 +11538,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6559,
-        "swing": "+16.3"
+        "swing": "-20.0"
       },
       {
         "party": "Lab",
         "votes": 15101,
-        "swing": "+37.6"
+        "swing": "-13.8"
       },
       {
         "party": "LD",
         "votes": 1741,
-        "swing": "+4.3"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
         "votes": 6196,
-        "swing": "+15.4"
+        "swing": "+12.0"
       },
       {
         "party": "Green",
@@ -12759,17 +11572,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18257,
-        "swing": "+35.1"
+        "swing": "-24.1"
       },
       {
         "party": "Lab",
         "votes": 16758,
-        "swing": "+32.2"
+        "swing": "+11.4"
       },
       {
         "party": "LD",
         "votes": 4821,
-        "swing": "+9.3"
+        "swing": "-4.8"
       },
       {
         "party": "RUK",
@@ -12784,7 +11597,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1123,
-        "swing": "+2.2"
+        "swing": "-0.3"
       }
     ]
   },
@@ -12798,22 +11611,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10499,
-        "swing": "+28.9"
+        "swing": "-19.6"
       },
       {
         "party": "Lab",
         "votes": 12186,
-        "swing": "+33.5"
+        "swing": "-8.0"
       },
       {
         "party": "LD",
         "votes": 1210,
-        "swing": "+3.3"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
         "votes": 7541,
-        "swing": "+20.7"
+        "swing": "+15.6"
       },
       {
         "party": "Green",
@@ -12832,22 +11645,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9619,
-        "swing": "+20.5"
+        "swing": "-16.2"
       },
       {
         "party": "Lab",
         "votes": 15647,
-        "swing": "+33.4"
+        "swing": "-20.8"
       },
       {
         "party": "LD",
         "votes": 1088,
-        "swing": "+2.3"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
         "votes": 3621,
-        "swing": "+7.7"
+        "swing": "+5.9"
       },
       {
         "party": "Green",
@@ -12857,7 +11670,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 15119,
-        "swing": "+32.2"
+        "swing": "+30.3"
       }
     ]
   },
@@ -12871,22 +11684,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6142,
-        "swing": "+14.9"
+        "swing": "-6.3"
       },
       {
         "party": "Lab",
         "votes": 16537,
-        "swing": "+40.2"
+        "swing": "-25.1"
       },
       {
         "party": "LD",
         "votes": 1340,
-        "swing": "+3.3"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
         "votes": 2329,
-        "swing": "+5.7"
+        "swing": "+3.4"
       },
       {
         "party": "Green",
@@ -12896,7 +11709,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 11385,
-        "swing": "+27.7"
+        "swing": "+21.0"
       }
     ]
   },
@@ -12910,17 +11723,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2863,
-        "swing": "+7.1"
+        "swing": "-10.8"
       },
       {
         "party": "Lab",
         "votes": 18931,
-        "swing": "+46.9"
+        "swing": "+18.7"
       },
       {
         "party": "LD",
         "votes": 1259,
-        "swing": "+3.1"
+        "swing": "-3.3"
       },
       {
         "party": "RUK",
@@ -12954,22 +11767,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2502,
-        "swing": "+5.2"
+        "swing": "-18.1"
       },
       {
         "party": "Lab",
         "votes": 6246,
-        "swing": "+13.0"
+        "swing": "+3.6"
       },
       {
         "party": "LD",
         "votes": 18159,
-        "swing": "+37.8"
+        "swing": "+22.7"
       },
       {
         "party": "RUK",
         "votes": 2934,
-        "swing": "+6.1"
+        "swing": "+4.1"
       },
       {
         "party": "Green",
@@ -12998,22 +11811,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11696,
-        "swing": "+26.5"
+        "swing": "-23.8"
       },
       {
         "party": "Lab",
         "votes": 19099,
-        "swing": "+43.3"
+        "swing": "+4.1"
       },
       {
         "party": "LD",
         "votes": 2241,
-        "swing": "+5.1"
+        "swing": "+0.2"
       },
       {
         "party": "RUK",
         "votes": 7027,
-        "swing": "+15.9"
+        "swing": "+13.1"
       },
       {
         "party": "Green",
@@ -13037,12 +11850,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10427,
-        "swing": "+30.6"
+        "swing": "-26.8"
       },
       {
         "party": "Lab",
         "votes": 6264,
-        "swing": "+18.4"
+        "swing": "-5.7"
       },
       {
         "party": "LD",
@@ -13062,7 +11875,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 420,
-        "swing": "+1.2"
+        "swing": "-3.3"
       }
     ]
   },
@@ -13076,12 +11889,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10063,
-        "swing": "+29.3"
+        "swing": "-25.6"
       },
       {
         "party": "Lab",
         "votes": 13240,
-        "swing": "+38.6"
+        "swing": "+14.1"
       },
       {
         "party": "LD",
@@ -13101,7 +11914,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 117,
-        "swing": "+0.3"
+        "swing": "-3.8"
       }
     ]
   },
@@ -13115,22 +11928,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1950,
-        "swing": "+4.0"
+        "swing": "-6.2"
       },
       {
         "party": "Lab",
         "votes": 16873,
-        "swing": "+34.4"
+        "swing": "-29.9"
       },
       {
         "party": "LD",
         "votes": 1661,
-        "swing": "+3.4"
+        "swing": "-12.3"
       },
       {
         "party": "RUK",
         "votes": 1710,
-        "swing": "+3.5"
+        "swing": "+2.1"
       },
       {
         "party": "Green",
@@ -13140,7 +11953,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 24152,
-        "swing": "+49.3"
+        "swing": "+48.8"
       }
     ]
   },
@@ -13154,22 +11967,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3584,
-        "swing": "+8.4"
+        "swing": "-8.0"
       },
       {
         "party": "Lab",
         "votes": 22946,
-        "swing": "+53.7"
+        "swing": "-3.3"
       },
       {
         "party": "LD",
         "votes": 4045,
-        "swing": "+9.5"
+        "swing": "-10.2"
       },
       {
         "party": "RUK",
         "votes": 3388,
-        "swing": "+7.9"
+        "swing": "+5.6"
       },
       {
         "party": "Green",
@@ -13179,7 +11992,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1300,
-        "swing": "+3.0"
+        "swing": "+2.7"
       }
     ]
   },
@@ -13193,22 +12006,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3354,
-        "swing": "+9.1"
+        "swing": "-14.6"
       },
       {
         "party": "Lab",
         "votes": 18856,
-        "swing": "+51.3"
+        "swing": "+2.2"
       },
       {
         "party": "LD",
         "votes": 1740,
-        "swing": "+4.7"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
         "votes": 9892,
-        "swing": "+26.9"
+        "swing": "+17.4"
       },
       {
         "party": "Green",
@@ -13218,7 +12031,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 502,
-        "swing": "+1.4"
+        "swing": "-7.2"
       }
     ]
   },
@@ -13232,22 +12045,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18589,
-        "swing": "+40.2"
+        "swing": "-7.8"
       },
       {
         "party": "Lab",
         "votes": 16964,
-        "swing": "+36.7"
+        "swing": "-7.1"
       },
       {
         "party": "LD",
         "votes": 970,
-        "swing": "+2.1"
+        "swing": "-2.8"
       },
       {
         "party": "RUK",
         "votes": 4782,
-        "swing": "+10.4"
+        "swing": "+8.7"
       },
       {
         "party": "Green",
@@ -13257,7 +12070,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2434,
-        "swing": "+5.3"
+        "swing": "+3.8"
       }
     ]
   },
@@ -13271,22 +12084,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19395,
-        "swing": "+36.4"
+        "swing": "-22.6"
       },
       {
         "party": "Lab",
         "votes": 12821,
-        "swing": "+24.0"
+        "swing": "+5.1"
       },
       {
         "party": "LD",
         "votes": 10464,
-        "swing": "+19.6"
+        "swing": "+2.7"
       },
       {
         "party": "RUK",
         "votes": 6920,
-        "swing": "+13.0"
+        "swing": "+12.8"
       },
       {
         "party": "Green",
@@ -13296,7 +12109,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 595,
-        "swing": "+1.1"
+        "swing": "+0.3"
       }
     ]
   },
@@ -13310,22 +12123,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14122,
-        "swing": "+33.7"
+        "swing": "-4.6"
       },
       {
         "party": "Lab",
         "votes": 17025,
-        "swing": "+40.6"
+        "swing": "+1.6"
       },
       {
         "party": "LD",
         "votes": 2910,
-        "swing": "+6.9"
+        "swing": "-13.2"
       },
       {
         "party": "RUK",
         "votes": 2514,
-        "swing": "+6.0"
+        "swing": "+5.2"
       },
       {
         "party": "Green",
@@ -13335,7 +12148,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2605,
-        "swing": "+6.2"
+        "swing": "+6.0"
       }
     ]
   },
@@ -13349,17 +12162,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14189,
-        "swing": "+28.2"
+        "swing": "-32.0"
       },
       {
         "party": "Lab",
         "votes": 18009,
-        "swing": "+35.9"
+        "swing": "+8.9"
       },
       {
         "party": "LD",
         "votes": 1357,
-        "swing": "+2.7"
+        "swing": "-4.0"
       },
       {
         "party": "RUK",
@@ -13374,7 +12187,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1204,
-        "swing": "+2.4"
+        "swing": "-0.8"
       }
     ]
   },
@@ -13388,17 +12201,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3527,
-        "swing": "+8.3"
+        "swing": "-16.0"
       },
       {
         "party": "Lab",
         "votes": 19055,
-        "swing": "+44.9"
+        "swing": "+25.9"
       },
       {
         "party": "LD",
         "votes": 850,
-        "swing": "+2.0"
+        "swing": "-3.1"
       },
       {
         "party": "RUK",
@@ -13418,7 +12231,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 401,
-        "swing": "+0.9"
+        "swing": "+0.1"
       }
     ]
   },
@@ -13432,22 +12245,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8635,
-        "swing": "+17.0"
+        "swing": "-16.0"
       },
       {
         "party": "Lab",
         "votes": 6561,
-        "swing": "+13.0"
+        "swing": "+2.7"
       },
       {
         "party": "LD",
         "votes": 25870,
-        "swing": "+51.1"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 4787,
-        "swing": "+9.4"
+        "swing": "+8.3"
       },
       {
         "party": "Green",
@@ -13457,7 +12270,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1802,
-        "swing": "+3.6"
+        "swing": "+2.2"
       }
     ]
   },
@@ -13471,22 +12284,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2715,
-        "swing": "+9.1"
+        "swing": "-25.2"
       },
       {
         "party": "Lab",
         "votes": 13047,
-        "swing": "+43.8"
+        "swing": "+2.1"
       },
       {
         "party": "LD",
         "votes": 3252,
-        "swing": "+10.9"
+        "swing": "+5.9"
       },
       {
         "party": "RUK",
         "votes": 9127,
-        "swing": "+30.6"
+        "swing": "+13.8"
       },
       {
         "party": "Green",
@@ -13505,22 +12318,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4897,
-        "swing": "+12.8"
+        "swing": "-20.6"
       },
       {
         "party": "Lab",
         "votes": 18480,
-        "swing": "+48.3"
+        "swing": "+1.7"
       },
       {
         "party": "LD",
         "votes": 3246,
-        "swing": "+8.5"
+        "swing": "+2.0"
       },
       {
         "party": "RUK",
         "votes": 7801,
-        "swing": "+20.4"
+        "swing": "+9.6"
       },
       {
         "party": "Green",
@@ -13544,22 +12357,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6924,
-        "swing": "+18.1"
+        "swing": "-24.3"
       },
       {
         "party": "Lab",
         "votes": 17875,
-        "swing": "+46.8"
+        "swing": "+13.0"
       },
       {
         "party": "LD",
         "votes": 2625,
-        "swing": "+6.9"
+        "swing": "-2.3"
       },
       {
         "party": "RUK",
         "votes": 8896,
-        "swing": "+23.3"
+        "swing": "+9.8"
       },
       {
         "party": "Green",
@@ -13583,17 +12396,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18199,
-        "swing": "+40.3"
+        "swing": "-34.0"
       },
       {
         "party": "Lab",
         "votes": 11896,
-        "swing": "+26.3"
+        "swing": "+9.5"
       },
       {
         "party": "LD",
         "votes": 2080,
-        "swing": "+4.6"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
@@ -13622,22 +12435,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1496,
-        "swing": "+4.2"
+        "swing": "-4.6"
       },
       {
         "party": "Lab",
         "votes": 24243,
-        "swing": "+67.3"
+        "swing": "-12.4"
       },
       {
         "party": "LD",
         "votes": 1232,
-        "swing": "+3.4"
+        "swing": "+0.9"
       },
       {
         "party": "RUK",
         "votes": 5924,
-        "swing": "+16.4"
+        "swing": "+10.2"
       },
       {
         "party": "Green",
@@ -13647,7 +12460,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 380,
-        "swing": "+1.1"
+        "swing": "+0.2"
       }
     ]
   },
@@ -13671,22 +12484,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 1028,
-        "swing": "+2.1"
+        "swing": "-2.0"
       },
       {
         "party": "UUP",
         "votes": 11157,
-        "swing": "+22.7"
+        "swing": "+4.2"
       },
       {
         "party": "APNI",
         "votes": 18618,
-        "swing": "+37.9"
+        "swing": "+10.9"
       },
       {
         "party": "All other candidates",
         "votes": 2186,
-        "swing": "+4.5"
+        "swing": "+3.8"
       }
     ]
   },
@@ -13700,22 +12513,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10062,
-        "swing": "+23.4"
+        "swing": "-24.6"
       },
       {
         "party": "Lab",
         "votes": 19315,
-        "swing": "+44.9"
+        "swing": "+3.1"
       },
       {
         "party": "LD",
         "votes": 1529,
-        "swing": "+3.6"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 6866,
-        "swing": "+16.0"
+        "swing": "+14.2"
       },
       {
         "party": "Green",
@@ -13734,22 +12547,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2237,
-        "swing": "+7.1"
+        "swing": "-10.8"
       },
       {
         "party": "Lab",
         "votes": 15853,
-        "swing": "+50.2"
+        "swing": "-13.3"
       },
       {
         "party": "LD",
         "votes": 2611,
-        "swing": "+8.3"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
         "votes": 2399,
-        "swing": "+7.6"
+        "swing": "+3.6"
       },
       {
         "party": "Green",
@@ -13773,22 +12586,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6898,
-        "swing": "+17.5"
+        "swing": "-23.3"
       },
       {
         "party": "Lab",
         "votes": 18610,
-        "swing": "+47.2"
+        "swing": "+0.3"
       },
       {
         "party": "LD",
         "votes": 1445,
-        "swing": "+3.7"
+        "swing": "0.0"
       },
       {
         "party": "RUK",
         "votes": 7345,
-        "swing": "+18.6"
+        "swing": "+12.8"
       },
       {
         "party": "Green",
@@ -13798,7 +12611,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1584,
-        "swing": "+4.0"
+        "swing": "+3.5"
       }
     ]
   },
@@ -13812,22 +12625,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7177,
-        "swing": "+15.9"
+        "swing": "-7.7"
       },
       {
         "party": "Lab",
         "votes": 23260,
-        "swing": "+51.5"
+        "swing": "-6.0"
       },
       {
         "party": "LD",
         "votes": 2168,
-        "swing": "+4.8"
+        "swing": "-6.4"
       },
       {
         "party": "RUK",
         "votes": 3426,
-        "swing": "+7.6"
+        "swing": "+4.1"
       },
       {
         "party": "Green",
@@ -13837,7 +12650,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3225,
-        "swing": "+7.1"
+        "swing": "+6.8"
       }
     ]
   },
@@ -13851,22 +12664,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10986,
-        "swing": "+22.1"
+        "swing": "-19.8"
       },
       {
         "party": "Lab",
         "votes": 22882,
-        "swing": "+46.0"
+        "swing": "+7.7"
       },
       {
         "party": "LD",
         "votes": 5641,
-        "swing": "+11.3"
+        "swing": "-3.4"
       },
       {
         "party": "RUK",
         "votes": 5935,
-        "swing": "+11.9"
+        "swing": "+10.6"
       },
       {
         "party": "Green",
@@ -13876,7 +12689,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1102,
-        "swing": "+2.2"
+        "swing": "+0.7"
       }
     ]
   },
@@ -13890,17 +12703,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4172,
-        "swing": "+13.2"
+        "swing": "-13.1"
       },
       {
         "party": "Lab",
         "votes": 17117,
-        "swing": "+54.0"
+        "swing": "-4.4"
       },
       {
         "party": "LD",
         "votes": 1340,
-        "swing": "+4.2"
+        "swing": "-0.2"
       },
       {
         "party": "Green",
@@ -13910,7 +12723,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3211,
-        "swing": "+10.1"
+        "swing": "+9.5"
       }
     ]
   },
@@ -13924,22 +12737,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9258,
-        "swing": "+23.0"
+        "swing": "-30.1"
       },
       {
         "party": "Lab",
         "votes": 17681,
-        "swing": "+44.0"
+        "swing": "+7.2"
       },
       {
         "party": "LD",
         "votes": 1798,
-        "swing": "+4.5"
+        "swing": "+1.7"
       },
       {
         "party": "RUK",
         "votes": 8187,
-        "swing": "+20.4"
+        "swing": "+18.6"
       },
       {
         "party": "Green",
@@ -13949,7 +12762,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 763,
-        "swing": "+1.9"
+        "swing": "-0.3"
       }
     ]
   },
@@ -13963,22 +12776,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6584,
-        "swing": "+17.1"
+        "swing": "-25.1"
       },
       {
         "party": "Lab",
         "votes": 18976,
-        "swing": "+49.3"
+        "swing": "+0.9"
       },
       {
         "party": "LD",
         "votes": 1743,
-        "swing": "+4.5"
+        "swing": "+0.9"
       },
       {
         "party": "RUK",
         "votes": 6281,
-        "swing": "+16.3"
+        "swing": "+13.5"
       },
       {
         "party": "Green",
@@ -13988,7 +12801,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1116,
-        "swing": "+2.9"
+        "swing": "+1.4"
       }
     ]
   },
@@ -14002,22 +12815,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14526,
-        "swing": "+31.1"
+        "swing": "-7.4"
       },
       {
         "party": "Lab",
         "votes": 10100,
-        "swing": "+21.6"
+        "swing": "-29.3"
       },
       {
         "party": "LD",
         "votes": 6329,
-        "swing": "+13.5"
+        "swing": "+7.9"
       },
       {
         "party": "RUK",
         "votes": 2611,
-        "swing": "+5.6"
+        "swing": "+3.1"
       },
       {
         "party": "Green",
@@ -14027,7 +12840,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 11005,
-        "swing": "+23.6"
+        "swing": "+22.9"
       }
     ]
   },
@@ -14041,22 +12854,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4820,
-        "swing": "+11.5"
+        "swing": "-10.3"
       },
       {
         "party": "Lab",
         "votes": 13760,
-        "swing": "+32.9"
+        "swing": "-35.3"
       },
       {
         "party": "LD",
         "votes": 1425,
-        "swing": "+3.4"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 2470,
-        "swing": "+5.9"
+        "swing": "+3.6"
       },
       {
         "party": "Green",
@@ -14080,22 +12893,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7021,
-        "swing": "+19.8"
+        "swing": "-16.8"
       },
       {
         "party": "Lab",
         "votes": 15798,
-        "swing": "+44.6"
+        "swing": "-4.7"
       },
       {
         "party": "LD",
         "votes": 2179,
-        "swing": "+6.2"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
         "votes": 5666,
-        "swing": "+16.0"
+        "swing": "+11.5"
       },
       {
         "party": "Green",
@@ -14119,22 +12932,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6483,
-        "swing": "+15.7"
+        "swing": "-28.1"
       },
       {
         "party": "Lab",
         "votes": 19971,
-        "swing": "+48.5"
+        "swing": "+5.3"
       },
       {
         "party": "LD",
         "votes": 1597,
-        "swing": "+3.9"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
         "votes": 11090,
-        "swing": "+26.9"
+        "swing": "+21.1"
       },
       {
         "party": "Green",
@@ -14144,7 +12957,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 376,
-        "swing": "+0.9"
+        "swing": "-1.3"
       }
     ]
   },
@@ -14158,22 +12971,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14271,
-        "swing": "+26.8"
+        "swing": "-21.7"
       },
       {
         "party": "Lab",
         "votes": 3574,
-        "swing": "+6.7"
+        "swing": "-0.3"
       },
       {
         "party": "LD",
         "votes": 26895,
-        "swing": "+50.6"
+        "swing": "+9.5"
       },
       {
         "party": "RUK",
         "votes": 6335,
-        "swing": "+11.9"
+        "swing": "+11.7"
       },
       {
         "party": "Green",
@@ -14183,7 +12996,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 229,
-        "swing": "+0.4"
+        "swing": "+0.2"
       }
     ]
   },
@@ -14197,22 +13010,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4401,
-        "swing": "+10.8"
+        "swing": "-9.2"
       },
       {
         "party": "Lab",
         "votes": 23646,
-        "swing": "+58.2"
+        "swing": "-4.5"
       },
       {
         "party": "LD",
         "votes": 2471,
-        "swing": "+6.1"
+        "swing": "-4.0"
       },
       {
         "party": "RUK",
         "votes": 3469,
-        "swing": "+8.5"
+        "swing": "+5.9"
       },
       {
         "party": "Green",
@@ -14222,7 +13035,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1077,
-        "swing": "+2.7"
+        "swing": "+1.5"
       }
     ]
   },
@@ -14236,22 +13049,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2701,
-        "swing": "+6.1"
+        "swing": "-6.1"
       },
       {
         "party": "Lab",
         "votes": 25467,
-        "swing": "+57.7"
+        "swing": "-11.8"
       },
       {
         "party": "LD",
         "votes": 3284,
-        "swing": "+7.4"
+        "swing": "-3.7"
       },
       {
         "party": "RUK",
         "votes": 2000,
-        "swing": "+4.5"
+        "swing": "+2.9"
       },
       {
         "party": "Green",
@@ -14261,7 +13074,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1030,
-        "swing": "+2.3"
+        "swing": "+1.9"
       }
     ]
   },
@@ -14275,22 +13088,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3477,
-        "swing": "+7.5"
+        "swing": "-7.0"
       },
       {
         "party": "Lab",
         "votes": 27406,
-        "swing": "+59.0"
+        "swing": "-7.0"
       },
       {
         "party": "LD",
         "votes": 3558,
-        "swing": "+7.7"
+        "swing": "-2.2"
       },
       {
         "party": "RUK",
         "votes": 2234,
-        "swing": "+4.8"
+        "swing": "+3.0"
       },
       {
         "party": "Green",
@@ -14300,7 +13113,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 730,
-        "swing": "+1.6"
+        "swing": "+1.1"
       }
     ]
   },
@@ -14314,22 +13127,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4846,
-        "swing": "+11.1"
+        "swing": "-8.8"
       },
       {
         "party": "Lab",
         "votes": 20755,
-        "swing": "+47.5"
+        "swing": "-15.6"
       },
       {
         "party": "LD",
         "votes": 2815,
-        "swing": "+6.4"
+        "swing": "-4.2"
       },
       {
         "party": "RUK",
         "votes": 2475,
-        "swing": "+5.7"
+        "swing": "+3.9"
       },
       {
         "party": "Green",
@@ -14339,7 +13152,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 6050,
-        "swing": "+13.8"
+        "swing": "+13.0"
       }
     ]
   },
@@ -14353,17 +13166,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16422,
-        "swing": "+33.4"
+        "swing": "-30.7"
       },
       {
         "party": "Lab",
         "votes": 17232,
-        "swing": "+35.1"
+        "swing": "+14.1"
       },
       {
         "party": "LD",
         "votes": 3572,
-        "swing": "+7.3"
+        "swing": "-3.3"
       },
       {
         "party": "RUK",
@@ -14378,7 +13191,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 420,
-        "swing": "+0.9"
+        "swing": "-0.2"
       }
     ]
   },
@@ -14392,22 +13205,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9677,
-        "swing": "+23.0"
+        "swing": "-25.0"
       },
       {
         "party": "Lab",
         "votes": 18470,
-        "swing": "+43.8"
+        "swing": "+2.8"
       },
       {
         "party": "LD",
         "votes": 2580,
-        "swing": "+6.1"
+        "swing": "+1.3"
       },
       {
         "party": "RUK",
         "votes": 7602,
-        "swing": "+18.0"
+        "swing": "+15.9"
       },
       {
         "party": "Green",
@@ -14417,7 +13230,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1080,
-        "swing": "+2.6"
+        "swing": "+0.8"
       }
     ]
   },
@@ -14431,22 +13244,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2943,
-        "swing": "+7.0"
+        "swing": "-4.7"
       },
       {
         "party": "Lab",
         "votes": 24510,
-        "swing": "+58.4"
+        "swing": "-11.8"
       },
       {
         "party": "LD",
         "votes": 3239,
-        "swing": "+7.7"
+        "swing": "-2.2"
       },
       {
         "party": "RUK",
         "votes": 4406,
-        "swing": "+10.5"
+        "swing": "+5.6"
       },
       {
         "party": "Green",
@@ -14456,7 +13269,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 4079,
-        "swing": "+9.7"
+        "swing": "+9.0"
       }
     ]
   },
@@ -14470,22 +13283,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1155,
-        "swing": "+3.6"
+        "swing": "-4.2"
       },
       {
         "party": "Lab",
         "votes": 20039,
-        "swing": "+61.9"
+        "swing": "-23.2"
       },
       {
         "party": "LD",
         "votes": 1544,
-        "swing": "+4.8"
+        "swing": "+2.6"
       },
       {
         "party": "RUK",
         "votes": 3272,
-        "swing": "+10.1"
+        "swing": "+7.5"
       },
       {
         "party": "Green",
@@ -14509,22 +13322,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1282,
-        "swing": "+3.5"
+        "swing": "-6.4"
       },
       {
         "party": "Lab",
         "votes": 26032,
-        "swing": "+70.6"
+        "swing": "-11.8"
       },
       {
         "party": "LD",
         "votes": 945,
-        "swing": "+2.6"
+        "swing": "+0.3"
       },
       {
         "party": "RUK",
         "votes": 5787,
-        "swing": "+15.7"
+        "swing": "+13.5"
       },
       {
         "party": "Green",
@@ -14534,7 +13347,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 452,
-        "swing": "+1.2"
+        "swing": "-0.2"
       }
     ]
   },
@@ -14548,22 +13361,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1887,
-        "swing": "+4.7"
+        "swing": "-4.8"
       },
       {
         "party": "Lab",
         "votes": 23077,
-        "swing": "+58.0"
+        "swing": "-13.6"
       },
       {
         "party": "LD",
         "votes": 2759,
-        "swing": "+6.9"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
         "votes": 3454,
-        "swing": "+8.7"
+        "swing": "+5.0"
       },
       {
         "party": "Green",
@@ -14573,7 +13386,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1865,
-        "swing": "+4.7"
+        "swing": "+3.7"
       }
     ]
   },
@@ -14587,22 +13400,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1566,
-        "swing": "+4.1"
+        "swing": "-4.5"
       },
       {
         "party": "Lab",
         "votes": 25302,
-        "swing": "+66.6"
+        "swing": "-11.3"
       },
       {
         "party": "LD",
         "votes": 1276,
-        "swing": "+3.4"
+        "swing": "+0.6"
       },
       {
         "party": "RUK",
         "votes": 4879,
-        "swing": "+12.8"
+        "swing": "+7.9"
       },
       {
         "party": "Green",
@@ -14612,7 +13425,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2336,
-        "swing": "+6.1"
+        "swing": "+2.2"
       }
     ]
   },
@@ -14626,17 +13439,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3469,
-        "swing": "+7.7"
+        "swing": "-14.2"
       },
       {
         "party": "Lab",
         "votes": 18324,
-        "swing": "+40.9"
+        "swing": "+18.8"
       },
       {
         "party": "LD",
         "votes": 2025,
-        "swing": "+4.5"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
@@ -14670,12 +13483,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4275,
-        "swing": "+10.5"
+        "swing": "-20.2"
       },
       {
         "party": "Lab",
         "votes": 12751,
-        "swing": "+31.3"
+        "swing": "-8.0"
       },
       {
         "party": "LD",
@@ -14685,7 +13498,7 @@ const RESULTS = {
       {
         "party": "RUK",
         "votes": 11247,
-        "swing": "+27.6"
+        "swing": "+18.7"
       },
       {
         "party": "Green",
@@ -14695,7 +13508,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 9511,
-        "swing": "+23.3"
+        "swing": "+2.2"
       },
       {
         "party": "All other candidates",
@@ -14714,17 +13527,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5535,
-        "swing": "+11.5"
+        "swing": "-16.0"
       },
       {
         "party": "Lab",
         "votes": 23555,
-        "swing": "+49.0"
+        "swing": "+18.5"
       },
       {
         "party": "LD",
         "votes": 2649,
-        "swing": "+5.5"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
@@ -14744,7 +13557,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 557,
-        "swing": "+1.2"
+        "swing": "+0.2"
       }
     ]
   },
@@ -14758,17 +13571,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12289,
-        "swing": "+29.1"
+        "swing": "-21.5"
       },
       {
         "party": "Lab",
         "votes": 17249,
-        "swing": "+40.8"
+        "swing": "+2.1"
       },
       {
         "party": "LD",
         "votes": 2561,
-        "swing": "+6.1"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
@@ -14792,17 +13605,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17441,
-        "swing": "+37.5"
+        "swing": "-34.9"
       },
       {
         "party": "Lab",
         "votes": 10475,
-        "swing": "+22.5"
+        "swing": "+4.8"
       },
       {
         "party": "LD",
         "votes": 2364,
-        "swing": "+5.1"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
@@ -14817,7 +13630,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1760,
-        "swing": "+3.8"
+        "swing": "+1.7"
       }
     ]
   },
@@ -14831,17 +13644,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12448,
-        "swing": "+29.8"
+        "swing": "-31.2"
       },
       {
         "party": "Lab",
         "votes": 14464,
-        "swing": "+34.6"
+        "swing": "+6.4"
       },
       {
         "party": "LD",
         "votes": 1489,
-        "swing": "+3.6"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
@@ -14865,22 +13678,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7167,
-        "swing": "+18.5"
+        "swing": "-15.8"
       },
       {
         "party": "Lab",
         "votes": 14677,
-        "swing": "+37.9"
+        "swing": "-16.0"
       },
       {
         "party": "LD",
         "votes": 1890,
-        "swing": "+4.9"
+        "swing": "+0.3"
       },
       {
         "party": "RUK",
         "votes": 4666,
-        "swing": "+12.0"
+        "swing": "+9.1"
       },
       {
         "party": "Green",
@@ -14890,7 +13703,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 8405,
-        "swing": "+21.7"
+        "swing": "+19.3"
       }
     ]
   },
@@ -14904,22 +13717,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6735,
-        "swing": "+17.5"
+        "swing": "-17.7"
       },
       {
         "party": "Lab",
         "votes": 13593,
-        "swing": "+35.4"
+        "swing": "-13.2"
       },
       {
         "party": "LD",
         "votes": 2400,
-        "swing": "+6.3"
+        "swing": "+5.8"
       },
       {
         "party": "RUK",
         "votes": 4759,
-        "swing": "+12.4"
+        "swing": "+9.1"
       },
       {
         "party": "Green",
@@ -14929,7 +13742,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 8494,
-        "swing": "+22.1"
+        "swing": "+12.5"
       }
     ]
   },
@@ -14943,17 +13756,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15552,
-        "swing": "+29.5"
+        "swing": "-23.1"
       },
       {
         "party": "Lab",
         "votes": 24672,
-        "swing": "+46.7"
+        "swing": "+14.1"
       },
       {
         "party": "LD",
         "votes": 2482,
-        "swing": "+4.7"
+        "swing": "-5.9"
       },
       {
         "party": "RUK",
@@ -14982,17 +13795,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18932,
-        "swing": "+37.6"
+        "swing": "-19.8"
       },
       {
         "party": "Lab",
         "votes": 5766,
-        "swing": "+11.5"
+        "swing": "-3.6"
       },
       {
         "party": "LD",
         "votes": 21895,
-        "swing": "+43.5"
+        "swing": "+19.7"
       },
       {
         "party": "Green",
@@ -15016,17 +13829,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14146,
-        "swing": "+30.5"
+        "swing": "-27.9"
       },
       {
         "party": "Lab",
         "votes": 12472,
-        "swing": "+26.9"
+        "swing": "+8.5"
       },
       {
         "party": "LD",
         "votes": 6375,
-        "swing": "+13.7"
+        "swing": "-4.9"
       },
       {
         "party": "RUK",
@@ -15041,7 +13854,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 353,
-        "swing": "+0.8"
+        "swing": "0.0"
       }
     ]
   },
@@ -15055,22 +13868,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4379,
-        "swing": "+10.9"
+        "swing": "-23.4"
       },
       {
         "party": "Lab",
         "votes": 18202,
-        "swing": "+45.2"
+        "swing": "-0.1"
       },
       {
         "party": "LD",
         "votes": 2735,
-        "swing": "+6.8"
+        "swing": "+2.0"
       },
       {
         "party": "RUK",
         "votes": 12803,
-        "swing": "+31.8"
+        "swing": "+18.7"
       },
       {
         "party": "Green",
@@ -15094,17 +13907,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19374,
-        "swing": "+38.9"
+        "swing": "-33.4"
       },
       {
         "party": "Lab",
         "votes": 9817,
-        "swing": "+19.7"
+        "swing": "+7.1"
       },
       {
         "party": "LD",
         "votes": 5882,
-        "swing": "+11.8"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
@@ -15128,22 +13941,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2823,
-        "swing": "+7.1"
+        "swing": "-13.9"
       },
       {
         "party": "Lab",
         "votes": 20184,
-        "swing": "+50.8"
+        "swing": "-14.6"
       },
       {
         "party": "LD",
         "votes": 3051,
-        "swing": "+7.7"
+        "swing": "+1.6"
       },
       {
         "party": "RUK",
         "votes": 4760,
-        "swing": "+12.0"
+        "swing": "+7.5"
       },
       {
         "party": "Green",
@@ -15153,7 +13966,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2520,
-        "swing": "+6.3"
+        "swing": "+6.1"
       }
     ]
   },
@@ -15167,17 +13980,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1678,
-        "swing": "+5.8"
+        "swing": "-3.3"
       },
       {
         "party": "Lab",
         "votes": 15054,
-        "swing": "+51.9"
+        "swing": "-26.7"
       },
       {
         "party": "RUK",
         "votes": 1313,
-        "swing": "+4.5"
+        "swing": "+0.5"
       },
       {
         "party": "Green",
@@ -15201,22 +14014,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2280,
-        "swing": "+5.5"
+        "swing": "-5.8"
       },
       {
         "party": "Lab",
         "votes": 22066,
-        "swing": "+52.9"
+        "swing": "-13.6"
       },
       {
         "party": "LD",
         "votes": 5412,
-        "swing": "+13.0"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
         "votes": 1961,
-        "swing": "+4.7"
+        "swing": "+2.2"
       },
       {
         "party": "Green",
@@ -15240,17 +14053,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12563,
-        "swing": "+30.6"
+        "swing": "-33.8"
       },
       {
         "party": "Lab",
         "votes": 16048,
-        "swing": "+39.1"
+        "swing": "+8.7"
       },
       {
         "party": "LD",
         "votes": 799,
-        "swing": "+1.9"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
@@ -15265,7 +14078,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 966,
-        "swing": "+2.4"
+        "swing": "+0.3"
       }
     ]
   },
@@ -15279,17 +14092,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17630,
-        "swing": "+34.4"
+        "swing": "-23.4"
       },
       {
         "party": "Lab",
         "votes": 4587,
-        "swing": "+9.0"
+        "swing": "-3.0"
       },
       {
         "party": "LD",
         "votes": 20031,
-        "swing": "+39.1"
+        "swing": "+11.9"
       },
       {
         "party": "RUK",
@@ -15313,17 +14126,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17526,
-        "swing": "+38.1"
+        "swing": "-25.1"
       },
       {
         "party": "Lab",
         "votes": 12130,
-        "swing": "+26.4"
+        "swing": "+2.9"
       },
       {
         "party": "LD",
         "votes": 2547,
-        "swing": "+5.5"
+        "swing": "-2.2"
       },
       {
         "party": "RUK",
@@ -15352,17 +14165,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16792,
-        "swing": "+38.1"
+        "swing": "-24.3"
       },
       {
         "party": "Lab",
         "votes": 12208,
-        "swing": "+27.7"
+        "swing": "+6.9"
       },
       {
         "party": "LD",
         "votes": 3353,
-        "swing": "+7.6"
+        "swing": "-5.9"
       },
       {
         "party": "RUK",
@@ -15386,22 +14199,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2687,
-        "swing": "+7.6"
+        "swing": "-13.0"
       },
       {
         "party": "Lab",
         "votes": 15791,
-        "swing": "+44.8"
+        "swing": "-6.9"
       },
       {
         "party": "LD",
         "votes": 1276,
-        "swing": "+3.6"
+        "swing": "+0.3"
       },
       {
         "party": "RUK",
         "votes": 8344,
-        "swing": "+23.7"
+        "swing": "+13.0"
       },
       {
         "party": "Green",
@@ -15411,12 +14224,12 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 4768,
-        "swing": "+13.5"
+        "swing": "+5.4"
       },
       {
         "party": "All other candidates",
         "votes": 1118,
-        "swing": "+3.2"
+        "swing": "-2.3"
       }
     ]
   },
@@ -15430,17 +14243,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14627,
-        "swing": "+31.4"
+        "swing": "-21.5"
       },
       {
         "party": "Lab",
         "votes": 16505,
-        "swing": "+35.4"
+        "swing": "-1.8"
       },
       {
         "party": "LD",
         "votes": 2372,
-        "swing": "+5.1"
+        "swing": "+0.5"
       },
       {
         "party": "RUK",
@@ -15455,7 +14268,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 2962,
-        "swing": "+6.4"
+        "swing": "+1.0"
       },
       {
         "party": "All other candidates",
@@ -15474,17 +14287,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16912,
-        "swing": "+34.1"
+        "swing": "-26.4"
       },
       {
         "party": "Lab",
         "votes": 15591,
-        "swing": "+31.4"
+        "swing": "+10.9"
       },
       {
         "party": "LD",
         "votes": 4068,
-        "swing": "+8.2"
+        "swing": "-4.3"
       },
       {
         "party": "RUK",
@@ -15499,7 +14312,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1872,
-        "swing": "+3.8"
+        "swing": "+1.1"
       }
     ]
   },
@@ -15513,22 +14326,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20150,
-        "swing": "+37.3"
+        "swing": "-24.1"
       },
       {
         "party": "Lab",
         "votes": 9171,
-        "swing": "+17.0"
+        "swing": "+1.7"
       },
       {
         "party": "LD",
         "votes": 14278,
-        "swing": "+26.5"
+        "swing": "+6.8"
       },
       {
         "party": "RUK",
         "votes": 6926,
-        "swing": "+12.8"
+        "swing": "+12.0"
       },
       {
         "party": "Green",
@@ -15552,22 +14365,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9530,
-        "swing": "+23.0"
+        "swing": "-24.0"
       },
       {
         "party": "Lab",
         "votes": 18457,
-        "swing": "+44.5"
+        "swing": "+2.8"
       },
       {
         "party": "LD",
         "votes": 2465,
-        "swing": "+5.9"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
         "votes": 7967,
-        "swing": "+19.2"
+        "swing": "+18.1"
       },
       {
         "party": "Green",
@@ -15591,17 +14404,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15468,
-        "swing": "+32.5"
+        "swing": "-27.0"
       },
       {
         "party": "Lab",
         "votes": 17346,
-        "swing": "+36.5"
+        "swing": "+9.5"
       },
       {
         "party": "LD",
         "votes": 2361,
-        "swing": "+5.0"
+        "swing": "-4.6"
       },
       {
         "party": "RUK",
@@ -15630,17 +14443,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20090,
-        "swing": "+40.6"
+        "swing": "-19.5"
       },
       {
         "party": "Lab",
         "votes": 4566,
-        "swing": "+9.2"
+        "swing": "+2.0"
       },
       {
         "party": "LD",
         "votes": 21442,
-        "swing": "+43.3"
+        "swing": "+13.4"
       },
       {
         "party": "Green",
@@ -15664,17 +14477,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2452,
-        "swing": "+4.6"
+        "swing": "-10.9"
       },
       {
         "party": "Lab",
         "votes": 10993,
-        "swing": "+20.8"
+        "swing": "+11.4"
       },
       {
         "party": "LD",
         "votes": 22349,
-        "swing": "+42.4"
+        "swing": "+7.9"
       },
       {
         "party": "RUK",
@@ -15694,7 +14507,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 449,
-        "swing": "+0.9"
+        "swing": "-0.2"
       }
     ]
   },
@@ -15708,17 +14521,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17735,
-        "swing": "+36.9"
+        "swing": "-25.3"
       },
       {
         "party": "Lab",
         "votes": 15534,
-        "swing": "+32.3"
+        "swing": "+6.7"
       },
       {
         "party": "LD",
         "votes": 2444,
-        "swing": "+5.1"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
@@ -15742,17 +14555,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16770,
-        "swing": "+36.5"
+        "swing": "-27.9"
       },
       {
         "party": "Lab",
         "votes": 13716,
-        "swing": "+29.9"
+        "swing": "+7.0"
       },
       {
         "party": "LD",
         "votes": 3126,
-        "swing": "+6.8"
+        "swing": "-3.6"
       },
       {
         "party": "RUK",
@@ -15776,17 +14589,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14474,
-        "swing": "+27.1"
+        "swing": "-24.1"
       },
       {
         "party": "Lab",
         "votes": 9397,
-        "swing": "+17.6"
+        "swing": "-0.4"
       },
       {
         "party": "LD",
         "votes": 21136,
-        "swing": "+39.6"
+        "swing": "+14.2"
       },
       {
         "party": "RUK",
@@ -15801,7 +14614,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 352,
-        "swing": "+0.7"
+        "swing": "-0.5"
       }
     ]
   },
@@ -15825,22 +14638,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 3722,
-        "swing": "+8.2"
+        "swing": "-5.7"
       },
       {
         "party": "UUP",
         "votes": 2269,
-        "swing": "+5.0"
+        "swing": "-2.5"
       },
       {
         "party": "APNI",
         "votes": 2001,
-        "swing": "+4.4"
+        "swing": "-3.2"
       },
       {
         "party": "All other candidates",
         "votes": 4206,
-        "swing": "+9.3"
+        "swing": "+7.7"
       }
     ]
   },
@@ -15854,22 +14667,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6174,
-        "swing": "+17.9"
+        "swing": "-6.4"
       },
       {
         "party": "Lab",
         "votes": 16238,
-        "swing": "+47.2"
+        "swing": "-6.8"
       },
       {
         "party": "LD",
         "votes": 1037,
-        "swing": "+3.0"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
         "votes": 7046,
-        "swing": "+20.5"
+        "swing": "+14.3"
       },
       {
         "party": "Green",
@@ -15879,7 +14692,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2390,
-        "swing": "+6.9"
+        "swing": "-4.4"
       }
     ]
   },
@@ -15893,17 +14706,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16254,
-        "swing": "+42.7"
+        "swing": "-15.1"
       },
       {
         "party": "Lab",
         "votes": 16468,
-        "swing": "+43.3"
+        "swing": "+8.3"
       },
       {
         "party": "LD",
         "votes": 2032,
-        "swing": "+5.3"
+        "swing": "+1.3"
       },
       {
         "party": "Green",
@@ -15913,7 +14726,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1835,
-        "swing": "+4.8"
+        "swing": "+4.2"
       }
     ]
   },
@@ -15927,17 +14740,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3248,
-        "swing": "+7.4"
+        "swing": "-14.4"
       },
       {
         "party": "Lab",
         "votes": 21480,
-        "swing": "+48.6"
+        "swing": "+18.9"
       },
       {
         "party": "LD",
         "votes": 2589,
-        "swing": "+5.9"
+        "swing": "-1.2"
       },
       {
         "party": "RUK",
@@ -15966,17 +14779,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12918,
-        "swing": "+27.1"
+        "swing": "-20.5"
       },
       {
         "party": "Lab",
         "votes": 20209,
-        "swing": "+42.3"
+        "swing": "+4.2"
       },
       {
         "party": "LD",
         "votes": 4931,
-        "swing": "+10.3"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
@@ -15991,7 +14804,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 200,
-        "swing": "+0.4"
+        "swing": "-1.0"
       }
     ]
   },
@@ -16005,17 +14818,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13888,
-        "swing": "+30.2"
+        "swing": "-21.4"
       },
       {
         "party": "Lab",
         "votes": 19318,
-        "swing": "+42.0"
+        "swing": "+3.5"
       },
       {
         "party": "LD",
         "votes": 3365,
-        "swing": "+7.3"
+        "swing": "+0.6"
       },
       {
         "party": "RUK",
@@ -16039,22 +14852,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6324,
-        "swing": "+14.0"
+        "swing": "-12.7"
       },
       {
         "party": "Lab",
         "votes": 25085,
-        "swing": "+55.4"
+        "swing": "-2.0"
       },
       {
         "party": "LD",
         "votes": 3622,
-        "swing": "+8.0"
+        "swing": "-2.8"
       },
       {
         "party": "RUK",
         "votes": 4135,
-        "swing": "+9.1"
+        "swing": "+6.8"
       },
       {
         "party": "Green",
@@ -16064,7 +14877,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1454,
-        "swing": "+3.2"
+        "swing": "+2.8"
       }
     ]
   },
@@ -16078,22 +14891,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17672,
-        "swing": "+34.8"
+        "swing": "-17.4"
       },
       {
         "party": "Lab",
         "votes": 21010,
-        "swing": "+41.3"
+        "swing": "+9.7"
       },
       {
         "party": "LD",
         "votes": 2279,
-        "swing": "+4.5"
+        "swing": "-5.1"
       },
       {
         "party": "RUK",
         "votes": 5438,
-        "swing": "+10.7"
+        "swing": "+9.8"
       },
       {
         "party": "Green",
@@ -16103,17 +14916,17 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 1273,
-        "swing": "+2.5"
+        "swing": "+0.1"
       },
       {
         "party": "All other candidates",
         "votes": 815,
-        "swing": "+1.6"
+        "swing": "+0.8"
       }
     ]
   },
   "W07000102": {
-    "name": "Montgomeryshire and Glynd\u0175r",
+    "name": "Montgomeryshire and Glyndŵr",
     "winner": "Steve Witherden",
     "party": "Lab",
     "majority": 3815,
@@ -16122,22 +14935,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7775,
-        "swing": "+18.0"
+        "swing": "-35.7"
       },
       {
         "party": "Lab",
         "votes": 12709,
-        "swing": "+29.4"
+        "swing": "+4.6"
       },
       {
         "party": "LD",
         "votes": 6470,
-        "swing": "+15.0"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
         "votes": 8894,
-        "swing": "+20.6"
+        "swing": "+19.2"
       },
       {
         "party": "Green",
@@ -16147,7 +14960,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 5667,
-        "swing": "+13.1"
+        "swing": "+11.1"
       }
     ]
   },
@@ -16161,22 +14974,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13960,
-        "swing": "+30.0"
+        "swing": "-10.9"
       },
       {
         "party": "Lab",
         "votes": 8259,
-        "swing": "+17.7"
+        "swing": "+13.1"
       },
       {
         "party": "LD",
         "votes": 3785,
-        "swing": "+8.1"
+        "swing": "+2.3"
       },
       {
         "party": "RUK",
         "votes": 3490,
-        "swing": "+7.5"
+        "swing": "+6.9"
       },
       {
         "party": "Green",
@@ -16191,7 +15004,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 423,
-        "swing": "+0.9"
+        "swing": "+0.2"
       }
     ]
   },
@@ -16205,22 +15018,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13788,
-        "swing": "+28.7"
+        "swing": "-24.9"
       },
       {
         "party": "Lab",
         "votes": 19603,
-        "swing": "+40.8"
+        "swing": "+12.7"
       },
       {
         "party": "LD",
         "votes": 4769,
-        "swing": "+9.9"
+        "swing": "-5.7"
       },
       {
         "party": "RUK",
         "votes": 7810,
-        "swing": "+16.3"
+        "swing": "+15.8"
       },
       {
         "party": "Green",
@@ -16239,17 +15052,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2415,
-        "swing": "+6.2"
+        "swing": "-15.0"
       },
       {
         "party": "Lab",
         "votes": 19168,
-        "swing": "+49.1"
+        "swing": "+21.6"
       },
       {
         "party": "LD",
         "votes": 822,
-        "swing": "+2.1"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
@@ -16269,7 +15082,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 334,
-        "swing": "+0.9"
+        "swing": "-0.5"
       }
     ]
   },
@@ -16283,17 +15096,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 647,
-        "swing": "+4.8"
+        "swing": "-17.4"
       },
       {
         "party": "Lab",
         "votes": 6692,
-        "swing": "+49.5"
+        "swing": "+21.2"
       },
       {
         "party": "LD",
         "votes": 382,
-        "swing": "+2.8"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
@@ -16322,22 +15135,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3765,
-        "swing": "+9.4"
+        "swing": "-18.8"
       },
       {
         "party": "Lab",
         "votes": 16797,
-        "swing": "+41.8"
+        "swing": "-5.2"
       },
       {
         "party": "LD",
         "votes": 2344,
-        "swing": "+5.8"
+        "swing": "+1.7"
       },
       {
         "party": "RUK",
         "votes": 10170,
-        "swing": "+25.3"
+        "swing": "+16.5"
       },
       {
         "party": "Green",
@@ -16347,7 +15160,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 5350,
-        "swing": "+13.3"
+        "swing": "+4.8"
       }
     ]
   },
@@ -16361,17 +15174,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17412,
-        "swing": "+38.5"
+        "swing": "-26.0"
       },
       {
         "party": "Lab",
         "votes": 8917,
-        "swing": "+19.7"
+        "swing": "+4.9"
       },
       {
         "party": "LD",
         "votes": 7198,
-        "swing": "+15.9"
+        "swing": "+1.4"
       },
       {
         "party": "RUK",
@@ -16386,7 +15199,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 939,
-        "swing": "+2.1"
+        "swing": "+0.7"
       }
     ]
   },
@@ -16400,17 +15213,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16412,
-        "swing": "+35.4"
+        "swing": "-28.4"
       },
       {
         "party": "Lab",
         "votes": 10812,
-        "swing": "+23.3"
+        "swing": "+10.2"
       },
       {
         "party": "LD",
         "votes": 8186,
-        "swing": "+17.7"
+        "swing": "+2.3"
       },
       {
         "party": "RUK",
@@ -16439,22 +15252,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20968,
-        "swing": "+39.2"
+        "swing": "-23.9"
       },
       {
         "party": "Lab",
         "votes": 17396,
-        "swing": "+32.5"
+        "swing": "+8.6"
       },
       {
         "party": "LD",
         "votes": 3026,
-        "swing": "+5.7"
+        "swing": "-3.9"
       },
       {
         "party": "RUK",
         "votes": 8280,
-        "swing": "+15.5"
+        "swing": "+15.1"
       },
       {
         "party": "Green",
@@ -16478,17 +15291,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17268,
-        "swing": "+35.3"
+        "swing": "-19.8"
       },
       {
         "party": "Lab",
         "votes": 3662,
-        "swing": "+7.5"
+        "swing": "-0.2"
       },
       {
         "party": "LD",
         "votes": 19645,
-        "swing": "+40.1"
+        "swing": "+7.6"
       },
       {
         "party": "RUK",
@@ -16503,7 +15316,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 284,
-        "swing": "+0.6"
+        "swing": "-0.1"
       }
     ]
   },
@@ -16517,22 +15330,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4228,
-        "swing": "+10.2"
+        "swing": "-16.3"
       },
       {
         "party": "Lab",
         "votes": 18875,
-        "swing": "+45.6"
+        "swing": "-13.6"
       },
       {
         "party": "LD",
         "votes": 1946,
-        "swing": "+4.7"
+        "swing": "+1.7"
       },
       {
         "party": "RUK",
         "votes": 7815,
-        "swing": "+18.9"
+        "swing": "+10.7"
       },
       {
         "party": "Green",
@@ -16556,22 +15369,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3522,
-        "swing": "+8.3"
+        "swing": "-15.3"
       },
       {
         "party": "Lab",
         "votes": 21200,
-        "swing": "+50.1"
+        "swing": "-9.2"
       },
       {
         "party": "LD",
         "votes": 2965,
-        "swing": "+7.0"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
         "votes": 8383,
-        "swing": "+19.8"
+        "swing": "+14.9"
       },
       {
         "party": "Green",
@@ -16595,22 +15408,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6678,
-        "swing": "+13.7"
+        "swing": "-18.0"
       },
       {
         "party": "Lab",
         "votes": 24440,
-        "swing": "+50.3"
+        "swing": "+5.9"
       },
       {
         "party": "LD",
         "votes": 5936,
-        "swing": "+12.2"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
         "votes": 5933,
-        "swing": "+12.2"
+        "swing": "+6.4"
       },
       {
         "party": "Green",
@@ -16634,22 +15447,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10923,
-        "swing": "+27.6"
+        "swing": "-25.2"
       },
       {
         "party": "Lab",
         "votes": 15992,
-        "swing": "+40.4"
+        "swing": "+5.0"
       },
       {
         "party": "LD",
         "votes": 1987,
-        "swing": "+5.0"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
         "votes": 8865,
-        "swing": "+22.4"
+        "swing": "+18.3"
       },
       {
         "party": "Green",
@@ -16668,22 +15481,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6487,
-        "swing": "+16.8"
+        "swing": "-19.4"
       },
       {
         "party": "Lab",
         "votes": 16370,
-        "swing": "+42.5"
+        "swing": "-5.0"
       },
       {
         "party": "LD",
         "votes": 2045,
-        "swing": "+5.3"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 7361,
-        "swing": "+19.1"
+        "swing": "+13.0"
       },
       {
         "party": "Green",
@@ -16693,7 +15506,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 2239,
-        "swing": "+5.8"
+        "swing": "+3.2"
       },
       {
         "party": "All other candidates",
@@ -16712,22 +15525,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6710,
-        "swing": "+16.0"
+        "swing": "-21.7"
       },
       {
         "party": "Lab",
         "votes": 17409,
-        "swing": "+41.5"
+        "swing": "-0.3"
       },
       {
         "party": "LD",
         "votes": 2087,
-        "swing": "+5.0"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
         "votes": 8541,
-        "swing": "+20.4"
+        "swing": "+11.5"
       },
       {
         "party": "Green",
@@ -16737,7 +15550,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 3529,
-        "swing": "+8.4"
+        "swing": "+3.8"
       },
       {
         "party": "All other candidates",
@@ -16748,7 +15561,7 @@ const RESULTS = {
   },
   "N05000011": {
     "name": "Newry and Armagh",
-    "winner": "D\u00e1ire Hughes",
+    "winner": "Dáire Hughes",
     "party": "SF",
     "majority": 15493,
     "turnout": 58.716323296354986,
@@ -16771,22 +15584,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 6806,
-        "swing": "+14.8"
+        "swing": "-4.6"
       },
       {
         "party": "UUP",
         "votes": 3175,
-        "swing": "+6.9"
+        "swing": "-0.8"
       },
       {
         "party": "APNI",
         "votes": 2692,
-        "swing": "+5.9"
+        "swing": "-2.5"
       },
       {
         "party": "All other candidates",
         "votes": 4987,
-        "swing": "+10.9"
+        "swing": "+7.6"
       }
     ]
   },
@@ -16800,17 +15613,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12955,
-        "swing": "+27.0"
+        "swing": "-28.6"
       },
       {
         "party": "Lab",
         "votes": 7115,
-        "swing": "+14.8"
+        "swing": "-2.9"
       },
       {
         "party": "LD",
         "votes": 15201,
-        "swing": "+31.7"
+        "swing": "+9.4"
       },
       {
         "party": "RUK",
@@ -16825,7 +15638,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2144,
-        "swing": "+4.5"
+        "swing": "+2.9"
       }
     ]
   },
@@ -16839,22 +15652,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8195,
-        "swing": "+20.6"
+        "swing": "-25.6"
       },
       {
         "party": "Lab",
         "votes": 18394,
-        "swing": "+46.2"
+        "swing": "+7.9"
       },
       {
         "party": "LD",
         "votes": 1491,
-        "swing": "+3.7"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
         "votes": 9555,
-        "swing": "+24.0"
+        "swing": "+16.2"
       },
       {
         "party": "Green",
@@ -16864,7 +15677,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 510,
-        "swing": "+1.3"
+        "swing": "+0.4"
       }
     ]
   },
@@ -16878,22 +15691,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4995,
-        "swing": "+13.7"
+        "swing": "-17.7"
       },
       {
         "party": "Lab",
         "votes": 17275,
-        "swing": "+47.5"
+        "swing": "+8.0"
       },
       {
         "party": "LD",
         "votes": 1319,
-        "swing": "+3.6"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
         "votes": 10613,
-        "swing": "+29.2"
+        "swing": "+14.0"
       },
       {
         "party": "Green",
@@ -16922,22 +15735,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 1661,
-        "swing": "+4.0"
+        "swing": "-1.9"
       },
       {
         "party": "UUP",
         "votes": 3901,
-        "swing": "+9.5"
+        "swing": "-7.5"
       },
       {
         "party": "APNI",
         "votes": 4488,
-        "swing": "+10.9"
+        "swing": "-3.4"
       },
       {
         "party": "All other candidates",
         "votes": 12229,
-        "swing": "+29.7"
+        "swing": "+29.1"
       }
     ]
   },
@@ -16951,17 +15764,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5954,
-        "swing": "+14.1"
+        "swing": "-16.8"
       },
       {
         "party": "Lab",
         "votes": 16821,
-        "swing": "+39.8"
+        "swing": "+25.9"
       },
       {
         "party": "LD",
         "votes": 1005,
-        "swing": "+2.4"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
@@ -16995,22 +15808,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19981,
-        "swing": "+38.8"
+        "swing": "-22.4"
       },
       {
         "party": "Lab",
         "votes": 14567,
-        "swing": "+28.3"
+        "swing": "+9.2"
       },
       {
         "party": "LD",
         "votes": 5553,
-        "swing": "+10.8"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
         "votes": 8433,
-        "swing": "+16.4"
+        "swing": "+16.2"
       },
       {
         "party": "Green",
@@ -17029,17 +15842,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14137,
-        "swing": "+27.6"
+        "swing": "-31.5"
       },
       {
         "party": "Lab",
         "votes": 2958,
-        "swing": "+5.8"
+        "swing": "-3.8"
       },
       {
         "party": "LD",
         "votes": 24094,
-        "swing": "+47.0"
+        "swing": "+17.1"
       },
       {
         "party": "RUK",
@@ -17054,7 +15867,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 277,
-        "swing": "+0.5"
+        "swing": "-0.7"
       }
     ]
   },
@@ -17068,22 +15881,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17426,
-        "swing": "+34.7"
+        "swing": "-24.6"
       },
       {
         "party": "Lab",
         "votes": 8593,
-        "swing": "+17.1"
+        "swing": "+0.6"
       },
       {
         "party": "LD",
         "votes": 14069,
-        "swing": "+28.0"
+        "swing": "+10.0"
       },
       {
         "party": "RUK",
         "votes": 6502,
-        "swing": "+12.9"
+        "swing": "+12.6"
       },
       {
         "party": "Green",
@@ -17107,17 +15920,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15076,
-        "swing": "+29.3"
+        "swing": "-27.3"
       },
       {
         "party": "Lab",
         "votes": 3216,
-        "swing": "+6.3"
+        "swing": "-2.9"
       },
       {
         "party": "LD",
         "votes": 21820,
-        "swing": "+42.4"
+        "swing": "+12.5"
       },
       {
         "party": "RUK",
@@ -17132,7 +15945,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 820,
-        "swing": "+1.6"
+        "swing": "+0.6"
       }
     ]
   },
@@ -17146,17 +15959,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18208,
-        "swing": "+36.6"
+        "swing": "-27.1"
       },
       {
         "party": "Lab",
         "votes": 4370,
-        "swing": "+8.8"
+        "swing": "-3.1"
       },
       {
         "party": "LD",
         "votes": 16619,
-        "swing": "+33.5"
+        "swing": "+13.1"
       },
       {
         "party": "RUK",
@@ -17195,12 +16008,12 @@ const RESULTS = {
       {
         "party": "UUP",
         "votes": 6754,
-        "swing": "+15.6"
+        "swing": "+3.7"
       },
       {
         "party": "APNI",
         "votes": 13608,
-        "swing": "+31.4"
+        "swing": "-13.4"
       },
       {
         "party": "All other candidates",
@@ -17219,22 +16032,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6492,
-        "swing": "+15.6"
+        "swing": "-18.8"
       },
       {
         "party": "Lab",
         "votes": 16562,
-        "swing": "+39.8"
+        "swing": "-3.8"
       },
       {
         "party": "LD",
         "votes": 4208,
-        "swing": "+10.1"
+        "swing": "+3.8"
       },
       {
         "party": "RUK",
         "votes": 10689,
-        "swing": "+25.7"
+        "swing": "+15.0"
       },
       {
         "party": "Green",
@@ -17244,7 +16057,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1248,
-        "swing": "+3.0"
+        "swing": "+0.8"
       }
     ]
   },
@@ -17258,17 +16071,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16246,
-        "swing": "+41.5"
+        "swing": "-32.4"
       },
       {
         "party": "Lab",
         "votes": 8008,
-        "swing": "+20.4"
+        "swing": "+4.4"
       },
       {
         "party": "LD",
         "votes": 2716,
-        "swing": "+6.9"
+        "swing": "+0.2"
       },
       {
         "party": "RUK",
@@ -17297,22 +16110,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15838,
-        "swing": "+34.5"
+        "swing": "-23.9"
       },
       {
         "party": "Lab",
         "votes": 17591,
-        "swing": "+38.4"
+        "swing": "+6.0"
       },
       {
         "party": "LD",
         "votes": 2159,
-        "swing": "+4.7"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
         "votes": 7899,
-        "swing": "+17.2"
+        "swing": "+16.8"
       },
       {
         "party": "Green",
@@ -17336,22 +16149,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1666,
-        "swing": "+3.9"
+        "swing": "-9.8"
       },
       {
         "party": "Lab",
         "votes": 4026,
-        "swing": "+9.4"
+        "swing": "+3.9"
       },
       {
         "party": "LD",
         "votes": 23384,
-        "swing": "+54.7"
+        "swing": "+15.2"
       },
       {
         "party": "RUK",
         "votes": 2094,
-        "swing": "+4.9"
+        "swing": "+4.5"
       },
       {
         "party": "Green",
@@ -17375,17 +16188,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20544,
-        "swing": "+37.0"
+        "swing": "-24.9"
       },
       {
         "party": "Lab",
         "votes": 5057,
-        "swing": "+9.1"
+        "swing": "-1.1"
       },
       {
         "party": "LD",
         "votes": 21178,
-        "swing": "+38.1"
+        "swing": "+15.7"
       },
       {
         "party": "RUK",
@@ -17400,7 +16213,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 683,
-        "swing": "+1.2"
+        "swing": "-1.3"
       }
     ]
   },
@@ -17414,17 +16227,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16435,
-        "swing": "+31.3"
+        "swing": "-25.3"
       },
       {
         "party": "Lab",
         "votes": 18358,
-        "swing": "+35.0"
+        "swing": "+11.3"
       },
       {
         "party": "LD",
         "votes": 5463,
-        "swing": "+10.4"
+        "swing": "-5.1"
       },
       {
         "party": "RUK",
@@ -17448,17 +16261,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15420,
-        "swing": "+30.2"
+        "swing": "-24.6"
       },
       {
         "party": "Lab",
         "votes": 20739,
-        "swing": "+40.6"
+        "swing": "+14.4"
       },
       {
         "party": "LD",
         "votes": 3878,
-        "swing": "+7.6"
+        "swing": "-7.4"
       },
       {
         "party": "RUK",
@@ -17473,7 +16286,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 442,
-        "swing": "+0.9"
+        "swing": "-0.8"
       }
     ]
   },
@@ -17487,17 +16300,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15842,
-        "swing": "+31.5"
+        "swing": "-31.0"
       },
       {
         "party": "Lab",
         "votes": 3205,
-        "swing": "+6.4"
+        "swing": "-8.9"
       },
       {
         "party": "LD",
         "votes": 1436,
-        "swing": "+2.9"
+        "swing": "-10.6"
       },
       {
         "party": "RUK",
@@ -17526,22 +16339,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16903,
-        "swing": "+35.9"
+        "swing": "-22.5"
       },
       {
         "party": "Lab",
         "votes": 2878,
-        "swing": "+6.1"
+        "swing": "-1.6"
       },
       {
         "party": "LD",
         "votes": 19488,
-        "swing": "+41.4"
+        "swing": "+11.1"
       },
       {
         "party": "RUK",
         "votes": 6368,
-        "swing": "+13.5"
+        "swing": "+10.2"
       },
       {
         "party": "Green",
@@ -17560,22 +16373,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12788,
-        "swing": "+26.2"
+        "swing": "-29.7"
       },
       {
         "party": "Lab",
         "votes": 17855,
-        "swing": "+36.6"
+        "swing": "+13.4"
       },
       {
         "party": "LD",
         "votes": 5169,
-        "swing": "+10.6"
+        "swing": "-5.5"
       },
       {
         "party": "RUK",
         "votes": 7688,
-        "swing": "+15.7"
+        "swing": "+14.3"
       },
       {
         "party": "Green",
@@ -17599,17 +16412,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10903,
-        "swing": "+22.0"
+        "swing": "-39.7"
       },
       {
         "party": "Lab",
         "votes": 3423,
-        "swing": "+6.9"
+        "swing": "-15.5"
       },
       {
         "party": "LD",
         "votes": 26214,
-        "swing": "+52.9"
+        "swing": "+42.4"
       },
       {
         "party": "RUK",
@@ -17624,7 +16437,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 133,
-        "swing": "+0.3"
+        "swing": "-1.9"
       }
     ]
   },
@@ -17638,17 +16451,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18499,
-        "swing": "+34.4"
+        "swing": "-19.1"
       },
       {
         "party": "Lab",
         "votes": 19138,
-        "swing": "+35.6"
+        "swing": "+10.6"
       },
       {
         "party": "LD",
         "votes": 7121,
-        "swing": "+13.2"
+        "swing": "-3.3"
       },
       {
         "party": "RUK",
@@ -17677,17 +16490,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12529,
-        "swing": "+30.6"
+        "swing": "-35.3"
       },
       {
         "party": "Lab",
         "votes": 14727,
-        "swing": "+36.0"
+        "swing": "+9.2"
       },
       {
         "party": "LD",
         "votes": 1228,
-        "swing": "+3.0"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
@@ -17711,22 +16524,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14746,
-        "swing": "+33.2"
+        "swing": "-26.8"
       },
       {
         "party": "Lab",
         "votes": 14785,
-        "swing": "+33.3"
+        "swing": "+9.5"
       },
       {
         "party": "LD",
         "votes": 3192,
-        "swing": "+7.2"
+        "swing": "-3.8"
       },
       {
         "party": "RUK",
         "votes": 8741,
-        "swing": "+19.7"
+        "swing": "+19.6"
       },
       {
         "party": "Green",
@@ -17745,17 +16558,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19360,
-        "swing": "+35.6"
+        "swing": "-26.1"
       },
       {
         "party": "Lab",
         "votes": 16750,
-        "swing": "+30.8"
+        "swing": "+17.0"
       },
       {
         "party": "LD",
         "votes": 6055,
-        "swing": "+11.1"
+        "swing": "-8.5"
       },
       {
         "party": "RUK",
@@ -17784,17 +16597,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17770,
-        "swing": "+35.0"
+        "swing": "-25.1"
       },
       {
         "party": "Lab",
         "votes": 14482,
-        "swing": "+28.5"
+        "swing": "+11.6"
       },
       {
         "party": "LD",
         "votes": 7626,
-        "swing": "+15.0"
+        "swing": "-3.5"
       },
       {
         "party": "RUK",
@@ -17823,17 +16636,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15859,
-        "swing": "+32.7"
+        "swing": "-29.4"
       },
       {
         "party": "Lab",
         "votes": 16871,
-        "swing": "+34.7"
+        "swing": "+9.3"
       },
       {
         "party": "LD",
         "votes": 1629,
-        "swing": "+3.4"
+        "swing": "-3.5"
       },
       {
         "party": "RUK",
@@ -17848,7 +16661,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1704,
-        "swing": "+3.5"
+        "swing": "+2.5"
       }
     ]
   },
@@ -17862,17 +16675,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16097,
-        "swing": "+36.1"
+        "swing": "-29.9"
       },
       {
         "party": "Lab",
         "votes": 11143,
-        "swing": "+25.0"
+        "swing": "+2.4"
       },
       {
         "party": "LD",
         "votes": 6492,
-        "swing": "+14.6"
+        "swing": "+6.8"
       },
       {
         "party": "RUK",
@@ -17896,17 +16709,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9195,
-        "swing": "+22.0"
+        "swing": "-27.8"
       },
       {
         "party": "Lab",
         "votes": 18209,
-        "swing": "+43.5"
+        "swing": "+1.5"
       },
       {
         "party": "LD",
         "votes": 2251,
-        "swing": "+5.4"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
@@ -17935,17 +16748,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12819,
-        "swing": "+29.2"
+        "swing": "-28.6"
       },
       {
         "party": "Lab",
         "votes": 16890,
-        "swing": "+38.5"
+        "swing": "+7.6"
       },
       {
         "party": "LD",
         "votes": 3193,
-        "swing": "+7.3"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
@@ -17974,22 +16787,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9944,
-        "swing": "+21.7"
+        "swing": "-29.8"
       },
       {
         "party": "Lab",
         "votes": 20794,
-        "swing": "+45.4"
+        "swing": "+6.5"
       },
       {
         "party": "LD",
         "votes": 2073,
-        "swing": "+4.5"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
         "votes": 8229,
-        "swing": "+18.0"
+        "swing": "+17.9"
       },
       {
         "party": "Green",
@@ -17999,7 +16812,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 353,
-        "swing": "+0.8"
+        "swing": "-0.2"
       }
     ]
   },
@@ -18013,22 +16826,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5806,
-        "swing": "+12.9"
+        "swing": "-16.1"
       },
       {
         "party": "Lab",
         "votes": 21484,
-        "swing": "+47.6"
+        "swing": "-5.9"
       },
       {
         "party": "LD",
         "votes": 3577,
-        "swing": "+7.9"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
         "votes": 5227,
-        "swing": "+11.6"
+        "swing": "+8.4"
       },
       {
         "party": "Green",
@@ -18052,22 +16865,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3925,
-        "swing": "+10.8"
+        "swing": "-10.1"
       },
       {
         "party": "Lab",
         "votes": 19494,
-        "swing": "+53.6"
+        "swing": "-9.6"
       },
       {
         "party": "LD",
         "votes": 1741,
-        "swing": "+4.8"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
         "votes": 3578,
-        "swing": "+9.8"
+        "swing": "+6.4"
       },
       {
         "party": "Green",
@@ -18077,7 +16890,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3331,
-        "swing": "+9.2"
+        "swing": "+5.9"
       }
     ]
   },
@@ -18091,22 +16904,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6787,
-        "swing": "+19.4"
+        "swing": "-20.8"
       },
       {
         "party": "Lab",
         "votes": 16480,
-        "swing": "+47.1"
+        "swing": "+1.1"
       },
       {
         "party": "LD",
         "votes": 1336,
-        "swing": "+3.8"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
         "votes": 7053,
-        "swing": "+20.1"
+        "swing": "+14.5"
       },
       {
         "party": "Green",
@@ -18125,22 +16938,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5285,
-        "swing": "+16.1"
+        "swing": "-15.5"
       },
       {
         "party": "Lab",
         "votes": 15579,
-        "swing": "+47.4"
+        "swing": "-6.4"
       },
       {
         "party": "LD",
         "votes": 2059,
-        "swing": "+6.3"
+        "swing": "-0.5"
       },
       {
         "party": "RUK",
         "votes": 4936,
-        "swing": "+15.0"
+        "swing": "+10.4"
       },
       {
         "party": "Green",
@@ -18164,17 +16977,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11737,
-        "swing": "+28.5"
+        "swing": "-32.1"
       },
       {
         "party": "Lab",
         "votes": 15216,
-        "swing": "+36.9"
+        "swing": "+5.4"
       },
       {
         "party": "LD",
         "votes": 1340,
-        "swing": "+3.3"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
@@ -18203,17 +17016,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17910,
-        "swing": "+37.6"
+        "swing": "-26.3"
       },
       {
         "party": "Lab",
         "votes": 14362,
-        "swing": "+30.2"
+        "swing": "+6.3"
       },
       {
         "party": "LD",
         "votes": 1927,
-        "swing": "+4.0"
+        "swing": "-4.3"
       },
       {
         "party": "RUK",
@@ -18228,7 +17041,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 449,
-        "swing": "+0.9"
+        "swing": "+0.5"
       }
     ]
   },
@@ -18242,22 +17055,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6838,
-        "swing": "+17.1"
+        "swing": "-23.2"
       },
       {
         "party": "Lab",
         "votes": 14091,
-        "swing": "+35.2"
+        "swing": "-8.3"
       },
       {
         "party": "LD",
         "votes": 3386,
-        "swing": "+8.5"
+        "swing": "+3.2"
       },
       {
         "party": "RUK",
         "votes": 7734,
-        "swing": "+19.3"
+        "swing": "+12.8"
       },
       {
         "party": "Green",
@@ -18267,7 +17080,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 6526,
-        "swing": "+16.3"
+        "swing": "+13.5"
       }
     ]
   },
@@ -18281,22 +17094,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4066,
-        "swing": "+10.5"
+        "swing": "-19.7"
       },
       {
         "party": "Lab",
         "votes": 13232,
-        "swing": "+34.3"
+        "swing": "-21.0"
       },
       {
         "party": "LD",
         "votes": 1271,
-        "swing": "+3.3"
+        "swing": "0.0"
       },
       {
         "party": "RUK",
         "votes": 6848,
-        "swing": "+17.8"
+        "swing": "+10.3"
       },
       {
         "party": "Green",
@@ -18306,7 +17119,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 11299,
-        "swing": "+29.3"
+        "swing": "+27.2"
       }
     ]
   },
@@ -18320,22 +17133,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 586,
-        "swing": "+2.8"
+        "swing": "-7.0"
       },
       {
         "party": "Lab",
         "votes": 1493,
-        "swing": "+7.2"
+        "swing": "+0.5"
       },
       {
         "party": "LD",
         "votes": 11392,
-        "swing": "+55.1"
+        "swing": "+10.2"
       },
       {
         "party": "RUK",
         "votes": 1586,
-        "swing": "+7.7"
+        "swing": "+3.8"
       },
       {
         "party": "Green",
@@ -18359,17 +17172,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17504,
-        "swing": "+38.0"
+        "swing": "-23.9"
       },
       {
         "party": "Lab",
         "votes": 12386,
-        "swing": "+26.9"
+        "swing": "+7.1"
       },
       {
         "party": "LD",
         "votes": 4728,
-        "swing": "+10.3"
+        "swing": "-4.3"
       },
       {
         "party": "RUK",
@@ -18398,22 +17211,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12690,
-        "swing": "+28.9"
+        "swing": "-24.9"
       },
       {
         "party": "Lab",
         "votes": 17232,
-        "swing": "+39.3"
+        "swing": "+8.1"
       },
       {
         "party": "LD",
         "votes": 1785,
-        "swing": "+4.1"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 9224,
-        "swing": "+21.0"
+        "swing": "+15.9"
       },
       {
         "party": "Green",
@@ -18423,7 +17236,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 810,
-        "swing": "+1.8"
+        "swing": "-1.8"
       }
     ]
   },
@@ -18437,17 +17250,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4739,
-        "swing": "+12.0"
+        "swing": "-9.4"
       },
       {
         "party": "Lab",
         "votes": 19541,
-        "swing": "+49.7"
+        "swing": "-6.8"
       },
       {
         "party": "LD",
         "votes": 3437,
-        "swing": "+8.7"
+        "swing": "-5.3"
       },
       {
         "party": "Green",
@@ -18457,7 +17270,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 6548,
-        "swing": "+16.6"
+        "swing": "+15.5"
       }
     ]
   },
@@ -18471,22 +17284,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8520,
-        "swing": "+18.5"
+        "swing": "-15.6"
       },
       {
         "party": "Lab",
         "votes": 5981,
-        "swing": "+13.0"
+        "swing": "+1.2"
       },
       {
         "party": "LD",
         "votes": 23414,
-        "swing": "+50.9"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
         "votes": 4164,
-        "swing": "+9.1"
+        "swing": "+7.6"
       },
       {
         "party": "Green",
@@ -18510,22 +17323,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2659,
-        "swing": "+6.4"
+        "swing": "-13.1"
       },
       {
         "party": "Lab",
         "votes": 19561,
-        "swing": "+47.1"
+        "swing": "+23.4"
       },
       {
         "party": "LD",
         "votes": 1374,
-        "swing": "+3.3"
+        "swing": "-4.3"
       },
       {
         "party": "RUK",
         "votes": 3228,
-        "swing": "+7.8"
+        "swing": "+7.5"
       },
       {
         "party": "Green",
@@ -18549,17 +17362,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2219,
-        "swing": "+5.4"
+        "swing": "-12.8"
       },
       {
         "party": "Lab",
         "votes": 19583,
-        "swing": "+47.4"
+        "swing": "+21.6"
       },
       {
         "party": "LD",
         "votes": 1315,
-        "swing": "+3.2"
+        "swing": "-3.0"
       },
       {
         "party": "RUK",
@@ -18593,22 +17406,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2276,
-        "swing": "+5.9"
+        "swing": "-5.4"
       },
       {
         "party": "Lab",
         "votes": 22813,
-        "swing": "+58.8"
+        "swing": "-12.0"
       },
       {
         "party": "LD",
         "votes": 2724,
-        "swing": "+7.0"
+        "swing": "-3.4"
       },
       {
         "party": "RUK",
         "votes": 1790,
-        "swing": "+4.6"
+        "swing": "+2.3"
       },
       {
         "party": "Green",
@@ -18618,7 +17431,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1609,
-        "swing": "+4.1"
+        "swing": "+3.9"
       }
     ]
   },
@@ -18632,17 +17445,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15227,
-        "swing": "+32.6"
+        "swing": "-24.4"
       },
       {
         "party": "Lab",
         "votes": 16129,
-        "swing": "+34.5"
+        "swing": "+1.4"
       },
       {
         "party": "LD",
         "votes": 2039,
-        "swing": "+4.4"
+        "swing": "-3.0"
       },
       {
         "party": "RUK",
@@ -18657,7 +17470,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3767,
-        "swing": "+8.1"
+        "swing": "+7.5"
       }
     ]
   },
@@ -18671,22 +17484,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10430,
-        "swing": "+23.7"
+        "swing": "-24.1"
       },
       {
         "party": "Lab",
         "votes": 19169,
-        "swing": "+43.6"
+        "swing": "+10.3"
       },
       {
         "party": "LD",
         "votes": 2866,
-        "swing": "+6.5"
+        "swing": "-3.7"
       },
       {
         "party": "RUK",
         "votes": 9456,
-        "swing": "+21.5"
+        "swing": "+12.8"
       },
       {
         "party": "Green",
@@ -18705,22 +17518,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14729,
-        "swing": "+29.9"
+        "swing": "-24.9"
       },
       {
         "party": "Lab",
         "votes": 19986,
-        "swing": "+40.6"
+        "swing": "+10.4"
       },
       {
         "party": "LD",
         "votes": 4742,
-        "swing": "+9.6"
+        "swing": "+1.5"
       },
       {
         "party": "RUK",
         "votes": 7624,
-        "swing": "+15.5"
+        "swing": "+13.7"
       },
       {
         "party": "Green",
@@ -18730,7 +17543,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 470,
-        "swing": "+1.0"
+        "swing": "-1.0"
       }
     ]
   },
@@ -18744,22 +17557,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14801,
-        "swing": "+29.6"
+        "swing": "-11.5"
       },
       {
         "party": "Lab",
         "votes": 9018,
-        "swing": "+18.0"
+        "swing": "+13.0"
       },
       {
         "party": "LD",
         "votes": 3681,
-        "swing": "+7.4"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
         "votes": 2970,
-        "swing": "+5.9"
+        "swing": "+5.2"
       },
       {
         "party": "SNP",
@@ -18783,22 +17596,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13300,
-        "swing": "+31.8"
+        "swing": "-14.7"
       },
       {
         "party": "Lab",
         "votes": 13418,
-        "swing": "+32.0"
+        "swing": "-9.5"
       },
       {
         "party": "LD",
         "votes": 1746,
-        "swing": "+4.2"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
         "votes": 5379,
-        "swing": "+12.8"
+        "swing": "+8.4"
       },
       {
         "party": "Green",
@@ -18808,7 +17621,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 5487,
-        "swing": "+13.1"
+        "swing": "+12.0"
       }
     ]
   },
@@ -18822,22 +17635,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12061,
-        "swing": "+28.1"
+        "swing": "-31.7"
       },
       {
         "party": "Lab",
         "votes": 17665,
-        "swing": "+41.2"
+        "swing": "+8.9"
       },
       {
         "party": "LD",
         "votes": 1766,
-        "swing": "+4.1"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 9670,
-        "swing": "+22.6"
+        "swing": "+22.3"
       },
       {
         "party": "Green",
@@ -18856,22 +17669,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6873,
-        "swing": "+16.3"
+        "swing": "-21.7"
       },
       {
         "party": "Lab",
         "votes": 20795,
-        "swing": "+49.4"
+        "swing": "+1.0"
       },
       {
         "party": "LD",
         "votes": 2441,
-        "swing": "+5.8"
+        "swing": "+0.9"
       },
       {
         "party": "RUK",
         "votes": 7467,
-        "swing": "+17.7"
+        "swing": "+12.1"
       },
       {
         "party": "Green",
@@ -18895,22 +17708,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5406,
-        "swing": "+15.0"
+        "swing": "-20.5"
       },
       {
         "party": "Lab",
         "votes": 17089,
-        "swing": "+47.5"
+        "swing": "+9.3"
       },
       {
         "party": "LD",
         "votes": 1213,
-        "swing": "+3.4"
+        "swing": "-3.4"
       },
       {
         "party": "RUK",
         "votes": 10459,
-        "swing": "+29.1"
+        "swing": "+13.3"
       },
       {
         "party": "Green",
@@ -18920,7 +17733,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 139,
-        "swing": "+0.4"
+        "swing": "-3.3"
       }
     ]
   },
@@ -18934,22 +17747,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3775,
-        "swing": "+9.6"
+        "swing": "-17.7"
       },
       {
         "party": "Lab",
         "votes": 16225,
-        "swing": "+41.2"
+        "swing": "-5.4"
       },
       {
         "party": "LD",
         "votes": 1606,
-        "swing": "+4.1"
+        "swing": "+2.7"
       },
       {
         "party": "RUK",
         "votes": 7823,
-        "swing": "+19.9"
+        "swing": "+11.4"
       },
       {
         "party": "Green",
@@ -18959,12 +17772,12 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 5275,
-        "swing": "+13.4"
+        "swing": "+2.5"
       },
       {
         "party": "All other candidates",
         "votes": 2809,
-        "swing": "+7.1"
+        "swing": "+2.1"
       }
     ]
   },
@@ -18978,17 +17791,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14150,
-        "swing": "+31.8"
+        "swing": "-27.0"
       },
       {
         "party": "Lab",
         "votes": 14168,
-        "swing": "+31.8"
+        "swing": "+11.2"
       },
       {
         "party": "LD",
         "votes": 5507,
-        "swing": "+12.4"
+        "swing": "-3.0"
       },
       {
         "party": "RUK",
@@ -19003,7 +17816,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1023,
-        "swing": "+2.3"
+        "swing": "+0.6"
       }
     ]
   },
@@ -19017,22 +17830,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4738,
-        "swing": "+11.0"
+        "swing": "-6.7"
       },
       {
         "party": "Lab",
         "votes": 18535,
-        "swing": "+43.1"
+        "swing": "-17.3"
       },
       {
         "party": "LD",
         "votes": 4189,
-        "swing": "+9.7"
+        "swing": "-5.8"
       },
       {
         "party": "RUK",
         "votes": 3403,
-        "swing": "+7.9"
+        "swing": "+5.5"
       },
       {
         "party": "Green",
@@ -19042,7 +17855,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 6211,
-        "swing": "+14.4"
+        "swing": "+13.7"
       }
     ]
   },
@@ -19056,17 +17869,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13715,
-        "swing": "+33.0"
+        "swing": "-28.4"
       },
       {
         "party": "Lab",
         "votes": 14495,
-        "swing": "+34.8"
+        "swing": "+7.9"
       },
       {
         "party": "LD",
         "votes": 3031,
-        "swing": "+7.3"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
@@ -19090,22 +17903,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5643,
-        "swing": "+14.5"
+        "swing": "-22.8"
       },
       {
         "party": "Lab",
         "votes": 18857,
-        "swing": "+48.4"
+        "swing": "-0.2"
       },
       {
         "party": "LD",
         "votes": 4886,
-        "swing": "+12.6"
+        "swing": "+1.1"
       },
       {
         "party": "RUK",
         "votes": 5702,
-        "swing": "+14.6"
+        "swing": "+12.6"
       },
       {
         "party": "Green",
@@ -19115,7 +17928,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 733,
-        "swing": "+1.9"
+        "swing": "+1.4"
       }
     ]
   },
@@ -19129,22 +17942,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5212,
-        "swing": "+13.0"
+        "swing": "-16.8"
       },
       {
         "party": "Lab",
         "votes": 14006,
-        "swing": "+35.0"
+        "swing": "-22.3"
       },
       {
         "party": "LD",
         "votes": 3195,
-        "swing": "+8.0"
+        "swing": "+1.2"
       },
       {
         "party": "RUK",
         "votes": 5738,
-        "swing": "+14.3"
+        "swing": "+10.2"
       },
       {
         "party": "Green",
@@ -19168,17 +17981,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11625,
-        "swing": "+23.6"
+        "swing": "-12.8"
       },
       {
         "party": "Lab",
         "votes": 24113,
-        "swing": "+48.9"
+        "swing": "+4.6"
       },
       {
         "party": "LD",
         "votes": 5943,
-        "swing": "+12.1"
+        "swing": "-4.8"
       },
       {
         "party": "RUK",
@@ -19207,22 +18020,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5088,
-        "swing": "+13.3"
+        "swing": "-6.5"
       },
       {
         "party": "Lab",
         "votes": 20126,
-        "swing": "+52.5"
+        "swing": "-9.4"
       },
       {
         "party": "LD",
         "votes": 3417,
-        "swing": "+8.9"
+        "swing": "-5.0"
       },
       {
         "party": "RUK",
         "votes": 2106,
-        "swing": "+5.5"
+        "swing": "+4.6"
       },
       {
         "party": "Green",
@@ -19232,7 +18045,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2393,
-        "swing": "+6.2"
+        "swing": "+6.0"
       }
     ]
   },
@@ -19246,22 +18059,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4496,
-        "swing": "+13.3"
+        "swing": "-23.7"
       },
       {
         "party": "Lab",
         "votes": 16612,
-        "swing": "+49.0"
+        "swing": "+8.9"
       },
       {
         "party": "LD",
         "votes": 1137,
-        "swing": "+3.4"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
         "votes": 9704,
-        "swing": "+28.6"
+        "swing": "+12.5"
       },
       {
         "party": "Green",
@@ -19271,7 +18084,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 268,
-        "swing": "+0.8"
+        "swing": "-1.9"
       }
     ]
   },
@@ -19285,17 +18098,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17756,
-        "swing": "+37.0"
+        "swing": "-35.9"
       },
       {
         "party": "Lab",
         "votes": 11823,
-        "swing": "+24.6"
+        "swing": "+9.0"
       },
       {
         "party": "LD",
         "votes": 4068,
-        "swing": "+8.5"
+        "swing": "+0.8"
       },
       {
         "party": "RUK",
@@ -19319,22 +18132,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8961,
-        "swing": "+19.8"
+        "swing": "-16.6"
       },
       {
         "party": "Lab",
         "votes": 21598,
-        "swing": "+47.7"
+        "swing": "-4.9"
       },
       {
         "party": "LD",
         "votes": 3963,
-        "swing": "+8.8"
+        "swing": "+2.4"
       },
       {
         "party": "RUK",
         "votes": 3904,
-        "swing": "+8.6"
+        "swing": "+7.5"
       },
       {
         "party": "Green",
@@ -19344,7 +18157,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 448,
-        "swing": "+1.0"
+        "swing": "+0.6"
       }
     ]
   },
@@ -19358,17 +18171,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14912,
-        "swing": "+32.0"
+        "swing": "-24.8"
       },
       {
         "party": "Lab",
         "votes": 16273,
-        "swing": "+35.0"
+        "swing": "+12.1"
       },
       {
         "party": "LD",
         "votes": 5103,
-        "swing": "+11.0"
+        "swing": "-5.9"
       },
       {
         "party": "RUK",
@@ -19397,22 +18210,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12340,
-        "swing": "+32.3"
+        "swing": "-15.2"
       },
       {
         "party": "Lab",
         "votes": 15663,
-        "swing": "+41.0"
+        "swing": "+4.4"
       },
       {
         "party": "LD",
         "votes": 1542,
-        "swing": "+4.0"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
         "votes": 7216,
-        "swing": "+18.9"
+        "swing": "+12.4"
       },
       {
         "party": "Green",
@@ -19422,7 +18235,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 169,
-        "swing": "+0.4"
+        "swing": "-2.5"
       }
     ]
   },
@@ -19436,17 +18249,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14021,
-        "swing": "+33.1"
+        "swing": "-31.6"
       },
       {
         "party": "Lab",
         "votes": 14810,
-        "swing": "+34.9"
+        "swing": "+9.1"
       },
       {
         "party": "LD",
         "votes": 2165,
-        "swing": "+5.1"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
@@ -19475,17 +18288,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18822,
-        "swing": "+35.4"
+        "swing": "-20.4"
       },
       {
         "party": "Lab",
         "votes": 15635,
-        "swing": "+29.4"
+        "swing": "+12.5"
       },
       {
         "party": "LD",
         "votes": 6773,
-        "swing": "+12.7"
+        "swing": "-7.1"
       },
       {
         "party": "RUK",
@@ -19509,22 +18322,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2050,
-        "swing": "+5.7"
+        "swing": "-9.7"
       },
       {
         "party": "Lab",
         "votes": 17118,
-        "swing": "+47.8"
+        "swing": "-8.5"
       },
       {
         "party": "LD",
         "votes": 935,
-        "swing": "+2.6"
+        "swing": "+0.3"
       },
       {
         "party": "RUK",
         "votes": 9328,
-        "swing": "+26.1"
+        "swing": "+14.5"
       },
       {
         "party": "Green",
@@ -19534,7 +18347,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 5198,
-        "swing": "+14.5"
+        "swing": "+2.1"
       }
     ]
   },
@@ -19548,17 +18361,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17321,
-        "swing": "+33.3"
+        "swing": "-26.5"
       },
       {
         "party": "Lab",
         "votes": 18177,
-        "swing": "+34.9"
+        "swing": "+7.3"
       },
       {
         "party": "LD",
         "votes": 5001,
-        "swing": "+9.6"
+        "swing": "+1.6"
       },
       {
         "party": "RUK",
@@ -19573,7 +18386,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1273,
-        "swing": "+2.4"
+        "swing": "+0.8"
       }
     ]
   },
@@ -19587,17 +18400,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 23059,
-        "swing": "+47.5"
+        "swing": "-15.8"
       },
       {
         "party": "Lab",
         "votes": 10874,
-        "swing": "+22.4"
+        "swing": "+6.0"
       },
       {
         "party": "LD",
         "votes": 4322,
-        "swing": "+8.9"
+        "swing": "-3.6"
       },
       {
         "party": "RUK",
@@ -19612,7 +18425,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1071,
-        "swing": "+2.2"
+        "swing": "-1.7"
       }
     ]
   },
@@ -19626,17 +18439,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11373,
-        "swing": "+21.8"
+        "swing": "-18.8"
       },
       {
         "party": "Lab",
         "votes": 5048,
-        "swing": "+9.7"
+        "swing": "+4.4"
       },
       {
         "party": "LD",
         "votes": 28528,
-        "swing": "+54.6"
+        "swing": "+1.0"
       },
       {
         "party": "RUK",
@@ -19651,7 +18464,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 582,
-        "swing": "+1.1"
+        "swing": "+0.6"
       }
     ]
   },
@@ -19665,22 +18478,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4273,
-        "swing": "+10.8"
+        "swing": "-20.8"
       },
       {
         "party": "Lab",
         "votes": 13027,
-        "swing": "+32.8"
+        "swing": "-18.0"
       },
       {
         "party": "LD",
         "votes": 2816,
-        "swing": "+7.1"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 6773,
-        "swing": "+17.1"
+        "swing": "+8.9"
       },
       {
         "party": "Green",
@@ -19704,17 +18517,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12473,
-        "swing": "+29.3"
+        "swing": "-29.2"
       },
       {
         "party": "Lab",
         "votes": 15403,
-        "swing": "+36.2"
+        "swing": "+8.1"
       },
       {
         "party": "LD",
         "votes": 1894,
-        "swing": "+4.4"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
@@ -19729,7 +18542,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 435,
-        "swing": "+1.0"
+        "swing": "-2.7"
       }
     ]
   },
@@ -19743,17 +18556,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15339,
-        "swing": "+34.8"
+        "swing": "-29.9"
       },
       {
         "party": "Lab",
         "votes": 13876,
-        "swing": "+31.5"
+        "swing": "+5.1"
       },
       {
         "party": "LD",
         "votes": 1895,
-        "swing": "+4.3"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
@@ -19782,17 +18595,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19893,
-        "swing": "+39.8"
+        "swing": "-18.1"
       },
       {
         "party": "Lab",
         "votes": 4640,
-        "swing": "+9.3"
+        "swing": "-2.8"
       },
       {
         "party": "LD",
         "votes": 17702,
-        "swing": "+35.4"
+        "swing": "+7.2"
       },
       {
         "party": "RUK",
@@ -19807,7 +18620,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 183,
-        "swing": "+0.4"
+        "swing": "-0.8"
       }
     ]
   },
@@ -19821,22 +18634,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12619,
-        "swing": "+28.3"
+        "swing": "-28.1"
       },
       {
         "party": "Lab",
         "votes": 18247,
-        "swing": "+40.9"
+        "swing": "+4.3"
       },
       {
         "party": "LD",
         "votes": 1241,
-        "swing": "+2.8"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
         "votes": 9695,
-        "swing": "+21.7"
+        "swing": "+21.4"
       },
       {
         "party": "Green",
@@ -19860,22 +18673,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15025,
-        "swing": "+36.1"
+        "swing": "-10.0"
       },
       {
         "party": "Lab",
         "votes": 16023,
-        "swing": "+38.5"
+        "swing": "+5.9"
       },
       {
         "party": "LD",
         "votes": 1175,
-        "swing": "+2.8"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
         "votes": 7679,
-        "swing": "+18.5"
+        "swing": "+6.8"
       },
       {
         "party": "Green",
@@ -19894,17 +18707,17 @@ const RESULTS = {
       {
         "party": "Lab",
         "votes": 16671,
-        "swing": "+45.1"
+        "swing": "+4.5"
       },
       {
         "party": "LD",
         "votes": 2824,
-        "swing": "+7.6"
+        "swing": "+1.4"
       },
       {
         "party": "RUK",
         "votes": 11181,
-        "swing": "+30.3"
+        "swing": "+13.3"
       },
       {
         "party": "Green",
@@ -19914,7 +18727,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3624,
-        "swing": "+9.8"
+        "swing": "+7.0"
       }
     ]
   },
@@ -19928,17 +18741,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15105,
-        "swing": "+30.8"
+        "swing": "-26.5"
       },
       {
         "party": "Lab",
         "votes": 19533,
-        "swing": "+39.9"
+        "swing": "+8.7"
       },
       {
         "party": "LD",
         "votes": 3252,
-        "swing": "+6.6"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
@@ -19967,22 +18780,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 21366,
-        "swing": "+45.4"
+        "swing": "-10.0"
       },
       {
         "party": "Lab",
         "votes": 13785,
-        "swing": "+29.3"
+        "swing": "+4.2"
       },
       {
         "party": "LD",
         "votes": 4343,
-        "swing": "+9.2"
+        "swing": "-5.9"
       },
       {
         "party": "RUK",
         "votes": 4671,
-        "swing": "+9.9"
+        "swing": "+9.8"
       },
       {
         "party": "Green",
@@ -20001,22 +18814,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6756,
-        "swing": "+16.0"
+        "swing": "-20.8"
       },
       {
         "party": "Lab",
         "votes": 22358,
-        "swing": "+52.9"
+        "swing": "+4.2"
       },
       {
         "party": "LD",
         "votes": 2149,
-        "swing": "+5.1"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 7662,
-        "swing": "+18.1"
+        "swing": "+13.4"
       },
       {
         "party": "Green",
@@ -20040,17 +18853,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18442,
-        "swing": "+38.2"
+        "swing": "-15.0"
       },
       {
         "party": "Lab",
         "votes": 9963,
-        "swing": "+20.6"
+        "swing": "+2.9"
       },
       {
         "party": "LD",
         "votes": 10815,
-        "swing": "+22.4"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
@@ -20065,7 +18878,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 660,
-        "swing": "+1.4"
+        "swing": "-2.3"
       }
     ]
   },
@@ -20079,17 +18892,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17865,
-        "swing": "+30.9"
+        "swing": "-16.4"
       },
       {
         "party": "Lab",
         "votes": 25291,
-        "swing": "+43.8"
+        "swing": "+8.8"
       },
       {
         "party": "LD",
         "votes": 3133,
-        "swing": "+5.4"
+        "swing": "-10.5"
       },
       {
         "party": "RUK",
@@ -20104,7 +18917,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 735,
-        "swing": "+1.3"
+        "swing": "-0.4"
       }
     ]
   },
@@ -20118,17 +18931,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2420,
-        "swing": "+5.7"
+        "swing": "-11.6"
       },
       {
         "party": "Lab",
         "votes": 21460,
-        "swing": "+50.5"
+        "swing": "+19.4"
       },
       {
         "party": "LD",
         "votes": 1714,
-        "swing": "+4.0"
+        "swing": "-3.2"
       },
       {
         "party": "RUK",
@@ -20143,7 +18956,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1512,
-        "swing": "+3.6"
+        "swing": "+2.3"
       }
     ]
   },
@@ -20157,17 +18970,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 21248,
-        "swing": "+43.7"
+        "swing": "-19.6"
       },
       {
         "party": "Lab",
         "votes": 10854,
-        "swing": "+22.3"
+        "swing": "+7.7"
       },
       {
         "party": "LD",
         "votes": 6252,
-        "swing": "+12.9"
+        "swing": "-3.0"
       },
       {
         "party": "RUK",
@@ -20182,7 +18995,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 409,
-        "swing": "+0.8"
+        "swing": "-1.7"
       }
     ]
   },
@@ -20196,22 +19009,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3583,
-        "swing": "+9.0"
+        "swing": "-14.3"
       },
       {
         "party": "Lab",
         "votes": 21132,
-        "swing": "+53.2"
+        "swing": "-4.2"
       },
       {
         "party": "LD",
         "votes": 2752,
-        "swing": "+6.9"
+        "swing": "+0.8"
       },
       {
         "party": "RUK",
         "votes": 6031,
-        "swing": "+15.2"
+        "swing": "+6.3"
       },
       {
         "party": "Green",
@@ -20235,17 +19048,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17110,
-        "swing": "+34.1"
+        "swing": "-21.1"
       },
       {
         "party": "Lab",
         "votes": 13303,
-        "swing": "+26.5"
+        "swing": "+7.8"
       },
       {
         "party": "LD",
         "votes": 11825,
-        "swing": "+23.6"
+        "swing": "+4.1"
       },
       {
         "party": "RUK",
@@ -20260,7 +19073,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 585,
-        "swing": "+1.2"
+        "swing": "-0.2"
       }
     ]
   },
@@ -20274,17 +19087,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12350,
-        "swing": "+27.9"
+        "swing": "-27.6"
       },
       {
         "party": "Lab",
         "votes": 17758,
-        "swing": "+40.2"
+        "swing": "+5.3"
       },
       {
         "party": "LD",
         "votes": 1899,
-        "swing": "+4.3"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
@@ -20299,7 +19112,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 838,
-        "swing": "+1.9"
+        "swing": "-1.7"
       }
     ]
   },
@@ -20313,22 +19126,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11942,
-        "swing": "+30.6"
+        "swing": "-25.7"
       },
       {
         "party": "Lab",
         "votes": 15484,
-        "swing": "+39.7"
+        "swing": "+4.8"
       },
       {
         "party": "LD",
         "votes": 942,
-        "swing": "+2.4"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
         "votes": 8163,
-        "swing": "+20.9"
+        "swing": "+16.6"
       },
       {
         "party": "Green",
@@ -20352,22 +19165,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8490,
-        "swing": "+17.9"
+        "swing": "-16.4"
       },
       {
         "party": "Lab",
         "votes": 26772,
-        "swing": "+56.4"
+        "swing": "+3.8"
       },
       {
         "party": "LD",
         "votes": 2630,
-        "swing": "+5.5"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
         "votes": 5767,
-        "swing": "+12.2"
+        "swing": "+8.5"
       },
       {
         "party": "Green",
@@ -20377,7 +19190,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 496,
-        "swing": "+1.0"
+        "swing": "+0.3"
       }
     ]
   },
@@ -20391,17 +19204,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12593,
-        "swing": "+25.6"
+        "swing": "-32.4"
       },
       {
         "party": "Lab",
         "votes": 22788,
-        "swing": "+46.3"
+        "swing": "+16.5"
       },
       {
         "party": "LD",
         "votes": 1792,
-        "swing": "+3.6"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
@@ -20425,17 +19238,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18328,
-        "swing": "+36.7"
+        "swing": "-25.0"
       },
       {
         "party": "Lab",
         "votes": 6802,
-        "swing": "+13.6"
+        "swing": "+0.1"
       },
       {
         "party": "LD",
         "votes": 12888,
-        "swing": "+25.8"
+        "swing": "+6.4"
       },
       {
         "party": "RUK",
@@ -20450,7 +19263,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 507,
-        "swing": "+1.0"
+        "swing": "-0.9"
       }
     ]
   },
@@ -20464,17 +19277,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4069,
-        "swing": "+12.9"
+        "swing": "-12.5"
       },
       {
         "party": "Lab",
         "votes": 16301,
-        "swing": "+51.6"
+        "swing": "-5.0"
       },
       {
         "party": "LD",
         "votes": 1694,
-        "swing": "+5.4"
+        "swing": "+1.5"
       },
       {
         "party": "Green",
@@ -20484,7 +19297,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 4847,
-        "swing": "+15.3"
+        "swing": "+13.9"
       }
     ]
   },
@@ -20498,17 +19311,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2339,
-        "swing": "+7.4"
+        "swing": "-5.0"
       },
       {
         "party": "Lab",
         "votes": 16569,
-        "swing": "+52.1"
+        "swing": "-14.9"
       },
       {
         "party": "LD",
         "votes": 2174,
-        "swing": "+6.8"
+        "swing": "+1.4"
       },
       {
         "party": "Green",
@@ -20518,7 +19331,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2438,
-        "swing": "+7.7"
+        "swing": "+6.4"
       }
     ]
   },
@@ -20532,17 +19345,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6205,
-        "swing": "+12.0"
+        "swing": "-13.7"
       },
       {
         "party": "Lab",
         "votes": 23875,
-        "swing": "+46.3"
+        "swing": "+11.3"
       },
       {
         "party": "LD",
         "votes": 15686,
-        "swing": "+30.4"
+        "swing": "-2.7"
       },
       {
         "party": "Green",
@@ -20552,7 +19365,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1344,
-        "swing": "+2.6"
+        "swing": "+2.1"
       }
     ]
   },
@@ -20566,17 +19379,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5242,
-        "swing": "+13.6"
+        "swing": "-13.5"
       },
       {
         "party": "Lab",
         "votes": 21230,
-        "swing": "+55.2"
+        "swing": "+1.3"
       },
       {
         "party": "LD",
         "votes": 3863,
-        "swing": "+10.0"
+        "swing": "+3.3"
       },
       {
         "party": "Green",
@@ -20600,17 +19413,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6252,
-        "swing": "+17.5"
+        "swing": "-18.2"
       },
       {
         "party": "Lab",
         "votes": 18710,
-        "swing": "+52.3"
+        "swing": "+5.6"
       },
       {
         "party": "LD",
         "votes": 3421,
-        "swing": "+9.6"
+        "swing": "+4.9"
       },
       {
         "party": "Green",
@@ -20620,7 +19433,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 4230,
-        "swing": "+11.8"
+        "swing": "+9.8"
       }
     ]
   },
@@ -20634,17 +19447,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13398,
-        "swing": "+27.5"
+        "swing": "-33.3"
       },
       {
         "party": "Lab",
         "votes": 18841,
-        "swing": "+38.7"
+        "swing": "+9.2"
       },
       {
         "party": "LD",
         "votes": 1838,
-        "swing": "+3.8"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
@@ -20659,7 +19472,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1047,
-        "swing": "+2.2"
+        "swing": "+0.8"
       }
     ]
   },
@@ -20673,17 +19486,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13135,
-        "swing": "+27.2"
+        "swing": "-23.6"
       },
       {
         "party": "Lab",
         "votes": 21738,
-        "swing": "+45.0"
+        "swing": "+5.8"
       },
       {
         "party": "LD",
         "votes": 1341,
-        "swing": "+2.8"
+        "swing": "-3.1"
       },
       {
         "party": "RUK",
@@ -20698,7 +19511,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1246,
-        "swing": "+2.6"
+        "swing": "+0.9"
       }
     ]
   },
@@ -20712,17 +19525,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11577,
-        "swing": "+22.5"
+        "swing": "-26.9"
       },
       {
         "party": "Lab",
         "votes": 22932,
-        "swing": "+44.5"
+        "swing": "+9.0"
       },
       {
         "party": "LD",
         "votes": 6722,
-        "swing": "+13.0"
+        "swing": "+2.2"
       },
       {
         "party": "RUK",
@@ -20737,7 +19550,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 418,
-        "swing": "+0.8"
+        "swing": "-0.3"
       }
     ]
   },
@@ -20751,17 +19564,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11564,
-        "swing": "+28.2"
+        "swing": "-38.3"
       },
       {
         "party": "Lab",
         "votes": 11919,
-        "swing": "+29.1"
+        "swing": "+8.2"
       },
       {
         "party": "LD",
         "votes": 1321,
-        "swing": "+3.2"
+        "swing": "-3.1"
       },
       {
         "party": "RUK",
@@ -20776,7 +19589,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3990,
-        "swing": "+9.7"
+        "swing": "+5.7"
       }
     ]
   },
@@ -20790,17 +19603,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18833,
-        "swing": "+35.2"
+        "swing": "-23.6"
       },
       {
         "party": "Lab",
         "votes": 17183,
-        "swing": "+32.1"
+        "swing": "+13.0"
       },
       {
         "party": "LD",
         "votes": 4194,
-        "swing": "+7.8"
+        "swing": "-7.4"
       },
       {
         "party": "RUK",
@@ -20815,7 +19628,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1278,
-        "swing": "+2.4"
+        "swing": "+0.4"
       }
     ]
   },
@@ -20829,17 +19642,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17348,
-        "swing": "+35.7"
+        "swing": "-30.8"
       },
       {
         "party": "Lab",
         "votes": 13002,
-        "swing": "+26.8"
+        "swing": "+8.2"
       },
       {
         "party": "LD",
         "votes": 2264,
-        "swing": "+4.7"
+        "swing": "-3.5"
       },
       {
         "party": "RUK",
@@ -20854,7 +19667,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3032,
-        "swing": "+6.2"
+        "swing": "+1.9"
       }
     ]
   },
@@ -20868,22 +19681,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7457,
-        "swing": "+17.2"
+        "swing": "-12.3"
       },
       {
         "party": "Lab",
         "votes": 14666,
-        "swing": "+33.9"
+        "swing": "-24.9"
       },
       {
         "party": "LD",
         "votes": 2060,
-        "swing": "+4.8"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
         "votes": 3352,
-        "swing": "+7.7"
+        "swing": "+4.9"
       },
       {
         "party": "Green",
@@ -20907,22 +19720,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4546,
-        "swing": "+12.9"
+        "swing": "-17.2"
       },
       {
         "party": "Lab",
         "votes": 16858,
-        "swing": "+48.0"
+        "swing": "-9.0"
       },
       {
         "party": "LD",
         "votes": 1018,
-        "swing": "+2.9"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 5670,
-        "swing": "+16.1"
+        "swing": "+10.1"
       },
       {
         "party": "Green",
@@ -20946,17 +19759,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16284,
-        "swing": "+34.7"
+        "swing": "-26.2"
       },
       {
         "party": "Lab",
         "votes": 11664,
-        "swing": "+24.9"
+        "swing": "+5.4"
       },
       {
         "party": "LD",
         "votes": 7916,
-        "swing": "+16.9"
+        "swing": "+1.2"
       },
       {
         "party": "RUK",
@@ -21000,17 +19813,17 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 1589,
-        "swing": "+3.7"
+        "swing": "-1.2"
       },
       {
         "party": "UUP",
         "votes": 16311,
-        "swing": "+38.0"
+        "swing": "+9.0"
       },
       {
         "party": "APNI",
         "votes": 4574,
-        "swing": "+10.7"
+        "swing": "-7.7"
       },
       {
         "party": "All other candidates",
@@ -21029,17 +19842,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10159,
-        "swing": "+25.7"
+        "swing": "-39.8"
       },
       {
         "party": "Lab",
         "votes": 12080,
-        "swing": "+30.5"
+        "swing": "+7.0"
       },
       {
         "party": "LD",
         "votes": 1071,
-        "swing": "+2.7"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
@@ -21054,7 +19867,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2343,
-        "swing": "+5.9"
+        "swing": "-0.8"
       }
     ]
   },
@@ -21068,22 +19881,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15063,
-        "swing": "+27.4"
+        "swing": "-16.1"
       },
       {
         "party": "Lab",
         "votes": 6106,
-        "swing": "+11.1"
+        "swing": "-4.0"
       },
       {
         "party": "LD",
         "votes": 25704,
-        "swing": "+46.8"
+        "swing": "+5.8"
       },
       {
         "party": "RUK",
         "votes": 4897,
-        "swing": "+8.9"
+        "swing": "+8.8"
       },
       {
         "party": "Green",
@@ -21107,17 +19920,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17988,
-        "swing": "+34.4"
+        "swing": "-23.5"
       },
       {
         "party": "Lab",
         "votes": 3942,
-        "swing": "+7.5"
+        "swing": "-3.1"
       },
       {
         "party": "LD",
         "votes": 22961,
-        "swing": "+43.9"
+        "swing": "+16.3"
       },
       {
         "party": "RUK",
@@ -21146,17 +19959,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13566,
-        "swing": "+29.7"
+        "swing": "-32.5"
       },
       {
         "party": "Lab",
         "votes": 17734,
-        "swing": "+38.8"
+        "swing": "+11.6"
       },
       {
         "party": "LD",
         "votes": 2134,
-        "swing": "+4.7"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
@@ -21185,17 +19998,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15413,
-        "swing": "+31.5"
+        "swing": "-22.1"
       },
       {
         "party": "Lab",
         "votes": 3066,
-        "swing": "+6.3"
+        "swing": "-10.8"
       },
       {
         "party": "LD",
         "votes": 22540,
-        "swing": "+46.0"
+        "swing": "+17.7"
       },
       {
         "party": "RUK",
@@ -21210,7 +20023,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 125,
-        "swing": "+0.3"
+        "swing": "-0.7"
       }
     ]
   },
@@ -21224,17 +20037,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14611,
-        "swing": "+29.8"
+        "swing": "-29.4"
       },
       {
         "party": "Lab",
         "votes": 15659,
-        "swing": "+31.9"
+        "swing": "+7.2"
       },
       {
         "party": "LD",
         "votes": 8017,
-        "swing": "+16.3"
+        "swing": "+5.7"
       },
       {
         "party": "RUK",
@@ -21244,12 +20057,12 @@ const RESULTS = {
       {
         "party": "Green",
         "votes": 2153,
-        "swing": "-0.0"
+        "swing": "0.0"
       },
       {
         "party": "All other candidates",
         "votes": 429,
-        "swing": "+0.9"
+        "swing": "0.0"
       }
     ]
   },
@@ -21283,22 +20096,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 10418,
-        "swing": "+23.0"
+        "swing": "-4.2"
       },
       {
         "party": "UUP",
         "votes": 1411,
-        "swing": "+3.1"
+        "swing": "-4.6"
       },
       {
         "party": "APNI",
         "votes": 3187,
-        "swing": "+7.0"
+        "swing": "-6.8"
       },
       {
         "party": "All other candidates",
         "votes": 2690,
-        "swing": "+5.9"
+        "swing": "+3.6"
       }
     ]
   },
@@ -21312,17 +20125,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13759,
-        "swing": "+27.9"
+        "swing": "-31.1"
       },
       {
         "party": "Lab",
         "votes": 15670,
-        "swing": "+31.8"
+        "swing": "+11.5"
       },
       {
         "party": "LD",
         "votes": 8284,
-        "swing": "+16.8"
+        "swing": "+0.5"
       },
       {
         "party": "RUK",
@@ -21337,7 +20150,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 263,
-        "swing": "+0.5"
+        "swing": "-1.1"
       }
     ]
   },
@@ -21351,17 +20164,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17462,
-        "swing": "+38.0"
+        "swing": "-37.9"
       },
       {
         "party": "Lab",
         "votes": 9086,
-        "swing": "+19.8"
+        "swing": "+6.6"
       },
       {
         "party": "LD",
         "votes": 1945,
-        "swing": "+4.2"
+        "swing": "-2.3"
       },
       {
         "party": "RUK",
@@ -21376,7 +20189,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 5031,
-        "swing": "+11.0"
+        "swing": "+9.9"
       }
     ]
   },
@@ -21390,17 +20203,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18264,
-        "swing": "+35.6"
+        "swing": "-31.0"
       },
       {
         "party": "Lab",
         "votes": 12758,
-        "swing": "+24.8"
+        "swing": "+4.9"
       },
       {
         "party": "LD",
         "votes": 7621,
-        "swing": "+14.8"
+        "swing": "+5.3"
       },
       {
         "party": "RUK",
@@ -21424,17 +20237,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14527,
-        "swing": "+29.3"
+        "swing": "-27.2"
       },
       {
         "party": "Lab",
         "votes": 17353,
-        "swing": "+35.0"
+        "swing": "+11.6"
       },
       {
         "party": "LD",
         "votes": 5746,
-        "swing": "+11.6"
+        "swing": "-5.4"
       },
       {
         "party": "RUK",
@@ -21463,17 +20276,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19191,
-        "swing": "+35.7"
+        "swing": "-27.4"
       },
       {
         "party": "Lab",
         "votes": 15504,
-        "swing": "+28.9"
+        "swing": "+8.1"
       },
       {
         "party": "LD",
         "votes": 4989,
-        "swing": "+9.3"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
@@ -21488,7 +20301,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2011,
-        "swing": "+3.7"
+        "swing": "+2.6"
       }
     ]
   },
@@ -21502,17 +20315,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13339,
-        "swing": "+28.6"
+        "swing": "-25.0"
       },
       {
         "party": "Lab",
         "votes": 19840,
-        "swing": "+42.5"
+        "swing": "+6.2"
       },
       {
         "party": "LD",
         "votes": 2972,
-        "swing": "+6.4"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
@@ -21536,22 +20349,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4128,
-        "swing": "+11.2"
+        "swing": "-14.6"
       },
       {
         "party": "Lab",
         "votes": 15122,
-        "swing": "+41.1"
+        "swing": "-3.0"
       },
       {
         "party": "LD",
         "votes": 1402,
-        "swing": "+3.8"
+        "swing": "+0.3"
       },
       {
         "party": "RUK",
         "votes": 8469,
-        "swing": "+23.0"
+        "swing": "+8.3"
       },
       {
         "party": "Green",
@@ -21561,7 +20374,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2270,
-        "swing": "+6.2"
+        "swing": "-2.5"
       }
     ]
   },
@@ -21575,17 +20388,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17628,
-        "swing": "+34.1"
+        "swing": "-31.3"
       },
       {
         "party": "Lab",
         "votes": 6939,
-        "swing": "+13.4"
+        "swing": "-2.4"
       },
       {
         "party": "LD",
         "votes": 16004,
-        "swing": "+31.0"
+        "swing": "+15.6"
       },
       {
         "party": "RUK",
@@ -21609,17 +20422,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16082,
-        "swing": "+33.0"
+        "swing": "-29.1"
       },
       {
         "party": "Lab",
         "votes": 13035,
-        "swing": "+26.7"
+        "swing": "+7.5"
       },
       {
         "party": "LD",
         "votes": 6424,
-        "swing": "+13.2"
+        "swing": "+0.5"
       },
       {
         "party": "RUK",
@@ -21643,17 +20456,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17916,
-        "swing": "+34.3"
+        "swing": "-28.3"
       },
       {
         "party": "Lab",
         "votes": 15804,
-        "swing": "+30.3"
+        "swing": "+8.8"
       },
       {
         "party": "LD",
         "votes": 5551,
-        "swing": "+10.6"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
@@ -21682,17 +20495,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16458,
-        "swing": "+34.1"
+        "swing": "-18.1"
       },
       {
         "party": "Lab",
         "votes": 9637,
-        "swing": "+20.0"
+        "swing": "+3.9"
       },
       {
         "party": "LD",
         "votes": 12002,
-        "swing": "+24.9"
+        "swing": "+12.2"
       },
       {
         "party": "RUK",
@@ -21707,7 +20520,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 835,
-        "swing": "+1.7"
+        "swing": "-15.8"
       }
     ]
   },
@@ -21721,17 +20534,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11217,
-        "swing": "+25.3"
+        "swing": "-43.4"
       },
       {
         "party": "Lab",
         "votes": 11847,
-        "swing": "+26.7"
+        "swing": "+8.4"
       },
       {
         "party": "LD",
         "votes": 2618,
-        "swing": "+5.9"
+        "swing": "-2.3"
       },
       {
         "party": "RUK",
@@ -21746,7 +20559,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 6857,
-        "swing": "+15.5"
+        "swing": "+13.7"
       }
     ]
   },
@@ -21760,17 +20573,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15617,
-        "swing": "+33.8"
+        "swing": "-24.5"
       },
       {
         "party": "Lab",
         "votes": 12374,
-        "swing": "+26.8"
+        "swing": "+5.3"
       },
       {
         "party": "LD",
         "votes": 7205,
-        "swing": "+15.6"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
@@ -21799,17 +20612,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9677,
-        "swing": "+25.4"
+        "swing": "-25.1"
       },
       {
         "party": "Lab",
         "votes": 15782,
-        "swing": "+41.5"
+        "swing": "+0.4"
       },
       {
         "party": "LD",
         "votes": 2684,
-        "swing": "+7.1"
+        "swing": "+1.8"
       },
       {
         "party": "RUK",
@@ -21824,7 +20637,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 264,
-        "swing": "+0.7"
+        "swing": "-0.3"
       }
     ]
   },
@@ -21838,22 +20651,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6612,
-        "swing": "+18.5"
+        "swing": "-17.2"
       },
       {
         "party": "Lab",
         "votes": 15945,
-        "swing": "+44.5"
+        "swing": "-4.9"
       },
       {
         "party": "LD",
         "votes": 3252,
-        "swing": "+9.1"
+        "swing": "+1.4"
       },
       {
         "party": "RUK",
         "votes": 5261,
-        "swing": "+14.7"
+        "swing": "+11.2"
       },
       {
         "party": "Green",
@@ -21863,7 +20676,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1141,
-        "swing": "+3.2"
+        "swing": "+2.7"
       }
     ]
   },
@@ -21877,17 +20690,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11368,
-        "swing": "+28.7"
+        "swing": "-30.3"
       },
       {
         "party": "Lab",
         "votes": 15395,
-        "swing": "+38.8"
+        "swing": "+7.5"
       },
       {
         "party": "LD",
         "votes": 2269,
-        "swing": "+5.7"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
@@ -21902,7 +20715,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 694,
-        "swing": "+1.8"
+        "swing": "-1.4"
       }
     ]
   },
@@ -21916,17 +20729,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14790,
-        "swing": "+31.5"
+        "swing": "-27.6"
       },
       {
         "party": "Lab",
         "votes": 16739,
-        "swing": "+35.6"
+        "swing": "+6.6"
       },
       {
         "party": "LD",
         "votes": 3174,
-        "swing": "+6.8"
+        "swing": "-3.8"
       },
       {
         "party": "RUK",
@@ -21941,7 +20754,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 730,
-        "swing": "+1.6"
+        "swing": "+0.2"
       }
     ]
   },
@@ -21955,22 +20768,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8037,
-        "swing": "+17.6"
+        "swing": "-11.0"
       },
       {
         "party": "Lab",
         "votes": 23337,
-        "swing": "+51.1"
+        "swing": "-6.7"
       },
       {
         "party": "LD",
         "votes": 3925,
-        "swing": "+8.6"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
         "votes": 3147,
-        "swing": "+6.9"
+        "swing": "+5.6"
       },
       {
         "party": "Green",
@@ -21994,17 +20807,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11463,
-        "swing": "+25.4"
+        "swing": "-24.9"
       },
       {
         "party": "Lab",
         "votes": 17252,
-        "swing": "+38.3"
+        "swing": "+1.5"
       },
       {
         "party": "LD",
         "votes": 5868,
-        "swing": "+13.0"
+        "swing": "+0.5"
       },
       {
         "party": "RUK",
@@ -22033,17 +20846,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14038,
-        "swing": "+30.4"
+        "swing": "-28.5"
       },
       {
         "party": "Lab",
         "votes": 12448,
-        "swing": "+27.0"
+        "swing": "+5.3"
       },
       {
         "party": "LD",
         "votes": 8710,
-        "swing": "+18.9"
+        "swing": "+3.7"
       },
       {
         "party": "RUK",
@@ -22072,22 +20885,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9859,
-        "swing": "+24.0"
+        "swing": "-22.3"
       },
       {
         "party": "Lab",
         "votes": 16076,
-        "swing": "+39.2"
+        "swing": "+5.6"
       },
       {
         "party": "LD",
         "votes": 1425,
-        "swing": "+3.5"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
         "votes": 9888,
-        "swing": "+24.1"
+        "swing": "+20.6"
       },
       {
         "party": "Green",
@@ -22097,7 +20910,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1526,
-        "swing": "+3.7"
+        "swing": "-5.4"
       }
     ]
   },
@@ -22111,17 +20924,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9388,
-        "swing": "+18.2"
+        "swing": "-21.1"
       },
       {
         "party": "Lab",
         "votes": 5189,
-        "swing": "+10.1"
+        "swing": "+1.2"
       },
       {
         "party": "LD",
         "votes": 29222,
-        "swing": "+56.6"
+        "swing": "+6.7"
       },
       {
         "party": "RUK",
@@ -22136,7 +20949,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 207,
-        "swing": "+0.4"
+        "swing": "+0.1"
       }
     ]
   },
@@ -22150,17 +20963,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13488,
-        "swing": "+28.9"
+        "swing": "-26.7"
       },
       {
         "party": "Lab",
         "votes": 15958,
-        "swing": "+34.1"
+        "swing": "+7.5"
       },
       {
         "party": "LD",
         "votes": 4805,
-        "swing": "+10.3"
+        "swing": "-0.5"
       },
       {
         "party": "RUK",
@@ -22175,7 +20988,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 932,
-        "swing": "+2.0"
+        "swing": "-1.9"
       }
     ]
   },
@@ -22189,22 +21002,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4507,
-        "swing": "+11.1"
+        "swing": "-15.5"
       },
       {
         "party": "Lab",
         "votes": 21284,
-        "swing": "+52.6"
+        "swing": "+0.3"
       },
       {
         "party": "LD",
         "votes": 1799,
-        "swing": "+4.4"
+        "swing": "-1.2"
       },
       {
         "party": "RUK",
         "votes": 9115,
-        "swing": "+22.5"
+        "swing": "+11.2"
       },
       {
         "party": "Green",
@@ -22228,22 +21041,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3057,
-        "swing": "+8.0"
+        "swing": "-13.3"
       },
       {
         "party": "Lab",
         "votes": 18919,
-        "swing": "+49.7"
+        "swing": "-8.4"
       },
       {
         "party": "LD",
         "votes": 2199,
-        "swing": "+5.8"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
         "votes": 6974,
-        "swing": "+18.3"
+        "swing": "+7.7"
       },
       {
         "party": "Green",
@@ -22267,17 +21080,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11247,
-        "swing": "+23.4"
+        "swing": "-25.6"
       },
       {
         "party": "Lab",
         "votes": 2788,
-        "swing": "+5.8"
+        "swing": "-3.3"
       },
       {
         "party": "LD",
         "votes": 25033,
-        "swing": "+52.0"
+        "swing": "+12.7"
       },
       {
         "party": "RUK",
@@ -22292,7 +21105,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 749,
-        "swing": "+1.6"
+        "swing": "+0.7"
       }
     ]
   },
@@ -22306,17 +21119,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14896,
-        "swing": "+28.2"
+        "swing": "-23.1"
       },
       {
         "party": "Lab",
         "votes": 6918,
-        "swing": "+13.1"
+        "swing": "-5.7"
       },
       {
         "party": "LD",
         "votes": 19517,
-        "swing": "+36.9"
+        "swing": "+10.1"
       },
       {
         "party": "RUK",
@@ -22331,7 +21144,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3215,
-        "swing": "+6.1"
+        "swing": "+4.7"
       }
     ]
   },
@@ -22345,17 +21158,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13936,
-        "swing": "+30.3"
+        "swing": "-27.7"
       },
       {
         "party": "Lab",
         "votes": 18531,
-        "swing": "+40.3"
+        "swing": "+9.1"
       },
       {
         "party": "LD",
         "votes": 1676,
-        "swing": "+3.6"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
@@ -22384,17 +21197,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15310,
-        "swing": "+35.4"
+        "swing": "-28.7"
       },
       {
         "party": "Lab",
         "votes": 14135,
-        "swing": "+32.6"
+        "swing": "+6.0"
       },
       {
         "party": "LD",
         "votes": 1499,
-        "swing": "+3.5"
+        "swing": "-2.7"
       },
       {
         "party": "RUK",
@@ -22418,22 +21231,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6872,
-        "swing": "+18.5"
+        "swing": "-19.5"
       },
       {
         "party": "Lab",
         "votes": 16320,
-        "swing": "+43.8"
+        "swing": "-1.1"
       },
       {
         "party": "LD",
         "votes": 1080,
-        "swing": "+2.9"
+        "swing": "-1.4"
       },
       {
         "party": "RUK",
         "votes": 7781,
-        "swing": "+20.9"
+        "swing": "+12.4"
       },
       {
         "party": "Green",
@@ -22443,7 +21256,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2441,
-        "swing": "+6.6"
+        "swing": "+5.5"
       }
     ]
   },
@@ -22457,17 +21270,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11080,
-        "swing": "+25.9"
+        "swing": "-27.2"
       },
       {
         "party": "Lab",
         "votes": 17698,
-        "swing": "+41.4"
+        "swing": "+6.3"
       },
       {
         "party": "LD",
         "votes": 3467,
-        "swing": "+8.1"
+        "swing": "-0.5"
       },
       {
         "party": "RUK",
@@ -22496,17 +21309,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9469,
-        "swing": "+19.0"
+        "swing": "-16.0"
       },
       {
         "party": "Lab",
         "votes": 16856,
-        "swing": "+33.9"
+        "swing": "+26.2"
       },
       {
         "party": "LD",
         "votes": 2530,
-        "swing": "+5.1"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
@@ -22535,22 +21348,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4967,
-        "swing": "+11.4"
+        "swing": "-16.8"
       },
       {
         "party": "Lab",
         "votes": 21787,
-        "swing": "+49.9"
+        "swing": "-4.4"
       },
       {
         "party": "LD",
         "votes": 3724,
-        "swing": "+8.5"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
         "votes": 6517,
-        "swing": "+14.9"
+        "swing": "+9.6"
       },
       {
         "party": "Green",
@@ -22574,22 +21387,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8028,
-        "swing": "+21.5"
+        "swing": "-16.0"
       },
       {
         "party": "Lab",
         "votes": 17128,
-        "swing": "+45.8"
+        "swing": "-0.9"
       },
       {
         "party": "LD",
         "votes": 1133,
-        "swing": "+3.0"
+        "swing": "-1.0"
       },
       {
         "party": "RUK",
         "votes": 9189,
-        "swing": "+24.6"
+        "swing": "+15.5"
       },
       {
         "party": "Green",
@@ -22608,22 +21421,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20372,
-        "swing": "+41.9"
+        "swing": "-14.6"
       },
       {
         "party": "Lab",
         "votes": 18233,
-        "swing": "+37.5"
+        "swing": "+3.6"
       },
       {
         "party": "LD",
         "votes": 1203,
-        "swing": "+2.5"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
         "votes": 6833,
-        "swing": "+14.0"
+        "swing": "+9.4"
       },
       {
         "party": "Green",
@@ -22647,22 +21460,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6221,
-        "swing": "+17.6"
+        "swing": "-29.5"
       },
       {
         "party": "Lab",
         "votes": 14950,
-        "swing": "+42.4"
+        "swing": "-0.5"
       },
       {
         "party": "LD",
         "votes": 999,
-        "swing": "+2.8"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 8541,
-        "swing": "+24.2"
+        "swing": "+19.9"
       },
       {
         "party": "Green",
@@ -22686,22 +21499,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9497,
-        "swing": "+26.3"
+        "swing": "-27.9"
       },
       {
         "party": "Lab",
         "votes": 14579,
-        "swing": "+40.3"
+        "swing": "+5.5"
       },
       {
         "party": "LD",
         "votes": 911,
-        "swing": "+2.5"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
         "votes": 8824,
-        "swing": "+24.4"
+        "swing": "+18.8"
       },
       {
         "party": "Green",
@@ -22711,7 +21524,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1103,
-        "swing": "+3.1"
+        "swing": "+2.3"
       }
     ]
   },
@@ -22725,17 +21538,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13594,
-        "swing": "+33.2"
+        "swing": "-29.3"
       },
       {
         "party": "Lab",
         "votes": 14221,
-        "swing": "+34.7"
+        "swing": "+5.1"
       },
       {
         "party": "LD",
         "votes": 1577,
-        "swing": "+3.9"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
@@ -22764,17 +21577,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19880,
-        "swing": "+46.5"
+        "swing": "-22.0"
       },
       {
         "party": "Lab",
         "votes": 14414,
-        "swing": "+33.7"
+        "swing": "+12.1"
       },
       {
         "party": "LD",
         "votes": 2952,
-        "swing": "+6.9"
+        "swing": "+0.4"
       },
       {
         "party": "Green",
@@ -22798,17 +21611,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12265,
-        "swing": "+30.8"
+        "swing": "-31.0"
       },
       {
         "party": "Lab",
         "votes": 15338,
-        "swing": "+38.5"
+        "swing": "+9.4"
       },
       {
         "party": "LD",
         "votes": 1607,
-        "swing": "+4.0"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
@@ -22823,7 +21636,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1067,
-        "swing": "+2.7"
+        "swing": "+1.3"
       }
     ]
   },
@@ -22837,12 +21650,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 146,
-        "swing": "+0.4"
+        "swing": "-3.0"
       },
       {
         "party": "Green",
         "votes": 703,
-        "swing": "+0.0"
+        "swing": "0.0"
       },
       {
         "party": "DUP",
@@ -22857,22 +21670,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 1783,
-        "swing": "+4.6"
+        "swing": "-5.5"
       },
       {
         "party": "UUP",
         "votes": 3941,
-        "swing": "+10.1"
+        "swing": "+0.9"
       },
       {
         "party": "APNI",
         "votes": 10428,
-        "swing": "+26.8"
+        "swing": "+0.6"
       },
       {
         "party": "All other candidates",
         "votes": 3556,
-        "swing": "+9.1"
+        "swing": "+7.9"
       }
     ]
   },
@@ -22886,22 +21699,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3114,
-        "swing": "+7.2"
+        "swing": "-7.3"
       },
       {
         "party": "Lab",
         "votes": 19145,
-        "swing": "+44.1"
+        "swing": "-26.4"
       },
       {
         "party": "LD",
         "votes": 1926,
-        "swing": "+4.4"
+        "swing": "-4.6"
       },
       {
         "party": "RUK",
         "votes": 2093,
-        "swing": "+4.8"
+        "swing": "+2.5"
       },
       {
         "party": "Green",
@@ -22925,17 +21738,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16328,
-        "swing": "+30.8"
+        "swing": "-29.4"
       },
       {
         "party": "Lab",
         "votes": 3753,
-        "swing": "+7.1"
+        "swing": "-4.3"
       },
       {
         "party": "LD",
         "votes": 23450,
-        "swing": "+44.3"
+        "swing": "+19.6"
       },
       {
         "party": "RUK",
@@ -22964,22 +21777,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5328,
-        "swing": "+12.0"
+        "swing": "-6.9"
       },
       {
         "party": "Lab",
         "votes": 23232,
-        "swing": "+52.1"
+        "swing": "-5.7"
       },
       {
         "party": "LD",
         "votes": 5031,
-        "swing": "+11.3"
+        "swing": "-6.3"
       },
       {
         "party": "RUK",
         "votes": 1994,
-        "swing": "+4.5"
+        "swing": "+3.2"
       },
       {
         "party": "Green",
@@ -23003,22 +21816,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6492,
-        "swing": "+14.1"
+        "swing": "-13.4"
       },
       {
         "party": "Lab",
         "votes": 22642,
-        "swing": "+49.2"
+        "swing": "-11.1"
       },
       {
         "party": "LD",
         "votes": 2216,
-        "swing": "+4.8"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
         "votes": 5485,
-        "swing": "+11.9"
+        "swing": "+8.4"
       },
       {
         "party": "Green",
@@ -23042,22 +21855,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14219,
-        "swing": "+25.7"
+        "swing": "-19.9"
       },
       {
         "party": "Lab",
         "votes": 25607,
-        "swing": "+46.4"
+        "swing": "+4.7"
       },
       {
         "party": "LD",
         "votes": 2913,
-        "swing": "+5.3"
+        "swing": "+3.0"
       },
       {
         "party": "RUK",
         "votes": 6329,
-        "swing": "+11.5"
+        "swing": "+10.0"
       },
       {
         "party": "Green",
@@ -23067,7 +21880,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 424,
-        "swing": "+0.8"
+        "swing": "-0.2"
       }
     ]
   },
@@ -23081,17 +21894,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14602,
-        "swing": "+29.5"
+        "swing": "-26.9"
       },
       {
         "party": "Lab",
         "votes": 15672,
-        "swing": "+31.7"
+        "swing": "+10.3"
       },
       {
         "party": "LD",
         "votes": 6947,
-        "swing": "+14.0"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
@@ -23115,22 +21928,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5731,
-        "swing": "+14.3"
+        "swing": "-21.0"
       },
       {
         "party": "Lab",
         "votes": 16852,
-        "swing": "+42.2"
+        "swing": "0.0"
       },
       {
         "party": "LD",
         "votes": 3602,
-        "swing": "+9.0"
+        "swing": "+2.1"
       },
       {
         "party": "RUK",
         "votes": 10779,
-        "swing": "+27.0"
+        "swing": "+15.4"
       },
       {
         "party": "Green",
@@ -23149,17 +21962,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15747,
-        "swing": "+33.0"
+        "swing": "-24.9"
       },
       {
         "party": "Lab",
         "votes": 3148,
-        "swing": "+6.6"
+        "swing": "-2.8"
       },
       {
         "party": "LD",
         "votes": 21387,
-        "swing": "+44.8"
+        "swing": "+16.7"
       },
       {
         "party": "RUK",
@@ -23174,7 +21987,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 92,
-        "swing": "+0.2"
+        "swing": "-1.0"
       }
     ]
   },
@@ -23188,17 +22001,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16758,
-        "swing": "+34.1"
+        "swing": "-29.6"
       },
       {
         "party": "Lab",
         "votes": 8239,
-        "swing": "+16.8"
+        "swing": "+1.9"
       },
       {
         "party": "LD",
         "votes": 9916,
-        "swing": "+20.2"
+        "swing": "+3.3"
       },
       {
         "party": "RUK",
@@ -23227,17 +22040,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13775,
-        "swing": "+28.9"
+        "swing": "-21.0"
       },
       {
         "party": "Lab",
         "votes": 8430,
-        "swing": "+17.7"
+        "swing": "+3.4"
       },
       {
         "party": "LD",
         "votes": 17576,
-        "swing": "+36.9"
+        "swing": "+3.5"
       },
       {
         "party": "RUK",
@@ -23266,17 +22079,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18502,
-        "swing": "+38.3"
+        "swing": "-22.1"
       },
       {
         "party": "Lab",
         "votes": 15959,
-        "swing": "+33.0"
+        "swing": "+9.5"
       },
       {
         "party": "LD",
         "votes": 2587,
-        "swing": "+5.4"
+        "swing": "-6.8"
       },
       {
         "party": "RUK",
@@ -23305,22 +22118,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3536,
-        "swing": "+9.9"
+        "swing": "-18.8"
       },
       {
         "party": "Lab",
         "votes": 14761,
-        "swing": "+41.4"
+        "swing": "-10.0"
       },
       {
         "party": "LD",
         "votes": 4367,
-        "swing": "+12.2"
+        "swing": "+5.8"
       },
       {
         "party": "RUK",
         "votes": 6246,
-        "swing": "+17.5"
+        "swing": "+10.7"
       },
       {
         "party": "Green",
@@ -23330,7 +22143,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 4105,
-        "swing": "+11.5"
+        "swing": "+5.6"
       },
       {
         "party": "All other candidates",
@@ -23349,17 +22162,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13827,
-        "swing": "+31.3"
+        "swing": "-27.2"
       },
       {
         "party": "Lab",
         "votes": 17930,
-        "swing": "+40.6"
+        "swing": "+10.1"
       },
       {
         "party": "LD",
         "votes": 2086,
-        "swing": "+4.7"
+        "swing": "-3.2"
       },
       {
         "party": "RUK",
@@ -23388,17 +22201,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12070,
-        "swing": "+26.9"
+        "swing": "-24.7"
       },
       {
         "party": "Lab",
         "votes": 21676,
-        "swing": "+48.4"
+        "swing": "+8.2"
       },
       {
         "party": "LD",
         "votes": 1843,
-        "swing": "+4.1"
+        "swing": "-3.5"
       },
       {
         "party": "RUK",
@@ -23427,17 +22240,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13956,
-        "swing": "+31.9"
+        "swing": "-34.8"
       },
       {
         "party": "Lab",
         "votes": 15338,
-        "swing": "+35.0"
+        "swing": "+11.7"
       },
       {
         "party": "LD",
         "votes": 1451,
-        "swing": "+3.3"
+        "swing": "-2.0"
       },
       {
         "party": "RUK",
@@ -23452,7 +22265,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 460,
-        "swing": "+1.1"
+        "swing": "-1.6"
       }
     ]
   },
@@ -23466,22 +22279,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19956,
-        "swing": "+38.4"
+        "swing": "-18.8"
       },
       {
         "party": "Lab",
         "votes": 18820,
-        "swing": "+36.3"
+        "swing": "+13.8"
       },
       {
         "party": "LD",
         "votes": 4614,
-        "swing": "+8.9"
+        "swing": "-7.3"
       },
       {
         "party": "RUK",
         "votes": 5948,
-        "swing": "+11.5"
+        "swing": "+11.1"
       },
       {
         "party": "Green",
@@ -23500,17 +22313,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12392,
-        "swing": "+24.6"
+        "swing": "-27.3"
       },
       {
         "party": "Lab",
         "votes": 3552,
-        "swing": "+7.1"
+        "swing": "-0.8"
       },
       {
         "party": "LD",
         "votes": 24331,
-        "swing": "+48.4"
+        "swing": "+12.1"
       },
       {
         "party": "RUK",
@@ -23525,7 +22338,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 134,
-        "swing": "+0.3"
+        "swing": "-3.6"
       }
     ]
   },
@@ -23539,17 +22352,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8728,
-        "swing": "+21.4"
+        "swing": "-37.9"
       },
       {
         "party": "Lab",
         "votes": 18212,
-        "swing": "+44.7"
+        "swing": "+10.4"
       },
       {
         "party": "LD",
         "votes": 1560,
-        "swing": "+3.8"
+        "swing": "-2.4"
       },
       {
         "party": "RUK",
@@ -23573,17 +22386,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14468,
-        "swing": "+29.8"
+        "swing": "-28.3"
       },
       {
         "party": "Lab",
         "votes": 4298,
-        "swing": "+8.9"
+        "swing": "-6.8"
       },
       {
         "party": "LD",
         "votes": 20730,
-        "swing": "+42.7"
+        "swing": "+20.7"
       },
       {
         "party": "RUK",
@@ -23612,17 +22425,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16320,
-        "swing": "+32.6"
+        "swing": "-32.1"
       },
       {
         "party": "Lab",
         "votes": 15437,
-        "swing": "+30.9"
+        "swing": "+6.5"
       },
       {
         "party": "LD",
         "votes": 4757,
-        "swing": "+9.5"
+        "swing": "+1.5"
       },
       {
         "party": "RUK",
@@ -23651,17 +22464,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19544,
-        "swing": "+39.2"
+        "swing": "-23.3"
       },
       {
         "party": "Lab",
         "votes": 11994,
-        "swing": "+24.1"
+        "swing": "+6.3"
       },
       {
         "party": "LD",
         "votes": 5379,
-        "swing": "+10.8"
+        "swing": "-1.7"
       },
       {
         "party": "RUK",
@@ -23676,7 +22489,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 931,
-        "swing": "+1.9"
+        "swing": "-0.9"
       }
     ]
   },
@@ -23690,17 +22503,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17801,
-        "swing": "+33.4"
+        "swing": "-25.1"
       },
       {
         "party": "Lab",
         "votes": 5057,
-        "swing": "+9.5"
+        "swing": "+0.7"
       },
       {
         "party": "LD",
         "votes": 20815,
-        "swing": "+39.0"
+        "swing": "+6.4"
       },
       {
         "party": "RUK",
@@ -23724,17 +22537,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8009,
-        "swing": "+21.3"
+        "swing": "-38.6"
       },
       {
         "party": "Lab",
         "votes": 16050,
-        "swing": "+42.7"
+        "swing": "+9.8"
       },
       {
         "party": "LD",
         "votes": 1157,
-        "swing": "+3.1"
+        "swing": "-0.1"
       },
       {
         "party": "RUK",
@@ -23749,7 +22562,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1134,
-        "swing": "+3.0"
+        "swing": "+0.7"
       }
     ]
   },
@@ -23763,22 +22576,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8370,
-        "swing": "+26.3"
+        "swing": "-24.4"
       },
       {
         "party": "Lab",
         "votes": 11755,
-        "swing": "+36.9"
+        "swing": "-1.5"
       },
       {
         "party": "LD",
         "votes": 592,
-        "swing": "+1.9"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
         "votes": 8019,
-        "swing": "+25.2"
+        "swing": "+19.3"
       },
       {
         "party": "Green",
@@ -23802,17 +22615,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14819,
-        "swing": "+31.2"
+        "swing": "-30.1"
       },
       {
         "party": "Lab",
         "votes": 4325,
-        "swing": "+9.1"
+        "swing": "-5.2"
       },
       {
         "party": "LD",
         "votes": 18326,
-        "swing": "+38.6"
+        "swing": "+19.1"
       },
       {
         "party": "RUK",
@@ -23836,17 +22649,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20517,
-        "swing": "+40.8"
+        "swing": "-24.0"
       },
       {
         "party": "Lab",
         "votes": 9351,
-        "swing": "+18.6"
+        "swing": "+3.5"
       },
       {
         "party": "LD",
         "votes": 4234,
-        "swing": "+8.4"
+        "swing": "-3.9"
       },
       {
         "party": "RUK",
@@ -23875,22 +22688,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9722,
-        "swing": "+18.4"
+        "swing": "-9.9"
       },
       {
         "party": "Lab",
         "votes": 29209,
-        "swing": "+55.2"
+        "swing": "+2.5"
       },
       {
         "party": "LD",
         "votes": 4438,
-        "swing": "+8.4"
+        "swing": "-5.8"
       },
       {
         "party": "RUK",
         "votes": 2546,
-        "swing": "+4.8"
+        "swing": "+4.0"
       },
       {
         "party": "Green",
@@ -23900,7 +22713,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1356,
-        "swing": "+2.6"
+        "swing": "+2.4"
       }
     ]
   },
@@ -23914,17 +22727,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13588,
-        "swing": "+29.5"
+        "swing": "-29.6"
       },
       {
         "party": "Lab",
         "votes": 3276,
-        "swing": "+7.1"
+        "swing": "-5.9"
       },
       {
         "party": "LD",
         "votes": 18937,
-        "swing": "+41.1"
+        "swing": "+16.8"
       },
       {
         "party": "RUK",
@@ -23939,7 +22752,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 234,
-        "swing": "+0.5"
+        "swing": "-0.8"
       }
     ]
   },
@@ -23953,22 +22766,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5737,
-        "swing": "+16.1"
+        "swing": "-17.2"
       },
       {
         "party": "Lab",
         "votes": 15176,
-        "swing": "+42.5"
+        "swing": "-0.2"
       },
       {
         "party": "LD",
         "votes": 1644,
-        "swing": "+4.6"
+        "swing": "-0.3"
       },
       {
         "party": "RUK",
         "votes": 7854,
-        "swing": "+22.0"
+        "swing": "+8.8"
       },
       {
         "party": "Green",
@@ -23978,7 +22791,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 2571,
-        "swing": "+7.2"
+        "swing": "+3.6"
       },
       {
         "party": "All other candidates",
@@ -23997,17 +22810,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16049,
-        "swing": "+31.6"
+        "swing": "-28.3"
       },
       {
         "party": "Lab",
         "votes": 10765,
-        "swing": "+21.2"
+        "swing": "+3.3"
       },
       {
         "party": "LD",
         "votes": 12099,
-        "swing": "+23.8"
+        "swing": "+5.9"
       },
       {
         "party": "RUK",
@@ -24022,7 +22835,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 405,
-        "swing": "+0.8"
+        "swing": "-0.2"
       }
     ]
   },
@@ -24036,22 +22849,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2320,
-        "swing": "+5.8"
+        "swing": "-5.3"
       },
       {
         "party": "Lab",
         "votes": 23066,
-        "swing": "+57.5"
+        "swing": "-20.3"
       },
       {
         "party": "LD",
         "votes": 1928,
-        "swing": "+4.8"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
         "votes": 1602,
-        "swing": "+4.0"
+        "swing": "+2.7"
       },
       {
         "party": "Green",
@@ -24061,7 +22874,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3600,
-        "swing": "+9.0"
+        "swing": "+8.5"
       }
     ]
   },
@@ -24075,17 +22888,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12632,
-        "swing": "+25.1"
+        "swing": "-21.7"
       },
       {
         "party": "Lab",
         "votes": 20783,
-        "swing": "+41.3"
+        "swing": "+2.6"
       },
       {
         "party": "LD",
         "votes": 6552,
-        "swing": "+13.0"
+        "swing": "+2.2"
       },
       {
         "party": "RUK",
@@ -24100,7 +22913,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 664,
-        "swing": "+1.3"
+        "swing": "+0.5"
       }
     ]
   },
@@ -24114,17 +22927,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14974,
-        "swing": "+27.6"
+        "swing": "-27.5"
       },
       {
         "party": "Lab",
         "votes": 6178,
-        "swing": "+11.4"
+        "swing": "-3.4"
       },
       {
         "party": "LD",
         "votes": 23661,
-        "swing": "+43.6"
+        "swing": "+15.3"
       },
       {
         "party": "RUK",
@@ -24139,7 +22952,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 609,
-        "swing": "+1.1"
+        "swing": "-0.6"
       }
     ]
   },
@@ -24153,22 +22966,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8728,
-        "swing": "+16.3"
+        "swing": "-17.6"
       },
       {
         "party": "Lab",
         "votes": 6693,
-        "swing": "+12.5"
+        "swing": "+3.8"
       },
       {
         "party": "LD",
         "votes": 30185,
-        "swing": "+56.3"
+        "swing": "0.0"
       },
       {
         "party": "RUK",
         "votes": 4092,
-        "swing": "+7.6"
+        "swing": "+6.4"
       },
       {
         "party": "Green",
@@ -24192,22 +23005,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9036,
-        "swing": "+18.7"
+        "swing": "-21.6"
       },
       {
         "party": "Lab",
         "votes": 24491,
-        "swing": "+50.6"
+        "swing": "+3.8"
       },
       {
         "party": "LD",
         "votes": 2709,
-        "swing": "+5.6"
+        "swing": "-1.1"
       },
       {
         "party": "RUK",
         "votes": 7392,
-        "swing": "+15.3"
+        "swing": "+11.4"
       },
       {
         "party": "Green",
@@ -24241,17 +23054,17 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 1496,
-        "swing": "+3.2"
+        "swing": "-6.2"
       },
       {
         "party": "UUP",
         "votes": 3662,
-        "swing": "+7.7"
+        "swing": "-4.7"
       },
       {
         "party": "APNI",
         "votes": 6322,
-        "swing": "+13.3"
+        "swing": "+0.7"
       }
     ]
   },
@@ -24265,17 +23078,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16012,
-        "swing": "+34.9"
+        "swing": "-17.7"
       },
       {
         "party": "Lab",
         "votes": 16599,
-        "swing": "+36.2"
+        "swing": "-0.8"
       },
       {
         "party": "LD",
         "votes": 1752,
-        "swing": "+3.8"
+        "swing": "-2.8"
       },
       {
         "party": "RUK",
@@ -24290,7 +23103,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 587,
-        "swing": "+1.3"
+        "swing": "+0.1"
       }
     ]
   },
@@ -24304,12 +23117,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13524,
-        "swing": "+29.5"
+        "swing": "-19.6"
       },
       {
         "party": "Lab",
         "votes": 17740,
-        "swing": "+38.7"
+        "swing": "-5.2"
       },
       {
         "party": "LD",
@@ -24334,7 +23147,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 851,
-        "swing": "+1.9"
+        "swing": "+0.8"
       }
     ]
   },
@@ -24348,22 +23161,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2809,
-        "swing": "+7.5"
+        "swing": "-7.0"
       },
       {
         "party": "Lab",
         "votes": 21528,
-        "swing": "+57.4"
+        "swing": "-3.1"
       },
       {
         "party": "LD",
         "votes": 4549,
-        "swing": "+12.1"
+        "swing": "-6.9"
       },
       {
         "party": "RUK",
         "votes": 2033,
-        "swing": "+5.4"
+        "swing": "+3.9"
       },
       {
         "party": "Green",
@@ -24373,7 +23186,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 201,
-        "swing": "+0.5"
+        "swing": "+0.2"
       }
     ]
   },
@@ -24387,22 +23200,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7322,
-        "swing": "+18.0"
+        "swing": "-26.8"
       },
       {
         "party": "Lab",
         "votes": 17773,
-        "swing": "+43.7"
+        "swing": "+4.2"
       },
       {
         "party": "LD",
         "votes": 3249,
-        "swing": "+8.0"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
         "votes": 8427,
-        "swing": "+20.7"
+        "swing": "+17.5"
       },
       {
         "party": "Green",
@@ -24412,7 +23225,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1496,
-        "swing": "+3.7"
+        "swing": "+3.2"
       }
     ]
   },
@@ -24426,22 +23239,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4987,
-        "swing": "+11.7"
+        "swing": "-14.3"
       },
       {
         "party": "Lab",
         "votes": 24674,
-        "swing": "+57.7"
+        "swing": "-5.9"
       },
       {
         "party": "LD",
         "votes": 1843,
-        "swing": "+4.3"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
         "votes": 6678,
-        "swing": "+15.6"
+        "swing": "+11.5"
       },
       {
         "party": "Green",
@@ -24465,22 +23278,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6679,
-        "swing": "+18.0"
+        "swing": "-31.2"
       },
       {
         "party": "Lab",
         "votes": 12514,
-        "swing": "+33.6"
+        "swing": "-10.8"
       },
       {
         "party": "LD",
         "votes": 817,
-        "swing": "+2.2"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
         "votes": 7293,
-        "swing": "+19.6"
+        "swing": "+18.3"
       },
       {
         "party": "Green",
@@ -24490,7 +23303,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 7600,
-        "swing": "+20.4"
+        "swing": "+19.8"
       }
     ]
   },
@@ -24504,22 +23317,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 2353,
-        "swing": "+5.2"
+        "swing": "-7.1"
       },
       {
         "party": "Lab",
         "votes": 27172,
-        "swing": "+59.5"
+        "swing": "-16.6"
       },
       {
         "party": "LD",
         "votes": 1736,
-        "swing": "+3.8"
+        "swing": "-2.1"
       },
       {
         "party": "RUK",
         "votes": 1836,
-        "swing": "+4.0"
+        "swing": "+2.4"
       },
       {
         "party": "Green",
@@ -24529,7 +23342,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 3395,
-        "swing": "+7.4"
+        "swing": "+6.9"
       }
     ]
   },
@@ -24543,22 +23356,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6486,
-        "swing": "+16.2"
+        "swing": "-24.7"
       },
       {
         "party": "Lab",
         "votes": 18730,
-        "swing": "+46.8"
+        "swing": "+2.6"
       },
       {
         "party": "LD",
         "votes": 2737,
-        "swing": "+6.8"
+        "swing": "+0.3"
       },
       {
         "party": "RUK",
         "votes": 9540,
-        "swing": "+23.8"
+        "swing": "+18.2"
       },
       {
         "party": "Green",
@@ -24582,22 +23395,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11861,
-        "swing": "+23.9"
+        "swing": "-20.5"
       },
       {
         "party": "Lab",
         "votes": 23201,
-        "swing": "+46.7"
+        "swing": "+2.2"
       },
       {
         "party": "LD",
         "votes": 3829,
-        "swing": "+7.7"
+        "swing": "-0.4"
       },
       {
         "party": "RUK",
         "votes": 7913,
-        "swing": "+15.9"
+        "swing": "+13.2"
       },
       {
         "party": "Green",
@@ -24607,7 +23420,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 555,
-        "swing": "+1.1"
+        "swing": "+0.8"
       }
     ]
   },
@@ -24621,22 +23434,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11563,
-        "swing": "+23.5"
+        "swing": "-17.6"
       },
       {
         "party": "Lab",
         "votes": 23975,
-        "swing": "+48.7"
+        "swing": "+5.4"
       },
       {
         "party": "LD",
         "votes": 3881,
-        "swing": "+7.9"
+        "swing": "-3.0"
       },
       {
         "party": "RUK",
         "votes": 5154,
-        "swing": "+10.5"
+        "swing": "+9.1"
       },
       {
         "party": "Green",
@@ -24646,7 +23459,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 154,
-        "swing": "+0.3"
+        "swing": "-0.1"
       }
     ]
   },
@@ -24660,22 +23473,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4654,
-        "swing": "+12.6"
+        "swing": "-21.2"
       },
       {
         "party": "Lab",
         "votes": 17682,
-        "swing": "+47.8"
+        "swing": "+4.6"
       },
       {
         "party": "LD",
         "votes": 1602,
-        "swing": "+4.3"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
         "votes": 10769,
-        "swing": "+29.1"
+        "swing": "+15.3"
       },
       {
         "party": "Green",
@@ -24685,7 +23498,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 627,
-        "swing": "+1.7"
+        "swing": "-0.1"
       }
     ]
   },
@@ -24699,17 +23512,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 10985,
-        "swing": "+24.7"
+        "swing": "-17.3"
       },
       {
         "party": "Lab",
         "votes": 15708,
-        "swing": "+35.3"
+        "swing": "-4.0"
       },
       {
         "party": "LD",
         "votes": 7577,
-        "swing": "+17.0"
+        "swing": "-0.7"
       },
       {
         "party": "RUK",
@@ -24724,7 +23537,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2827,
-        "swing": "+6.4"
+        "swing": "+5.7"
       }
     ]
   },
@@ -24738,17 +23551,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14873,
-        "swing": "+30.3"
+        "swing": "-31.9"
       },
       {
         "party": "Lab",
         "votes": 4621,
-        "swing": "+9.4"
+        "swing": "-9.2"
       },
       {
         "party": "LD",
         "votes": 1214,
-        "swing": "+2.5"
+        "swing": "-6.7"
       },
       {
         "party": "RUK",
@@ -24763,7 +23576,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 118,
-        "swing": "+0.2"
+        "swing": "-0.5"
       }
     ]
   },
@@ -24777,17 +23590,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20202,
-        "swing": "+39.8"
+        "swing": "-32.1"
       },
       {
         "party": "Lab",
         "votes": 11780,
-        "swing": "+23.2"
+        "swing": "+9.2"
       },
       {
         "party": "LD",
         "votes": 3975,
-        "swing": "+7.8"
+        "swing": "-2.3"
       },
       {
         "party": "RUK",
@@ -24811,17 +23624,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12248,
-        "swing": "+27.8"
+        "swing": "-34.5"
       },
       {
         "party": "Lab",
         "votes": 17734,
-        "swing": "+40.3"
+        "swing": "+12.1"
       },
       {
         "party": "LD",
         "votes": 1570,
-        "swing": "+3.6"
+        "swing": "-3.1"
       },
       {
         "party": "RUK",
@@ -24850,17 +23663,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12501,
-        "swing": "+24.8"
+        "swing": "-31.3"
       },
       {
         "party": "Lab",
         "votes": 3527,
-        "swing": "+7.0"
+        "swing": "-3.8"
       },
       {
         "party": "LD",
         "votes": 23622,
-        "swing": "+46.9"
+        "swing": "+16.1"
       },
       {
         "party": "RUK",
@@ -24875,7 +23688,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2039,
-        "swing": "+4.0"
+        "swing": "+2.9"
       }
     ]
   },
@@ -24889,17 +23702,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16078,
-        "swing": "+33.2"
+        "swing": "-19.3"
       },
       {
         "party": "Lab",
         "votes": 19877,
-        "swing": "+41.0"
+        "swing": "+9.3"
       },
       {
         "party": "LD",
         "votes": 3117,
-        "swing": "+6.4"
+        "swing": "-6.3"
       },
       {
         "party": "RUK",
@@ -24923,17 +23736,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17428,
-        "swing": "+35.6"
+        "swing": "-7.1"
       },
       {
         "party": "Lab",
         "votes": 6397,
-        "swing": "+13.1"
+        "swing": "+8.5"
       },
       {
         "party": "LD",
         "votes": 6342,
-        "swing": "+13.0"
+        "swing": "+1.2"
       },
       {
         "party": "RUK",
@@ -24967,22 +23780,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 7318,
-        "swing": "+20.1"
+        "swing": "-27.3"
       },
       {
         "party": "Lab",
         "votes": 16872,
-        "swing": "+46.2"
+        "swing": "+4.1"
       },
       {
         "party": "LD",
         "votes": 1314,
-        "swing": "+3.6"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
         "votes": 7101,
-        "swing": "+19.5"
+        "swing": "+15.7"
       },
       {
         "party": "Green",
@@ -24992,7 +23805,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1840,
-        "swing": "+5.0"
+        "swing": "+3.7"
       }
     ]
   },
@@ -25006,17 +23819,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19210,
-        "swing": "+36.5"
+        "swing": "-17.8"
       },
       {
         "party": "Lab",
         "votes": 3086,
-        "swing": "+5.9"
+        "swing": "-3.5"
       },
       {
         "party": "LD",
         "votes": 26999,
-        "swing": "+51.3"
+        "swing": "+18.5"
       },
       {
         "party": "Green",
@@ -25040,17 +23853,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 1474,
-        "swing": "+3.7"
+        "swing": "-10.4"
       },
       {
         "party": "Lab",
         "votes": 19312,
-        "swing": "+48.8"
+        "swing": "+20.2"
       },
       {
         "party": "LD",
         "votes": 839,
-        "swing": "+2.1"
+        "swing": "-2.1"
       },
       {
         "party": "RUK",
@@ -25070,7 +23883,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 391,
-        "swing": "+1.0"
+        "swing": "-0.5"
       }
     ]
   },
@@ -25084,22 +23897,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3781,
-        "swing": "+10.4"
+        "swing": "-6.0"
       },
       {
         "party": "Lab",
         "votes": 16434,
-        "swing": "+45.2"
+        "swing": "-25.5"
       },
       {
         "party": "LD",
         "votes": 1606,
-        "swing": "+4.4"
+        "swing": "-1.6"
       },
       {
         "party": "RUK",
         "votes": 2800,
-        "swing": "+7.7"
+        "swing": "+4.9"
       },
       {
         "party": "Green",
@@ -25109,7 +23922,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 7830,
-        "swing": "+21.5"
+        "swing": "+20.0"
       }
     ]
   },
@@ -25123,22 +23936,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8680,
-        "swing": "+19.6"
+        "swing": "-16.7"
       },
       {
         "party": "Lab",
         "votes": 22305,
-        "swing": "+50.5"
+        "swing": "-1.7"
       },
       {
         "party": "LD",
         "votes": 2043,
-        "swing": "+4.6"
+        "swing": "-0.2"
       },
       {
         "party": "RUK",
         "votes": 7909,
-        "swing": "+17.9"
+        "swing": "+13.6"
       },
       {
         "party": "Green",
@@ -25157,17 +23970,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 15814,
-        "swing": "+34.3"
+        "swing": "-30.1"
       },
       {
         "party": "Lab",
         "votes": 12567,
-        "swing": "+27.2"
+        "swing": "+5.0"
       },
       {
         "party": "LD",
         "votes": 4284,
-        "swing": "+9.3"
+        "swing": "+0.2"
       },
       {
         "party": "RUK",
@@ -25188,7 +24001,7 @@ const RESULTS = {
   },
   "N05000018": {
     "name": "West Tyrone",
-    "winner": "\u00d3rfhlaith Begley",
+    "winner": "Órfhlaith Begley",
     "party": "SF",
     "majority": 15917,
     "turnout": 58.833429829403926,
@@ -25211,22 +24024,22 @@ const RESULTS = {
       {
         "party": "SDLP",
         "votes": 5821,
-        "swing": "+13.3"
+        "swing": "-5.2"
       },
       {
         "party": "UUP",
         "votes": 2683,
-        "swing": "+6.1"
+        "swing": "-0.4"
       },
       {
         "party": "APNI",
         "votes": 2287,
-        "swing": "+5.2"
+        "swing": "-4.3"
       },
       {
         "party": "All other candidates",
         "votes": 3308,
-        "swing": "+7.6"
+        "swing": "+5.2"
       }
     ]
   },
@@ -25240,17 +24053,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 19783,
-        "swing": "+36.2"
+        "swing": "-24.5"
       },
       {
         "party": "Lab",
         "votes": 8335,
-        "swing": "+15.2"
+        "swing": "-1.3"
       },
       {
         "party": "LD",
         "votes": 13236,
-        "swing": "+24.2"
+        "swing": "+6.1"
       },
       {
         "party": "RUK",
@@ -25279,22 +24092,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9589,
-        "swing": "+19.4"
+        "swing": "-30.8"
       },
       {
         "party": "Lab",
         "votes": 2306,
-        "swing": "+4.7"
+        "swing": "-2.3"
       },
       {
         "party": "LD",
         "votes": 31061,
-        "swing": "+62.7"
+        "swing": "+22.0"
       },
       {
         "party": "RUK",
         "votes": 4842,
-        "swing": "+9.8"
+        "swing": "+8.7"
       },
       {
         "party": "Green",
@@ -25304,7 +24117,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 249,
-        "swing": "+0.5"
+        "swing": "-0.1"
       }
     ]
   },
@@ -25318,17 +24131,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11901,
-        "swing": "+28.1"
+        "swing": "-29.1"
       },
       {
         "party": "Lab",
         "votes": 16310,
-        "swing": "+38.5"
+        "swing": "+10.4"
       },
       {
         "party": "LD",
         "votes": 3756,
-        "swing": "+8.9"
+        "swing": "-2.9"
       },
       {
         "party": "RUK",
@@ -25352,17 +24165,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 20597,
-        "swing": "+39.4"
+        "swing": "-28.8"
       },
       {
         "party": "Lab",
         "votes": 15751,
-        "swing": "+30.1"
+        "swing": "+11.9"
       },
       {
         "party": "LD",
         "votes": 3351,
-        "swing": "+6.4"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
@@ -25377,7 +24190,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 743,
-        "swing": "+1.4"
+        "swing": "-0.3"
       }
     ]
   },
@@ -25391,22 +24204,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8455,
-        "swing": "+20.2"
+        "swing": "-28.2"
       },
       {
         "party": "Lab",
         "votes": 22173,
-        "swing": "+53.0"
+        "swing": "+8.9"
       },
       {
         "party": "LD",
         "votes": 1118,
-        "swing": "+2.7"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
         "votes": 8887,
-        "swing": "+21.2"
+        "swing": "+19.7"
       },
       {
         "party": "Green",
@@ -25425,22 +24238,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 3507,
-        "swing": "+9.2"
+        "swing": "-11.6"
       },
       {
         "party": "Lab",
         "votes": 23484,
-        "swing": "+61.6"
+        "swing": "-4.8"
       },
       {
         "party": "LD",
         "votes": 1593,
-        "swing": "+4.2"
+        "swing": "+1.4"
       },
       {
         "party": "RUK",
         "votes": 7059,
-        "swing": "+18.5"
+        "swing": "+10.9"
       },
       {
         "party": "Green",
@@ -25464,22 +24277,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 4310,
-        "swing": "+10.5"
+        "swing": "-21.2"
       },
       {
         "party": "Lab",
         "votes": 19401,
-        "swing": "+47.4"
+        "swing": "+0.7"
       },
       {
         "party": "LD",
         "votes": 1692,
-        "swing": "+4.1"
+        "swing": "-1.3"
       },
       {
         "party": "RUK",
         "votes": 9852,
-        "swing": "+24.1"
+        "swing": "+10.9"
       },
       {
         "party": "Green",
@@ -25503,22 +24316,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12180,
-        "swing": "+22.2"
+        "swing": "-17.6"
       },
       {
         "party": "Lab",
         "votes": 11733,
-        "swing": "+21.3"
+        "swing": "+0.5"
       },
       {
         "party": "LD",
         "votes": 24790,
-        "swing": "+45.1"
+        "swing": "+6.8"
       },
       {
         "party": "RUK",
         "votes": 3221,
-        "swing": "+5.9"
+        "swing": "+5.6"
       },
       {
         "party": "Green",
@@ -25528,7 +24341,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 619,
-        "swing": "+1.1"
+        "swing": "+0.5"
       }
     ]
   },
@@ -25542,17 +24355,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16118,
-        "swing": "+28.2"
+        "swing": "-25.8"
       },
       {
         "party": "Lab",
         "votes": 3023,
-        "swing": "+5.3"
+        "swing": "+0.5"
       },
       {
         "party": "LD",
         "votes": 29939,
-        "swing": "+52.5"
+        "swing": "+12.6"
       },
       {
         "party": "RUK",
@@ -25567,7 +24380,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 459,
-        "swing": "+0.8"
+        "swing": "+0.3"
       }
     ]
   },
@@ -25581,22 +24394,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16483,
-        "swing": "+36.4"
+        "swing": "-19.6"
       },
       {
         "party": "Lab",
         "votes": 10026,
-        "swing": "+22.2"
+        "swing": "+2.6"
       },
       {
         "party": "LD",
         "votes": 9539,
-        "swing": "+21.1"
+        "swing": "+2.2"
       },
       {
         "party": "RUK",
         "votes": 4660,
-        "swing": "+10.3"
+        "swing": "+10.0"
       },
       {
         "party": "Green",
@@ -25606,7 +24419,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 2250,
-        "swing": "+5.0"
+        "swing": "+3.2"
       }
     ]
   },
@@ -25620,22 +24433,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13158,
-        "swing": "+26.3"
+        "swing": "-18.0"
       },
       {
         "party": "Lab",
         "votes": 23156,
-        "swing": "+46.4"
+        "swing": "+1.2"
       },
       {
         "party": "LD",
         "votes": 3055,
-        "swing": "+6.1"
+        "swing": "+0.4"
       },
       {
         "party": "RUK",
         "votes": 6422,
-        "swing": "+12.9"
+        "swing": "+10.6"
       },
       {
         "party": "Green",
@@ -25654,17 +24467,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 18827,
-        "swing": "+37.2"
+        "swing": "-29.5"
       },
       {
         "party": "Lab",
         "votes": 13682,
-        "swing": "+27.0"
+        "swing": "+9.6"
       },
       {
         "party": "LD",
         "votes": 3439,
-        "swing": "+6.8"
+        "swing": "-3.2"
       },
       {
         "party": "RUK",
@@ -25693,22 +24506,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16493,
-        "swing": "+32.6"
+        "swing": "-25.5"
       },
       {
         "party": "Lab",
         "votes": 4773,
-        "swing": "+9.4"
+        "swing": "-6.0"
       },
       {
         "party": "LD",
         "votes": 20832,
-        "swing": "+41.2"
+        "swing": "+15.2"
       },
       {
         "party": "RUK",
         "votes": 6307,
-        "swing": "+12.5"
+        "swing": "+12.4"
       },
       {
         "party": "Green",
@@ -25718,7 +24531,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 518,
-        "swing": "+1.0"
+        "swing": "+0.5"
       }
     ]
   },
@@ -25732,17 +24545,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 12773,
-        "swing": "+26.5"
+        "swing": "-21.7"
       },
       {
         "party": "Lab",
         "votes": 4444,
-        "swing": "+9.2"
+        "swing": "-7.5"
       },
       {
         "party": "LD",
         "votes": 24019,
-        "swing": "+49.9"
+        "swing": "+18.8"
       },
       {
         "party": "RUK",
@@ -25757,7 +24570,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 168,
-        "swing": "+0.3"
+        "swing": "-0.8"
       }
     ]
   },
@@ -25771,17 +24584,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 17398,
-        "swing": "+32.2"
+        "swing": "-23.3"
       },
       {
         "party": "Lab",
         "votes": 3631,
-        "swing": "+6.7"
+        "swing": "-3.1"
       },
       {
         "party": "LD",
         "votes": 25743,
-        "swing": "+47.7"
+        "swing": "+15.4"
       },
       {
         "party": "RUK",
@@ -25805,22 +24618,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 8860,
-        "swing": "+26.6"
+        "swing": "-29.1"
       },
       {
         "party": "Lab",
         "votes": 14282,
-        "swing": "+42.9"
+        "swing": "+7.0"
       },
       {
         "party": "LD",
         "votes": 1002,
-        "swing": "+3.0"
+        "swing": "-0.6"
       },
       {
         "party": "RUK",
         "votes": 7721,
-        "swing": "+23.2"
+        "swing": "+20.1"
       },
       {
         "party": "Green",
@@ -25839,22 +24652,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5654,
-        "swing": "+16.9"
+        "swing": "-24.2"
       },
       {
         "party": "Lab",
         "votes": 16800,
-        "swing": "+50.3"
+        "swing": "+2.9"
       },
       {
         "party": "LD",
         "votes": 758,
-        "swing": "+2.3"
+        "swing": "-1.5"
       },
       {
         "party": "RUK",
         "votes": 7612,
-        "swing": "+22.8"
+        "swing": "+16.9"
       },
       {
         "party": "Green",
@@ -25878,22 +24691,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11463,
-        "swing": "+26.3"
+        "swing": "-21.1"
       },
       {
         "party": "Lab",
         "votes": 19331,
-        "swing": "+44.3"
+        "swing": "-1.3"
       },
       {
         "party": "LD",
         "votes": 1376,
-        "swing": "+3.2"
+        "swing": "-1.2"
       },
       {
         "party": "RUK",
         "votes": 6078,
-        "swing": "+13.9"
+        "swing": "+11.4"
       },
       {
         "party": "Green",
@@ -25917,17 +24730,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11506,
-        "swing": "+25.0"
+        "swing": "-25.8"
       },
       {
         "party": "Lab",
         "votes": 18622,
-        "swing": "+40.5"
+        "swing": "+2.9"
       },
       {
         "party": "LD",
         "votes": 3986,
-        "swing": "+8.7"
+        "swing": "+1.5"
       },
       {
         "party": "RUK",
@@ -25942,7 +24755,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 410,
-        "swing": "+0.9"
+        "swing": "-0.3"
       }
     ]
   },
@@ -25956,22 +24769,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 6791,
-        "swing": "+16.0"
+        "swing": "-22.6"
       },
       {
         "party": "Lab",
         "votes": 20277,
-        "swing": "+47.7"
+        "swing": "+1.1"
       },
       {
         "party": "LD",
         "votes": 1851,
-        "swing": "+4.4"
+        "swing": "-0.9"
       },
       {
         "party": "RUK",
         "votes": 9186,
-        "swing": "+21.6"
+        "swing": "+14.4"
       },
       {
         "party": "Green",
@@ -25995,17 +24808,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 16570,
-        "swing": "+32.5"
+        "swing": "-23.5"
       },
       {
         "party": "Lab",
         "votes": 20519,
-        "swing": "+40.2"
+        "swing": "+10.7"
       },
       {
         "party": "LD",
         "votes": 2708,
-        "swing": "+5.3"
+        "swing": "-4.6"
       },
       {
         "party": "RUK",
@@ -26020,7 +24833,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 364,
-        "swing": "+0.7"
+        "swing": "-0.2"
       }
     ]
   },
@@ -26034,22 +24847,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9888,
-        "swing": "+24.5"
+        "swing": "-22.1"
       },
       {
         "party": "Lab",
         "votes": 15836,
-        "swing": "+39.2"
+        "swing": "+1.0"
       },
       {
         "party": "LD",
         "votes": 1777,
-        "swing": "+4.4"
+        "swing": "+0.1"
       },
       {
         "party": "RUK",
         "votes": 6915,
-        "swing": "+17.1"
+        "swing": "+13.4"
       },
       {
         "party": "Green",
@@ -26059,7 +24872,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 4138,
-        "swing": "+10.2"
+        "swing": "+4.0"
       },
       {
         "party": "All other candidates",
@@ -26078,17 +24891,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11444,
-        "swing": "+25.6"
+        "swing": "-17.5"
       },
       {
         "party": "Lab",
         "votes": 16035,
-        "swing": "+35.9"
+        "swing": "-4.0"
       },
       {
         "party": "LD",
         "votes": 4236,
-        "swing": "+9.5"
+        "swing": "-1.8"
       },
       {
         "party": "RUK",
@@ -26103,7 +24916,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 5960,
-        "swing": "+13.4"
+        "swing": "+10.3"
       }
     ]
   },
@@ -26117,17 +24930,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 14489,
-        "swing": "+32.1"
+        "swing": "-33.1"
       },
       {
         "party": "Lab",
         "votes": 13677,
-        "swing": "+30.3"
+        "swing": "+7.4"
       },
       {
         "party": "LD",
         "votes": 2809,
-        "swing": "+6.2"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
@@ -26156,22 +24969,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5392,
-        "swing": "+13.8"
+        "swing": "-16.3"
       },
       {
         "party": "Lab",
         "votes": 20596,
-        "swing": "+52.6"
+        "swing": "-0.7"
       },
       {
         "party": "LD",
         "votes": 1985,
-        "swing": "+5.1"
+        "swing": "-1.9"
       },
       {
         "party": "RUK",
         "votes": 5986,
-        "swing": "+15.3"
+        "swing": "+9.2"
       },
       {
         "party": "Green",
@@ -26181,7 +24994,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 1040,
-        "swing": "+2.7"
+        "swing": "+2.5"
       }
     ]
   },
@@ -26195,17 +25008,17 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 11497,
-        "swing": "+23.5"
+        "swing": "-34.7"
       },
       {
         "party": "Lab",
         "votes": 3002,
-        "swing": "+6.1"
+        "swing": "-0.2"
       },
       {
         "party": "LD",
         "votes": 23765,
-        "swing": "+48.5"
+        "swing": "+17.4"
       },
       {
         "party": "RUK",
@@ -26220,12 +25033,12 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 608,
-        "swing": "+1.2"
+        "swing": "-0.4"
       }
     ]
   },
   "W07000112": {
-    "name": "Ynys M\u00f4n",
+    "name": "Ynys Môn",
     "winner": "Llinos Medi",
     "party": "PC",
     "majority": 637,
@@ -26234,12 +25047,12 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 9953,
-        "swing": "+30.5"
+        "swing": "-4.9"
       },
       {
         "party": "Lab",
         "votes": 7619,
-        "swing": "+23.4"
+        "swing": "-6.7"
       },
       {
         "party": "LD",
@@ -26249,7 +25062,7 @@ const RESULTS = {
       {
         "party": "RUK",
         "votes": 3223,
-        "swing": "+9.9"
+        "swing": "+3.9"
       },
       {
         "party": "Green",
@@ -26259,7 +25072,7 @@ const RESULTS = {
       {
         "party": "PC",
         "votes": 10590,
-        "swing": "+32.5"
+        "swing": "+4.0"
       },
       {
         "party": "All other candidates",
@@ -26278,22 +25091,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 5383,
-        "swing": "+12.4"
+        "swing": "-15.4"
       },
       {
         "party": "Lab",
         "votes": 24537,
-        "swing": "+56.6"
+        "swing": "+0.2"
       },
       {
         "party": "LD",
         "votes": 3051,
-        "swing": "+7.0"
+        "swing": "-0.8"
       },
       {
         "party": "RUK",
         "votes": 4721,
-        "swing": "+10.9"
+        "swing": "+8.5"
       },
       {
         "party": "Green",
@@ -26303,7 +25116,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 446,
-        "swing": "+1.0"
+        "swing": "-0.3"
       }
     ]
   },
@@ -26317,22 +25130,22 @@ const RESULTS = {
       {
         "party": "Con",
         "votes": 13770,
-        "swing": "+26.9"
+        "swing": "-22.7"
       },
       {
         "party": "Lab",
         "votes": 23161,
-        "swing": "+45.3"
+        "swing": "+15.4"
       },
       {
         "party": "LD",
         "votes": 5496,
-        "swing": "+10.8"
+        "swing": "-7.9"
       },
       {
         "party": "RUK",
         "votes": 5912,
-        "swing": "+11.6"
+        "swing": "+11.1"
       },
       {
         "party": "Green",
@@ -26342,7 +25155,7 @@ const RESULTS = {
       {
         "party": "All other candidates",
         "votes": 555,
-        "swing": "+1.1"
+        "swing": "-0.2"
       }
     ]
   }
@@ -26364,5 +25177,4 @@ const SEAT_SUMMARY = {
   "APNI": 1,
   "TUV": 1,
   "UUP": 1
->>>>>>> c178f2c (Add 2019 swing data and live MP overrides to interactive map)
 };

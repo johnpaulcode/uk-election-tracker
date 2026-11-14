@@ -19,6 +19,17 @@
       <h1>UK General Election Tracker 2024</h1>
     </header>
     
+    <section id="national-dashboard">
+      <div class="dashboard-header">
+        <h2>National Overview</h2>
+        <span class="dashboard-meta">650 seats &middot; 326 for a majority</span>
+      </div>
+      <div class="seat-progress-container" id="seat-progress-container">
+        <div class="majority-marker"></div>
+      </div>
+      <div class="seat-legend" id="seat-legend"></div>
+    </section>
+
     <main class="app-main">
       <div id="map-container">
         <div id="map"></div>
@@ -27,16 +38,17 @@
       <aside id="info-panel">
         <div class="panel-content">
           <h2>Constituency Details</h2>
-          <p class="placeholder-text">Hover over or click a constituency on the map to see detailed results.</p>
+          <p class="placeholder-text">Hover over a constituency to preview its result, or click to pin it.</p>
           <div id="constituency-info" style="display: none;">
             <h3 id="constituency-name"></h3>
+            <div id="override-container"></div>
             <div class="result-card">
               <p><strong>Winner:</strong> <span id="winner-name"></span></p>
               <p><strong>Party:</strong> <span id="winner-party" class="party-badge"></span></p>
               <p><strong>Majority:</strong> <span id="winner-majority"></span></p>
-              <p><strong>Turnout:</strong> <span id="voter-turnout"></span>%</p>
+              <p><strong>Turnout:</strong> <span><span id="voter-turnout"></span>%</span></p>
             </div>
-            <h4>Candidates</h4>
+            <h4>Votes by party <span class="heading-note">share, and change since 2019</span></h4>
             <ul id="candidate-list"></ul>
           </div>
         </div>
